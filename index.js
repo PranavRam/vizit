@@ -8,6 +8,7 @@ var neo4j = require("neo4j");
 var AlchemyAPI = require('alchemy-api');
 var swig = require('swig');
 var S = require('string');
+var _ = require('lodash');
 
 var alchemy = new AlchemyAPI('e611893e79748690d9a387240bab8b64f14b9a2b');
 
@@ -179,11 +180,11 @@ function getDocuments(reply) {
       var documents = results.map(function(doc) {
           // console.log(doc['n']);
           var obj = doc['n'].properties;
-          obj.entities = doc['entities'].map(function(entity) {
+          obj.entities = _.groupBy(doc['entities'].map(function(entity) {
             var obj = entity.properties;
             obj._id = entity._id;
             return obj;
-          });
+          }), 'type');
           obj._id = doc['n']._id
       		return obj;
       });

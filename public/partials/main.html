@@ -85,7 +85,7 @@
 			  <div class="md-toolbar-tools" layout="row" layout-align="start center">
 			    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
 			    <!-- <ng-md-icon icon="text_format" style="fill: white;"></ng-md-icon> -->
-			    <ng-md-icon icon="list" style="fill: white;"></ng-md-icon>
+			    <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;" ng-click="showDocumentText = !showDocumentText"></ng-md-icon>
 		      <span flex></span>
 		      <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
 		      <span flex="5"></span>
@@ -113,7 +113,13 @@
 		</div>
 		<div layout-padding class="document-viewer" layout="column" flex>
 		  <md-content flex>
-				<p class="document-text" ng-bind-html="selectedDocument.text | to_trusted"></p>
+				<p ng-show="showDocumentText" class="document-text" ng-bind-html="selectedDocument.text | to_trusted"></p>
+				<div ng-hide="showDocumentText" class="document-entities">
+					<div class="document-entity-type" ng-repeat="(entityType, entityArray) in selectedDocument.entities">
+						<span class="{{entityType}}">{{entityType}}</span>
+						<span ng-repeat="entity in entityArray">{{entity.text}}</span>
+					</div>
+				</div>
 		  </md-content>
 		  <div layout="row">
 		  	<span flex=""></span>

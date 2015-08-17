@@ -7,7 +7,7 @@ function MainCtrl($scope, $http) {
   $scope.selectedDocument = {};
   $scope.entityType = "Person";
   $scope.entityTypes = ["Person", "Organization", "City", "Quantity", "JobTitle", "FieldTerminology"];
-  
+  $scope.showDocumentText = true;
   $scope.entityCountScale = d3.scale.linear();
   $scope.ach = {
     toolbar: {
@@ -24,7 +24,7 @@ function MainCtrl($scope, $http) {
       doc.viewCount = doc.viewCount + 1;
     };
     $scope.selectedDocument = doc;
-  }
+  };
   
   $http.get('/api/documents').
     then(function(response) {
