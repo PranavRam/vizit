@@ -1,0 +1,9 @@
+{% block header %}
+		<!-- bower:css -->
+	  <link rel="stylesheet" href="/public/lib/angular-material/angular-material.css">
+	  <!-- endinject -->
+    {% for item in assets.css %}
+        <link rel="stylesheet" href="[[item]]"/>
+    {% endfor %}
+    <link rel="stylesheet" href="/public/main.css">
+{% endblock %}

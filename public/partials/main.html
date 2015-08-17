@@ -1,0 +1,60 @@
+<md-toolbar class="top-bar">
+  <div class="md-toolbar-tools" layout="row" layout-align="start center">
+    <h2>
+      <span>Vizit</span>
+    </h2>
+    <span flex></span>
+    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
+      <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon> 
+    <!-- </md-button> -->
+  </div>
+</md-toolbar>
+<div flex layout="row">
+	<md-content layout-padding flex="20">
+		<md-input-container>
+      <label>Entity Type</label>
+      <md-select ng-model="entityType">
+        <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
+      </md-select>
+    </md-input-container>
+    <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity">
+    	<div class="entity-relevance"></div>
+    	<div class="entity-text">
+    		<span>{{entity.text}}</span>
+    	</div>
+    </div>
+	</md-content>
+	<div flex layout-padding>
+		Canvas
+	</div>
+</div>
+<div flex="25" layout="row">
+	<div layout-padding flex="20">
+  	<md-toolbar class="top-bar">
+  	  <div class="md-toolbar-tools" layout="row" layout-align="start center">
+  	    <span flex></span>
+  	    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
+	      <ng-md-icon icon="add" style="fill: white;"></ng-md-icon> 
+  	    <!-- </md-button> -->
+  	  </div>
+  	</md-toolbar>
+  	<md-content>
+	    <div ng-click="selectDocument(document)" ng-repeat="document in documents">
+	    	<span>{{document.name}}</span>
+	    </div>
+  	</md-content>
+	</div>
+	<div layout-padding layout="column" flex>
+  	<md-toolbar class="top-bar">
+  	  <div class="md-toolbar-tools" layout="row" layout-align="start center">
+  	    <span flex></span>
+  	    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
+	      <ng-md-icon icon="add" style="fill: white;"></ng-md-icon> 
+  	    <!-- </md-button> -->
+  	  </div>
+  	</md-toolbar>	
+	  <md-content flex>
+			<p class="document-viewer" ng-bind-html="selectedDocumentText | to_trusted"></p>
+	  </md-content>
+	</div>
+</div>

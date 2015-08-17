@@ -1,0 +1,20 @@
+<md-toolbar class="top-bar">
+  <div class="md-toolbar-tools" layout="row" layout-align="start center">
+    <h2>
+      <span>Vizit</span>
+    </h2>
+    <span flex></span>
+    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
+      <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon> 
+    <!-- </md-button> -->
+  </div>
+</md-toolbar>
+<div flex="1" layout="column" layout-align="center center" ng-controller="UploadCtrl">
+	<p>{{file.name}}</p>
+	<md-button class="md-raised">
+		<div class="button" ngf-change="fileUpdated($files, $event)" ngf-select ng-model="file">Select a file</div>
+	</md-button>
+	<md-button class="md-raised md-primary" ng-click="upload(file)">
+		Upload
+	</md-button>
+</div>
