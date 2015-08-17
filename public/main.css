@@ -50,24 +50,55 @@ fieldterminology {
 	line-height: 20px;
 }
 
-.entity {
+.entity-list {
+	overflow-x: hidden;
+}
+.entity-container {
 	position: relative;
 }
 
-.entity .entity-relevance {
+.entity-container .entity-relevance {
 	position: absolute;
 	left: 0;
 	top: 0;
 	height: 100%;
-	width: 100%;
+	/*width: 100%;*/
 	/*background-color: orange;*/
 }
 
-.entity .entity-text {
+.entity-container .entity {
+	padding: 2px 0;
+	cursor: pointer;
+}
+
+.entity-container .entity .entity-count {
 	position: relative;
-	left: 0;
-	top: 0;
-	/*height: 100%;*/
-	/*width: 50%;*/
-	background-color: transparent;
+	width: 50px;
+}
+
+.entity-container .entity .entity-count .bar{
+	height: 100%;
+	position: absolute;
+	right: 8px;
+	background-color: black;
+}
+
+.entity-container .entity-text {
+	/*position: relative;*/
+	/*left: 60px;*/
+	font-size: small;
+	/*top: 0;*/
+	/*background-color: transparent;*/
+}
+
+.document-list {
+	margin-top: 8px;
+}
+
+.document-list .document-item {
+	cursor: pointer;
+}
+
+.document-list .document-item.selected {
+	border-right: solid 2px red;
 }

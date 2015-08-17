@@ -10,20 +10,26 @@
   </div>
 </md-toolbar>
 <div flex layout="row">
-	<md-content layout-padding flex="20">
+	<div class="entity-list" layout-padding flex="20">
 		<md-input-container>
       <label>Entity Type</label>
       <md-select ng-model="entityType">
         <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
       </md-select>
     </md-input-container>
-    <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity">
-    	<div class="entity-relevance"></div>
-    	<div class="entity-text">
-    		<span>{{entity.text}}</span>
-    	</div>
-    </div>
-	</md-content>
+    <md-content>
+      <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity-container">
+      	<div class="entity-relevance">
+      	</div>
+      	<div class="entity" layout="row">
+  				<div class="entity-count">
+  					<div class="bar" ng-style="{ 'width' : entity.count+'px' }"></div>
+  				</div>
+      		<span flex class="entity-text">{{entity.text}}</span>
+      	</div>
+      </div>
+    </md-content>
+	</div>
 	<div flex layout-padding>
 		Canvas
 	</div>
@@ -31,16 +37,19 @@
 <div flex="25" layout="row">
 	<div layout-padding flex="20">
   	<md-toolbar class="top-bar">
-  	  <div class="md-toolbar-tools" layout="row" layout-align="start center">
-  	    <span flex></span>
+  	  <div class="md-toolbar-tools" layout="row" layout-align="center center">
+  	    <!-- <span flex></span> -->
   	    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
-	      <ng-md-icon icon="add" style="fill: white;"></ng-md-icon> 
+	      <ng-md-icon icon="sort" style="fill: white;"></ng-md-icon>
+	      <span flex="5"></span>
+	      <ng-md-icon icon="visibility" style="fill: white;"></ng-md-icon>
   	    <!-- </md-button> -->
   	  </div>
   	</md-toolbar>
-  	<md-content>
-	    <div ng-click="selectDocument(document)" ng-repeat="document in documents">
-	    	<span>{{document.name}}</span>
+  	<md-content class="document-list">
+	    <div class="document-item" ng-click="selectDocument(document)" ng-repeat="document in documents" layout="row" layout-align="space-between center" ng-class="{selected: document.name === selectedDocument.name}">
+	    	<span flex="20">{{document.viewCount}}</span>
+	    	<span flex>{{document.name}}</span>
 	    </div>
   	</md-content>
 	</div>
@@ -49,12 +58,14 @@
   	  <div class="md-toolbar-tools" layout="row" layout-align="start center">
   	    <span flex></span>
   	    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
-	      <ng-md-icon icon="add" style="fill: white;"></ng-md-icon> 
+	      <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
+	      <span flex="5"></span>
+	      <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon> 
   	    <!-- </md-button> -->
   	  </div>
   	</md-toolbar>	
 	  <md-content flex>
-			<p class="document-viewer" ng-bind-html="selectedDocumentText | to_trusted"></p>
+			<p class="document-viewer" ng-bind-html="selectedDocument.text | to_trusted"></p>
 	  </md-content>
 	</div>
 </div>
