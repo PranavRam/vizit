@@ -41,10 +41,14 @@
 	    </md-input-container>
 		</div>
 		<div class="editor-tools" layout="row">
-			<ng-md-icon icon="fullscreen_exit" size="36" ng-click="ach.fullscreen = false"
-			ng-class="{selected: !ach.fullscreen}"></ng-md-icon> 
-			 <ng-md-icon icon="fullscreen" size="36" ng-click="ach.fullscreen = true"
-			 ng-class="{selected: ach.fullscreen}"></ng-md-icon>
+			<md-button aria-label="fullscreen_exit" ng-click="ach.fullscreen = false">
+			  <ng-md-icon icon="fullscreen_exit" size="32"
+			  ng-class="{selected: !ach.fullscreen}"></ng-md-icon> 
+			</md-button>
+			<md-button aria-label="fullscreen" ng-click="ach.fullscreen = true">
+			  <ng-md-icon icon="fullscreen" size="32"
+			  ng-class="{selected: ach.fullscreen}"></ng-md-icon>
+			</md-button>
 		</div>
 		<md-fab-speed-dial md-open="ach.toolbar.isOpen" md-direction="right" class="ach-toolbar">
       <md-fab-trigger>
@@ -75,9 +79,12 @@
 			<md-toolbar flex="20" class="top-bar">
 			  <div class="md-toolbar-tools" layout="row" layout-align="center center">
 			    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
-	      	<ng-md-icon icon="sort" style="fill: white;"></ng-md-icon>
-	      	<span flex="5"></span>
-	      	<ng-md-icon icon="visibility" style="fill: white;"></ng-md-icon>
+	      	<md-button aria-label="sort">
+		        <ng-md-icon icon="sort" style="fill: white;"></ng-md-icon>
+		      </md-button>
+	      	<md-button aria-label="visibility">
+		        <ng-md-icon icon="visibility" style="fill: white;"></ng-md-icon>
+		      </md-button>
 			    <!-- </md-button> -->
 			  </div>
 			</md-toolbar>
@@ -85,11 +92,16 @@
 			  <div class="md-toolbar-tools" layout="row" layout-align="start center">
 			    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
 			    <!-- <ng-md-icon icon="text_format" style="fill: white;"></ng-md-icon> -->
-			    <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;" ng-click="showDocumentText = !showDocumentText"></ng-md-icon>
+			    <md-button aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
+			      <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;"></ng-md-icon>
+			    </md-button>
 		      <span flex></span>
-		      <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
-		      <span flex="5"></span>
-		      <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon> 
+		      <md-button aria-label="add">
+		        <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
+		      </md-button>
+		      <md-button aria-label="note_add">
+		        <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon>
+		      </md-button>
 			    <!-- </md-button> -->
 			  </div>
 			</md-toolbar>
