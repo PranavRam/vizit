@@ -7,6 +7,18 @@ function MainCtrl($scope, $http) {
   $scope.selectedDocument = {};
   $scope.entityType = "Person";
   $scope.entityTypes = ["Person", "Organization", "City", "Quantity", "JobTitle", "FieldTerminology"];
+  
+  $scope.entityCountScale = d3.scale.linear();
+  $scope.ach = {
+    toolbar: {
+      isOpen: false
+    },
+    searchInput: "",
+    fullscreen: false
+  };
+
+  var entityCountWidth = 40;
+
   $scope.selectDocument = function(doc) {
     if($scope.selectedDocument._id !== doc._id){
       doc.viewCount = doc.viewCount + 1;
@@ -28,10 +40,12 @@ function MainCtrl($scope, $http) {
 
   $http.get('/api/entities').
     then(function(response) {
-      $scope.entities = response.data.map(function(data) {
-        data.count = Math.floor(Math.random() * 20) + 1;
-        return data;
-      });
+      var entities = response.data;
+      $scope.entityCountScale
+          .domain(d3.extent(entities, function(d) { return d.count; }))
+          .range([1, entityCountWidth]);
+
+      $scope.entities = entities;
     }, function(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.

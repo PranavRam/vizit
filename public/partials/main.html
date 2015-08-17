@@ -10,7 +10,7 @@
   </div>
 </md-toolbar>
 <div flex layout="row">
-	<div class="entity-list" layout-padding flex="20">
+	<div class="entity-list" layout-padding flex="20" ng-hide="ach.fullscreen">
 		<md-input-container>
       <label>Entity Type</label>
       <md-select ng-model="entityType">
@@ -23,18 +23,54 @@
       	</div>
       	<div class="entity" layout="row">
   				<div class="entity-count">
-  					<div class="bar" ng-style="{ 'width' : entity.count+'px' }"></div>
+  					<div class="bar" ng-style="{ 'width' : entityCountScale(entity.count)+'px' }"></div>
   				</div>
       		<span flex class="entity-text">{{entity.text}}</span>
       	</div>
       </div>
     </md-content>
 	</div>
-	<div flex layout-padding>
-		Canvas
+	<div flex layout-padding class="ach-browser">
+		<div ach-canvas class="ach-canvas"></div>
+		<div class="search-input">
+			<md-input-container class="md-icon-float" >
+			      <!-- Use floating label instead of placeholder -->
+	      <label>Search</label>
+	      <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>
+	      <input ng-model="ach.searchInput" type="text">
+	    </md-input-container>
+		</div>
+		<div class="editor-tools" layout="row">
+			<ng-md-icon icon="fullscreen_exit" size="36" ng-click="ach.fullscreen = false"
+			ng-class="{selected: !ach.fullscreen}"></ng-md-icon> 
+			 <ng-md-icon icon="fullscreen" size="36" ng-click="ach.fullscreen = true"
+			 ng-class="{selected: ach.fullscreen}"></ng-md-icon>
+		</div>
+		<md-fab-speed-dial md-open="ach.toolbar.isOpen" md-direction="right" class="ach-toolbar">
+      <md-fab-trigger>
+        <md-button aria-label="menu" class="md-fab md-warn">
+          <ng-md-icon icon="menu" style="fill: white;"></ng-md-icon>
+        </md-button>
+      </md-fab-trigger>
+      <md-fab-actions>
+        <md-button aria-label="add" class="md-fab md-raised md-mini">
+          <ng-md-icon icon="add"></ng-md-icon> 
+        </md-button>
+      </md-fab-actions>
+      <md-fab-actions>
+        <md-button aria-label="delete" class="md-fab md-raised md-mini">
+          <ng-md-icon icon="clear"></ng-md-icon> 
+        </md-button>
+      </md-fab-actions>
+      <md-fab-actions>
+        <md-button aria-label="provenance" class="md-fab md-raised md-mini">
+          <ng-md-icon icon="trending_up"></ng-md-icon> 
+        </md-button>
+      </md-fab-actions>
+    </md-fab-speed-dial>
 	</div>
 </div>
-<div flex="25" layout="row">
+<div flex="25" layout="row" ng-hide="ach.fullscreen">
 	<div layout-padding flex="20">
   	<md-toolbar class="top-bar">
   	  <div class="md-toolbar-tools" layout="row" layout-align="center center">

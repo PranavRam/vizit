@@ -44,17 +44,20 @@ function addEntity(entity, cb) {
 		var query = [
 				"MERGE (n:Entity {text: {text}} )",
 	      'ON CREATE SET n = {props}',
+        'ON MATCH SET n.count = n.count + {count}',
 	      'RETURN n',
 	  ].join('\n');
 
 	  var props = {
 	  	type: entity.type,
-	  	text: entity.text
+	  	text: entity.text,
+      count: entity.count
 	  };
 
 	  var params = {
 	      props: props,
-	      text: entity.text
+	      text: entity.text,
+        count: entity.count
 	  };
 
 	  db.cypher({
