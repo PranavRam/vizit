@@ -168,8 +168,8 @@ function readZip(path, reply) {
 
 function getDocuments(reply) {
 	var query = [
-    'MATCH (n:Document)',
-    'RETURN n',
+    'MATCH (n:Document)-[:DOCENTITY]->(e)',
+    'RETURN n, collect(e) as entities',
   ].join('\n')
 
   db.cypher({
@@ -179,6 +179,11 @@ function getDocuments(reply) {
       var documents = results.map(function(doc) {
           // console.log(doc['n']);
           var obj = doc['n'].properties;
+          obj.entities = doc['entities'].map(function(entity) {
+            var obj = entity.properties;
+            obj._id = entity._id;
+            return obj;
+          });
           obj._id = doc['n']._id
       		return obj;
       });

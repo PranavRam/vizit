@@ -72,6 +72,15 @@ fieldterminology {
 	/*background-color: orange;*/
 }
 
+.document-list-search md-input-container {
+	padding-bottom: 0;
+}
+.document-viewer md-input-container {
+	padding-bottom: 0;
+}
+.document-text {
+	margin-top: 0;
+}
 .entity-container .entity {
 	padding: 2px 0;
 	cursor: pointer;
@@ -98,7 +107,7 @@ fieldterminology {
 }
 
 .document-list {
-	margin-top: 8px;
+	/*margin-top: 8px;*/
 }
 
 .document-list .document-item {

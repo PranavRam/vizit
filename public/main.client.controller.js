@@ -32,6 +32,7 @@ function MainCtrl($scope, $http) {
         data.viewCount = 0;
         return data;
       });
+      console.log($scope.documents);
       $scope.selectedDocument = $scope.documents[0];
     }, function(response) {
       // called asynchronously if an error occurs
