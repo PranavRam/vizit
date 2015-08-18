@@ -1,18 +1,61 @@
 d3.vizit = {};
 (function(d3) {
 	function Hypothesis() {
+		var opts = {
+			width: 200
+		}
 		function component(selection) {
 			selection.each(function(data) {
-				var container = d3.select(this);
-				container
-					.append("rect")
-			    .attr("width", 250)
-			    .attr("height", 150)
-			    .style("fill", "red")
-			    .attr({
-			    	x: 100,
-			    	y: 100
-			    });
+				// debugger;
+				var parent = d3.select(this);
+				var fo = parent.append("foreignObject")
+    					    .attr({
+    					    	x:data.x,
+    					    	y:data.y
+    					    })
+				var wrapper = fo.append("xhtml:body")
+
+				var container = wrapper
+													.append('xhtml:div')
+													.attr('class', 'hypothesis');
+
+				var header = container.append('xhtml:div');
+				var body = container.append('xhtml:div')
+
+				header.style({
+					width: opts.width+'px',
+					height: 50+'px',
+					"background-color": "red"
+				})
+				body.style({
+					width: opts.width+'px',
+					height: 150+'px',
+					"background-color": "blue"
+				})
+
+				var node = $(container.node());
+				fo.attr({
+					width: opts.width,
+					height: node.height()
+				});
+
+				var drag = d3.behavior.drag()
+				    .origin(function(d) { return d; })
+				    .on('dragstart', function() { d3.event.sourceEvent.stopPropagation(); })
+				    .on("drag", dragmove);
+
+				function dragmove(d) {
+					d.x += d3.event.dx;
+          d.y += d3.event.dy;
+					var translate = [d.x, d.y];
+				  d3.select(this)
+				      .attr({
+				      	x: d.x,
+				      	y: d.y
+				      });
+				}
+
+				fo.call(drag);
 			})
 		}
 		return component;
@@ -38,7 +81,7 @@ function achCanvas($timeout) {
     		});
 
     		var container = svg.append("g");
-
+    		var hypotheses = container.selectAll('.hypothesis');
     		var minimap = svg.append("rect")
 											    .attr("width", 250)
 											    .attr("height", 150)
@@ -57,47 +100,46 @@ function achCanvas($timeout) {
 				// 											.append('g')
 				// 											.call(hypothesis);
 
-				var fb = container
-									.append("foreignObject")
-							    .attr({
-							    	width: 100,
-							    	height: 100,
-							    	x:100,
-							    	y:100
-							    });
-    		fb.data([{x: 100, y: 100}]);
+    		
+    		hypotheses = hypotheses.data([{x: 100, y: 100}, {x: 200, y: 200}]);
 
-		    var div = fb
-								  	.append("xhtml:body").append("xhtml:div")
-								    .style({
-								    	"background-color": "red",
-								    	width: 100+'px',
-								    	height: 100+'px'
-								    });
+    		var fb = hypotheses
+    							.enter()
+    							.append('g')
+  					      .call(hypothesis);
+
+		    // var div = fb.enter()
+								  	
+
 			  var zoom = d3.behavior.zoom()
-			      .scaleExtent([1, 10])
+			      .scaleExtent([0.1, 1])
 			      .on("zoom", zoomed);
-
-				var drag = d3.behavior.drag()
-				    .origin(function(d) { return d; })
-				    .on("drag", dragmove);
-
-				function dragmove(d) {
-					d.x += d3.event.dx;
-          d.y += d3.event.dy;
-					var translate = [d.x, d.y];
-				  d3.select(this)
-				      .attr({
-				      	x: d.x,
-				      	y: d.y
-				      });
-				}
 
 				function zoomed() {
 				  container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 				}
 				// fb.call(drag);
 				svg.call(zoom);
+
+				scope.$watch('ach.fullscreen', function(newVal, oldVal) {
+					if(newVal !== oldVal) {
+						$timeout(function() {
+							svg
+								// .transition()
+								.attr({
+									width: achCanvas.width(),
+									height: achCanvas.height()
+								});
+
+							minimap
+								// .transition()
+								.attr({
+						    	x: achCanvas.width() - 8 - 250,
+						    	y: achCanvas.height() - 8 - 150
+						    })
+						})
+					}
+				})
     	}
 
     	$timeout(compile);
