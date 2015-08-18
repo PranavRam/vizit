@@ -72,6 +72,11 @@ ng-md-icon svg {
 .entity-list {
 	overflow-x: hidden;
 }
+
+.entity-list .entity-selection {
+	padding-bottom: 16px;
+}
+
 .entity-container {
 	position: relative;
 }
@@ -167,4 +172,17 @@ ng-md-icon svg {
 .document-entities .document-entity-type span {
 	display: inline-block;
 	margin: 4px;
+}
+
+.hypothesis {
+
+}
+
+.hypothesis .body {
+	box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  width:100px;
+  height:100px;
+  border:1px solid #263238;
 }

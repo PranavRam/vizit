@@ -17,6 +17,7 @@
     "angular-material-icons": "~0.5.0",
     "d3": "~3.5.6",
     "lodash": "~3.10.1",
-    "svg-morpheus": "~0.1.8"
+    "svg-morpheus": "~0.1.8",
+    "font-awesome": "~4.4.0"
   }
 }

@@ -11,7 +11,7 @@
 </md-toolbar>
 <md-content flex layout="row">
 	<md-content class="entity-list" layout="column" layout-padding flex="20" ng-hide="ach.fullscreen">
-		<md-input-container>
+		<md-input-container class="entity-selection">
       <label>Entity Type</label>
       <md-select ng-model="entityType">
         <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
@@ -33,6 +33,17 @@
 				</md-card-content>
       </md-card>
     </md-content>
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+      <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
+        <ng-md-icon icon="sort"></ng-md-icon>
+      </md-button>
+      <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
+        <ng-md-icon icon="filter_list"></ng-md-icon>
+      </md-button>
+      <md-button class="md-icon-button" aria-label="sort_connection">
+        <ng-md-icon icon="swap_calls"></ng-md-icon>
+      </md-button>
+    </section>
 	</md-content>
 	<md-content flex layout-padding class="ach-browser">
 		<div ach-canvas class="ach-canvas"></div>
@@ -40,16 +51,16 @@
 			<md-input-container class="md-icon-float" >
 			      <!-- Use floating label instead of placeholder -->
 	      <label>ACH</label>
-	      <md-icon><ng-md-icon icon="edit"></ng-md-icon></md-icon>
+	      <md-icon><ng-md-icon icon="create"></ng-md-icon></md-icon>
 	      <input ng-model="ach.searchInput" type="text">
 	    </md-input-container>
 		</div>
 		<div class="editor-tools" layout="row">
-			<md-button aria-label="fullscreen_exit" ng-click="ach.fullscreen = false">
+			<md-button class="md-icon-button md-primary" aria-label="fullscreen_exit" ng-click="ach.fullscreen = false">
 			  <ng-md-icon icon="fullscreen_exit" size="32"
 			  ng-class="{selected: !ach.fullscreen}"></ng-md-icon> 
 			</md-button>
-			<md-button aria-label="fullscreen" ng-click="ach.fullscreen = true">
+			<md-button class="md-icon-button md-primary" aria-label="fullscreen" ng-click="ach.fullscreen = true">
 			  <ng-md-icon icon="fullscreen" size="32"
 			  ng-class="{selected: ach.fullscreen}"></ng-md-icon>
 			</md-button>
@@ -83,10 +94,10 @@
 			<md-toolbar flex="20" class="top-bar">
 			  <div class="md-toolbar-tools" layout="row" layout-align="center center">
 			    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
-	      	<md-button aria-label="sort">
+	      	<md-button class="md-icon-button md-primary" aria-label="sort">
 		        <ng-md-icon icon="sort" style="fill: white;"></ng-md-icon>
 		      </md-button>
-	      	<md-button aria-label="visibility">
+	      	<md-button class="md-icon-button md-primary" aria-label="visibility">
 		        <ng-md-icon icon="visibility" style="fill: white;"></ng-md-icon>
 		      </md-button>
 			    <!-- </md-button> -->
@@ -96,14 +107,14 @@
 			  <div class="md-toolbar-tools" layout="row" layout-align="start center">
 			    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
 			    <!-- <ng-md-icon icon="text_format" style="fill: white;"></ng-md-icon> -->
-			    <md-button aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
+			    <md-button class="md-icon-button md-primary" aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
 			      <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;"></ng-md-icon>
 			    </md-button>
 		      <span flex></span>
-		      <md-button aria-label="add">
+		      <md-button class="md-icon-button md-primary" aria-label="add">
 		        <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
 		      </md-button>
-		      <md-button aria-label="note_add">
+		      <md-button class="md-icon-button md-primary" aria-label="note_add">
 		        <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon>
 		      </md-button>
 			    <!-- </md-button> -->
