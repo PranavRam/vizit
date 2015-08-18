@@ -8,7 +8,7 @@ function MainCtrl($scope, $http) {
   $scope.entityType = "Person";
   $scope.entityTypes = ["Person", "Organization", "City", "Quantity", "JobTitle", "FieldTerminology"];
   $scope.showDocumentText = true;
-  $scope.entityCountScale = d3.scale.linear();
+  var entityCountScale = d3.scale.linear();
   $scope.ach = {
     toolbar: {
       isOpen: false
@@ -16,8 +16,13 @@ function MainCtrl($scope, $http) {
     searchInput: "",
     fullscreen: false
   };
-
+  $scope.config = {}; // use defaults
+  $scope.model = {}; // always pass empty object
   var entityCountWidth = 40;
+
+  $scope.getOccurenceWidth = function(count) {
+    return Math.round(entityCountScale(count)) + 'px';
+  }
 
   $scope.selectDocument = function(doc) {
     if($scope.selectedDocument._id !== doc._id){
@@ -32,7 +37,7 @@ function MainCtrl($scope, $http) {
         data.viewCount = 0;
         return data;
       });
-      console.log($scope.documents);
+      // console.log($scope.documents);
       $scope.selectedDocument = $scope.documents[0];
     }, function(response) {
       // called asynchronously if an error occurs
@@ -42,10 +47,9 @@ function MainCtrl($scope, $http) {
   $http.get('/api/entities').
     then(function(response) {
       var entities = response.data;
-      $scope.entityCountScale
+      entityCountScale
           .domain(d3.extent(entities, function(d) { return d.count; }))
           .range([1, entityCountWidth]);
-
       $scope.entities = entities;
     }, function(response) {
       // called asynchronously if an error occurs

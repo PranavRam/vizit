@@ -9,28 +9,32 @@
     <!-- </md-button> -->
   </div>
 </md-toolbar>
-<div flex layout="row">
-	<div class="entity-list" layout-padding flex="20" ng-hide="ach.fullscreen">
+<md-content flex layout="row">
+	<md-content class="entity-list" layout="column" layout-padding flex="20" ng-hide="ach.fullscreen">
 		<md-input-container>
       <label>Entity Type</label>
       <md-select ng-model="entityType">
         <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
       </md-select>
     </md-input-container>
-    <md-content>
-      <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity-container">
-      	<div class="entity-relevance">
-      	</div>
-      	<div class="entity" layout="row">
-  				<div class="entity-count">
-  					<div class="bar" ng-style="{ 'width' : entityCountScale(entity.count)+'px' }"></div>
-  				</div>
-      		<span flex class="entity-text">{{entity.text}}</span>
-      	</div>
-      </div>
+    <md-content flex>
+      <md-card>
+				<md-card-content>
+			    <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity-container">
+			    	<div class="entity-relevance">
+			    	</div>
+			    	<div class="entity" layout="row">
+							<div class="entity-count">
+								<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.count) }"></div>
+							</div>
+			    		<span flex class="entity-text">{{entity.text}}</span>
+			    	</div>
+			    </div>
+				</md-card-content>
+      </md-card>
     </md-content>
-	</div>
-	<div flex layout-padding class="ach-browser">
+	</md-content>
+	<md-content flex layout-padding class="ach-browser">
 		<div ach-canvas class="ach-canvas"></div>
 		<div class="search-input">
 			<md-input-container class="md-icon-float" >
@@ -72,9 +76,9 @@
         </md-button>
       </md-fab-actions>
     </md-fab-speed-dial>
-	</div>
-</div>
-<div flex="25" layout="column" ng-hide="ach.fullscreen">
+	</md-content>
+</md-content>
+<md-content flex="25" layout="column" ng-hide="ach.fullscreen">
 	<div layout="row">
 			<md-toolbar flex="20" class="top-bar">
 			  <div class="md-toolbar-tools" layout="row" layout-align="center center">
@@ -107,23 +111,27 @@
 			</md-toolbar>
 	</div>
 	<md-content flex layout="row">
-		<div layout-padding flex="20" layout="column">
-	  	<md-content flex class="document-list">
-		    <div class="document-item" ng-click="selectDocument(document)" ng-repeat="document in documents" layout="row" layout-align="space-between center" ng-class="{selected: document.name === selectedDocument.name}">
-		    	<span flex="20">{{document.viewCount}}</span>
-		    	<span flex>{{document.name}}</span>
-		    </div>
-	  	</md-content>
-  	  <div class="document-list-search">
-  	  	<md-input-container class="md-icon-float" >
-  		      <!-- Use floating label instead of placeholder -->
-  	      <label>Documents</label>
-  	      <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>
-  	      <input ng-model="ach.searchInput" type="text">
-  	    </md-input-container>
-  	  </div>
-		</div>
-		<div layout-padding class="document-viewer" layout="column" flex>
+		<!-- <div layout-padding flex="20" layout="column"> -->
+	  	<md-card flex="20" class="document-list" layout="column">
+		    <md-content>
+		       <md-card-content flex>
+		       	<div class="document-item" ng-click="selectDocument(document)" ng-repeat="document in documents" layout="row" layout-align="space-between center" ng-class="{selected: document.name === selectedDocument.name}">
+		       		<span flex="20">{{document.viewCount}}</span>
+		       		<span flex>{{document.name}}</span>
+		       	</div>
+		       </md-card-content>
+		    </md-content>
+	      <div class="document-list-search">
+	      	<md-input-container class="md-icon-float" >
+	    	      <!-- Use floating label instead of placeholder -->
+	          <label>Documents</label>
+	          <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>
+	          <input ng-model="ach.searchInput" type="text">
+	        </md-input-container>
+	      </div>
+	  	</md-card>
+		<!-- </div> -->
+		<md-content layout-padding class="document-viewer" layout="column" flex>
 		  <md-content flex>
 				<p ng-show="showDocumentText" class="document-text" ng-bind-html="selectedDocument.text | to_trusted"></p>
 				<div ng-hide="showDocumentText" class="document-entities">
@@ -142,6 +150,6 @@
 		      <input ng-model="ach.searchInput" type="text">
 		    </md-input-container>
 		  </div>
-		</div>
+		</md-content>
 	</md-content>
-</div>
+</md-content>

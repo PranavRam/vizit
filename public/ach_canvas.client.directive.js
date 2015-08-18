@@ -1,3 +1,25 @@
+d3.vizit = {};
+(function(d3) {
+	function Hypothesis() {
+		function component(selection) {
+			selection.each(function(data) {
+				var container = d3.select(this);
+				container
+					.append("rect")
+			    .attr("width", 250)
+			    .attr("height", 150)
+			    .style("fill", "red")
+			    .attr({
+			    	x: 100,
+			    	y: 100
+			    });
+			})
+		}
+		return component;
+	}
+	d3.vizit.hypothesis = Hypothesis;
+})(d3);
+
 angular.module('vizit')
 				.directive('achCanvas', achCanvas);
 
@@ -5,6 +27,7 @@ function achCanvas($timeout) {
 	return {
     restrict: 'A',
     link: function(scope, el, attrs) {
+    	var hypothesis = d3.vizit.hypothesis();
     	var compile = function() {
     		var achCanvas = $(el[0]);
     		var svg = d3.select(achCanvas.get()[0]).append("svg");
@@ -16,11 +39,23 @@ function achCanvas($timeout) {
 
     		var container = svg.append("g");
 
-    		container.append("rect")
-    .attr("width", 200)
-    .attr("height", 200)
-    .style("fill", "blue")
-    .style("pointer-events", "all");
+    		var minimap = svg.append("rect")
+											    .attr("width", 250)
+											    .attr("height", 150)
+											    .style("fill", "gray")
+											    .attr({
+											    	x: achCanvas.width() - 8 - 250,
+											    	y: achCanvas.height() - 8 - 150
+											    })
+											    .style("pointer-events", "all");
+
+				// var hypotheses = container.selectAll('.hypothesis');
+
+				// 										hypotheses
+				// 											.data([0])
+				// 											.enter()
+				// 											.append('g')
+				// 											.call(hypothesis);
 
 				var fb = container
 									.append("foreignObject")
@@ -39,7 +74,6 @@ function achCanvas($timeout) {
 								    	width: 100+'px',
 								    	height: 100+'px'
 								    });
-
 			  var zoom = d3.behavior.zoom()
 			      .scaleExtent([1, 10])
 			      .on("zoom", zoomed);
@@ -62,8 +96,8 @@ function achCanvas($timeout) {
 				function zoomed() {
 				  container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 				}
-				fb.call(drag);
-				container.call(zoom);
+				// fb.call(drag);
+				svg.call(zoom);
     	}
 
     	$timeout(compile);

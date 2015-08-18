@@ -43,7 +43,7 @@ var upload = function(files, reply) {
 
 function addEntity(entity, cb) {
 		var query = [
-				"MERGE (n:Entity {text: {text}} )",
+				"MERGE (n:Entity {text: {text}, type: {type}} )",
 	      'ON CREATE SET n = {props}',
         'ON MATCH SET n.count = n.count + {count}',
 	      'RETURN n',
@@ -52,13 +52,14 @@ function addEntity(entity, cb) {
 	  var props = {
 	  	type: entity.type,
 	  	text: entity.text,
-      count: entity.count
+      count: +entity.count
 	  };
 
 	  var params = {
 	      props: props,
 	      text: entity.text,
-        count: entity.count
+        type: entity.type,
+        count: +entity.count
 	  };
 
 	  db.cypher({
