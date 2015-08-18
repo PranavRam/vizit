@@ -182,7 +182,20 @@ ng-md-icon svg {
 	box-sizing:border-box;
   -moz-box-sizing:border-box;
   -webkit-box-sizing:border-box;
-  width:100px;
-  height:100px;
-  border:1px solid #263238;
+  /*width:100px;*/
+  /*height:100px;*/
+  border:3px solid #263238;
+}
+
+.evidence {
+
+}
+
+.evidence .body{
+	box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  /*width:100px;*/
+  /*height:100px;*/
+  border:3px solid #283593;
 }

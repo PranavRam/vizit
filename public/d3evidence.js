@@ -1,6 +1,6 @@
 (function(d3) {
 	d3.vizit = d3.vizit || {};
-	function Hypothesis() {
+	function Evidence() {
 		var opts = {
 			width: 250
 		}
@@ -45,7 +45,7 @@
 
 				var container = wrapper
 													.append("xhtml:div")
-													.attr("class", "hypothesis");
+													.attr("class", "evidence");
 
 				var header = container.append("xhtml:div").attr("class", "header");
 				var body = container.append("xhtml:div").attr("class", "body");
@@ -61,7 +61,7 @@
 					.style({
 						width: opts.width+"px",
 						height: 50+"px",
-						"background-color": "#263238",
+						"background-color": "#283593",
 						padding: "8px"
 					})
 					.attr({
@@ -70,7 +70,7 @@
 					})
 
 
-				title.text("Hypothesis "+i)
+				title.text("Evidence "+i)
 							.attr({
 								flex: ""
 							});
@@ -83,7 +83,7 @@
 					height: 25+"px",
 					padding: "8px"
 				})
-				.text("5")
+				.text("3")
 				.attr({
 					// flex: "5"
 				})
@@ -113,5 +113,5 @@
 		}
 		return component;
 	}
-	d3.vizit.hypothesis = Hypothesis;
+	d3.vizit.evidence = Evidence;
 })(d3);

@@ -6,6 +6,11 @@ function achCanvas($timeout) {
     restrict: 'A',
     link: function(scope, el, attrs) {
     	var hypothesis = d3.vizit.hypothesis();
+    	var evidence = d3.vizit.evidence();
+    	var borderScale = d3.scale.linear()
+    														.domain([0.1, 1])
+    														.range([10, 3]);
+
     	var compile = function() {
     		var achCanvas = $(el[0]);
     		var svg = d3.select(achCanvas.get()[0]).append("svg");
@@ -17,6 +22,7 @@ function achCanvas($timeout) {
 
     		var container = svg.append("g");
     		var hypotheses = container.selectAll('.hypothesis');
+    		var evidences = container.selectAll('.evidence');
     		var minimap = svg.append("rect")
 											    .attr("width", 250)
 											    .attr("height", 150)
@@ -37,11 +43,17 @@ function achCanvas($timeout) {
 
     		
     		hypotheses = hypotheses.data([{x: 100, y: 100}, {x: 200, y: 200}]);
+    		evidences = evidences.data([{x: 300, y: 300}, {x: 400, y: 400}]);
 
     		var fb = hypotheses
     							.enter()
     							.append('g')
   					      .call(hypothesis);
+
+	  		var fb = evidences
+	  							.enter()
+	  							.append('g')
+						      .call(evidence);
 
 		    // var div = fb.enter()
 								  	
@@ -52,6 +64,11 @@ function achCanvas($timeout) {
 
 				function zoomed() {
 				  container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+					var scale = d3.event.scale;
+					container.selectAll(".body")
+										.style({
+											"border-width": Math.round(borderScale(scale))+"px"
+										});
 				}
 				// fb.call(drag);
 				svg.call(zoom);
