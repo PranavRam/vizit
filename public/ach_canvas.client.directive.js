@@ -74,7 +74,7 @@ function achCanvas($timeout) {
 											"border-width": Math.round(borderScale(scale))+"px"
 										});
 
-					minimap.scale(scale).render();
+					minimap.render();
 				}
 				// fb.call(drag);
 				svg.call(zoom);

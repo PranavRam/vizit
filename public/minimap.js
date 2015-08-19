@@ -69,12 +69,12 @@
 
 				minimapHandleContainer
 						.attr({
-							"transform": "translate("+minimapHandleTransform+")"+"scale("+ opts.minimapScale +")"
+							"transform": "translate("+minimapHandleTransform+")"
 						});
 
 				var translate = [
-					-opts.minimapHandleX * 1 / opts.minimapScale * opts.scale,
-					-opts.minimapHandleY * 1 / opts.minimapScale * opts.scale,
+					-opts.minimapHandleX * opts.scale,
+					-opts.minimapHandleY * opts.scale,
 				];
 				// console.log(opts.scale);
 				opts.target
@@ -82,7 +82,7 @@
 									"transform": "translate(" + translate + ")scale(" + opts.scale + ")"
 								})
 				opts.zoom.translate(translate);
-				// opts.zoom.event(opts.target);
+				opts.zoom.event(opts.target);
 			}
 			var drag = d3.behavior.drag()
 									.on("dragstart.minimap", dragstart)
@@ -102,7 +102,7 @@
 						"transform": "translate("+ [opts.x, opts.y] +")"
 					});
 
-				minimapClone
+				minimap
 					.attr({
 						"transform": "scale("+ opts.minimapScale +")"
 					});
@@ -124,7 +124,7 @@
 
 				minimapHandleContainer
 						.attr({
-							"transform": "translate("+ minimapHandleTransform +")" +"scale("+ opts.minimapScale +")"
+							"transform": "translate("+ minimapHandleTransform +")"
 						});
 
 				minimapHandle
