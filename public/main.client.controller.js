@@ -60,12 +60,12 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
     <div class="md-open-menu-container md-whiteframe-z2">
         <md-menu-content>
             <md-menu-item>
-              <md-button class="menu-container-item" ng-click="log('<%= sentence %>')">
+              <md-button class="menu-container-item" ng-click="log(selectedDocument.selectedText)">
                 add to selected Hypothesis
               </md-button>
             </md-menu-item>
             <md-menu-item>
-              <md-button class="menu-container-item" ng-click="log('<%= sentence %>')">
+              <md-button class="menu-container-item" ng-click="log(selectedDocument.selectedText)">
                 add as an Evidence
               </md-button>
             </md-menu-item>
@@ -88,8 +88,9 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
         scope: $scope,
         mdMenuCtrl: RightClickMenuCtrl,
         element: function() {
-          var menu = documentMenu({sentence: event.target.innerHTML});
-          return angular.element($compile(menu)($scope));
+          $scope.selectedDocument.selectedText = event.target.innerHTML;
+          // var menu = documentMenu({sentence: _.escape(event.target.innerHTML)});
+          return angular.element($compile(template)($scope));
         }(),
         target: 'body' // used for where the menu animates out of
       });
