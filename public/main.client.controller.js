@@ -1,7 +1,7 @@
 angular.module('vizit')
 			.controller('MainCtrl', MainCtrl);
 
-function MainCtrl($scope, $http, $mdMenu, $rootScope) {
+function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
 	$scope.documents = [];
   $scope.entities = [];
   $scope.selectedDocument = {};
@@ -56,30 +56,44 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope) {
       // or server returns response with an error status.
     });
 
-  var myCustomMenu = angular.element(`<div class="md-open-menu-container md-whiteframe-z2">
-    <md-menu-content>
-       <md-menu-item>
-          <md-button ng-click="log(this)">
-            Yo
-          </md-button>
-        </md-menu-item>
-    </md-menu-content>
-  </div>`);
+  var template = `
+    <div class="md-open-menu-container md-whiteframe-z2">
+        <md-menu-content>
+            <md-menu-item>
+              <md-button class="menu-container-item" ng-click="log('<%= sentence %>')">
+                add to selected Hypothesis
+              </md-button>
+            </md-menu-item>
+            <md-menu-item>
+              <md-button class="menu-container-item" ng-click="log('<%= sentence %>')">
+                add as an Evidence
+              </md-button>
+            </md-menu-item>
+        </md-menu-content>
+      </div>
+  `;
+
+  var documentMenu = _.template(template);
+  // var myCustomMenu = angular.element($compile()($scope));
+
+  $scope.log = function(sentence) { console.log(sentence) };
 
   var RightClickMenuCtrl = {
     top: 0,
     left: 0,
     open: function(event) {
-      RightClickMenuCtrl.left = event.offsetX;
-      RightClickMenuCtrl.top = event.offsetY;
+      RightClickMenuCtrl.left = event.clientX;
+      RightClickMenuCtrl.top = event.clientY;
       $mdMenu.show({
-        scope: $rootScope.$new(),
+        scope: $scope,
         mdMenuCtrl: RightClickMenuCtrl,
-        element: myCustomMenu,
-        target: event.target // used for where the menu animates out of
+        element: function() {
+          var menu = documentMenu({sentence: event.target.innerHTML});
+          return angular.element($compile(menu)($scope));
+        }(),
+        target: 'body' // used for where the menu animates out of
       });
     },
-    log: function() { console.log(arguments) },
     close: function() { $mdMenu.hide(); },
     positionMode: function() { return { left: 'target', top: 'target' }; },
     offsets: function() { return { top: RightClickMenuCtrl.top, left: RightClickMenuCtrl.left }; }

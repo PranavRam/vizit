@@ -6,16 +6,8 @@ angular.module('vizit')
         };
     }])
     .filter('sentences', function() {
-    	var template = [
-				'<div class="dropdown position-fixed" id="menu-<%= index %>">',
-				  '<ul class="dropdown-menu" role="menu">',
-				    '<li>',
-				      'yo',
-				    '</li>',
-				  '</ul>',
-				'</div>',
-			].join('');
-    	var compiled = _.template(template);
+
+    	// var compiled = _.template(template);
     	return function(text) {
     		if(!text) return text;
     		var result = text.match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
