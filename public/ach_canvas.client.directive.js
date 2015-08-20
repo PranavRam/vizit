@@ -12,7 +12,7 @@ function achCanvas($timeout) {
     	var borderScale = d3.scale.linear()
     														.domain([0.1, 1])
     														.range([11, 3]);
-
+    	var minimapWidth = 250, minimapHeight = 150;
     	var compile = function() {
     		var achCanvas = $(el[0]);
     		var svg = d3.select(achCanvas.get()[0]).append("svg");
@@ -34,18 +34,9 @@ function achCanvas($timeout) {
     		var evidences = container.selectAll('.evidence');
 
     		var minimapLoc = [
-    			achCanvas.width() - 8 - 250,
-    			achCanvas.height() - 8 - 150
+    			achCanvas.width() - 8 - minimapWidth,
+    			achCanvas.height() - 8 - minimapHeight
     		]
-    		
-				// var hypotheses = container.selectAll('.hypothesis');
-
-				// 										hypotheses
-				// 											.data([0])
-				// 											.enter()
-				// 											.append('g')
-				// 											.call(hypothesis);
-
     		
     		hypotheses = hypotheses.data([{x: 100, y: 100}]);
     		evidences = evidences.data([{x: 300, y: 300}]);
@@ -83,8 +74,8 @@ function achCanvas($timeout) {
 		    		.zoom(zoom)
 		    		.target(container)
 		    		.minimapScale(minimapScale)
-		    		.minimapWidth(250)
-		    		.minimapHeight(150)
+		    		.minimapWidth(minimapWidth)
+		    		.minimapHeight(minimapHeight)
 		    		.x(minimapLoc[0])
 		    		.y(minimapLoc[1]);
 
@@ -103,12 +94,10 @@ function achCanvas($timeout) {
 									height: achCanvas.height()
 								});
 
-							// minimap
-							// 	// .transition()
-							// 	.attr({
-						 //    	x: achCanvas.width() - 8 - 250,
-						 //    	y: achCanvas.height() - 8 - 150
-						 //    })
+							minimap
+								.x(achCanvas.width() - 8 - minimapWidth)
+								.y(achCanvas.height() - 8 - minimapHeight)
+								.render()
 						})
 					}
 				})

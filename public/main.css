@@ -203,3 +203,14 @@ ng-md-icon svg {
 .minimap-handle-container {
 	fill-opacity: 0.4;
 }
+
+.select-text {
+	color: black;
+	background-color: yellow;
+}
+
+.position-fixed {
+  position: fixed;
+  width: 0px;
+  height: 0px;
+}

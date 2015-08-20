@@ -88,11 +88,23 @@
 									.on("dragstart.minimap", dragstart)
 									.on("drag.minimap", dragmove);
 
+			var dragDisabled = d3.behavior.drag()
+									.on("dragstart.minimap", function() {
+										d3.event.sourceEvent.stopImmediatePropagation();
+									});
+
+			var zoomDisabled = d3.behavior.zoom()
+			    .on("zoom", function() {
+			    	d3.event.sourceEvent.stopImmediatePropagation();
+			    });
+
 			opts.zoom.on("zoom.minimap", function() {
 				opts.scale = d3.event.scale;
 			});
 
 			minimapHandleContainer.call(drag);
+			minimapBg.call(dragDisabled);
+			minimapBg.call(zoomDisabled);
 
 			component.render = function() {
 				opts.scale = opts.zoom.scale();
