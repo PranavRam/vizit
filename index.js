@@ -13,6 +13,19 @@ var Q = require('q');
 var natural = require('natural'),
     TfIdf = natural.TfIdf;
 
+var openNLP = require("opennlp");
+var NLP = require('stanford-corenlp');
+var config = {
+  'nlpPath': Path.join ( __dirname, '/corenlp'), //the path of corenlp
+  'version':'3.5.2', //what version of corenlp are you using
+  'annotators': ['tokenize','ssplit','pos','parse','sentiment','depparse','quote','lemma', 'ner'], //optional!
+  'extra' : {
+      'depparse.extradependencie': 'MAXIMAL'
+    }
+
+};
+var coreNLP = new NLP.StanfordNLP(config);
+
 var alchemy = new AlchemyAPI('e611893e79748690d9a387240bab8b64f14b9a2b');
 
 var db = new neo4j.GraphDatabase("http://vizit:0bp1mago6MgssAE46bH3@vizit.sb05.stations.graphenedb.com:24789");
@@ -327,6 +340,25 @@ server.register([
         handler: function (request, reply) {
           // console.log(request);
           setTFDIF(reply);
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path:'/api/named-entities', 
+        handler: function (request, reply) {
+          var sentence = 'Jason John , 61 years old , will join the board as a nonexecutive director Nov. 29 . He works at Google';
+          // var nameFinder = new openNLP().nameFinder;
+          // nameFinder.find(sentence, function(err, results) {
+          //     console.log(results.toString());
+          //     reply(results.toString());
+          // });
+          coreNLP.process(sentence, function(err, result) {
+                if(err)
+                  throw err;
+                else
+                  reply(JSON.stringify(result));
+            });
         }
     });
 
