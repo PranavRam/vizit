@@ -48,7 +48,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
     then(function(response) {
       var entities = response.data;
       entityCountScale
-          .domain(d3.extent(entities, function(d) { return d.count; }))
+          .domain(d3.extent(entities, function(d) { return d.tfidf; }))
           .range([1, entityCountWidth]);
       $scope.entities = entities;
     }, function(response) {

@@ -11,9 +11,15 @@
 </md-toolbar>
 <div flex="1" layout="column" layout-align="center center" ng-controller="UploadCtrl">
 	<p>{{file.name}}</p>
-	<md-button class="md-raised">
-		<div class="button" ngf-change="fileUpdated($files, $event)" ngf-select ng-model="file">Select a file</div>
+	<!-- <md-button class="md-raised" ngf-change="fileUpdated($files, $event)" ngf-select ng-model="file">
+    Select a file
+  </md-button> -->
+  <md-button class="md-raised" type="file" ngf-select="fileUpdated($file, $event)" ngf-max-height="1000" ngf-max-size="1MB">
+		Select a file
 	</md-button>
+  <!-- <button type="file" ngf-select="uploadFiles($file)"
+           accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">
+       Select File</button> -->
 	<md-button class="md-raised md-primary" ng-click="upload(file)">
 		Upload
 	</md-button>

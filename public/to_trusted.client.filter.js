@@ -29,16 +29,40 @@ angular.module('vizit')
 		      }         
 		  	}
 			})
-		.directive('hoverClass', function () {
+		.directive('hoverClass', function ($document) {
 		    return {
 		        restrict: 'A',
 		        link: function (scope, element, attrs) {
+		        		var clicked = false;
 		            element.on('mouseenter', function() {
-		                element.addClass(attrs["hoverClass"]);
+	                element.addClass(attrs["hoverClass"]);
 		            });
 		            element.on('mouseleave', function() {
-		                element.removeClass(attrs["hoverClass"]);
+		            	if(clicked) return;
+	                element.removeClass(attrs["hoverClass"]);
+	                clicked = false;
 		            });
+		            $document.bind('click.selectedText', function(event){
+		            		if(event.target === element[0]) {
+		            			element.addClass(attrs["hoverClass"]);
+		            			clicked = true;
+		            			return;
+		            		}
+
+                    var isClickedElementChildOfPopup = element
+                        .find(event.target)
+                        .length > 0;
+
+                    if (isClickedElementChildOfPopup){
+                    	clicked = true;
+                      return;
+                    }
+
+                    // scope.$apply(function(){
+                    element.removeClass(attrs["hoverClass"]);
+                    clicked = false;
+                    // });
+                });
 		        }
 		    };
 		})

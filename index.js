@@ -9,6 +9,9 @@ var AlchemyAPI = require('alchemy-api');
 var swig = require('swig');
 var S = require('string');
 var _ = require('lodash');
+var Q = require('q');
+var natural = require('natural'),
+    TfIdf = natural.TfIdf;
 
 var alchemy = new AlchemyAPI('e611893e79748690d9a387240bab8b64f14b9a2b');
 
@@ -94,14 +97,14 @@ function addEntityToDocument(entity, doc) {
 		    params: params,
 		}, function (err, results) {
 		    if (err) {}
-		    // console.log(results);
 		    var createdRelation = results[0]['r'];
+        console.log('deferred');
 		    // console.log(createdRelation);
 		});
 	});
 }
 
-function extractEntities(doc) {
+function extractEntities(doc, deferred) {
 	alchemy.entities(doc.text, {}, function(err, response) {
 	  if (err) throw err;
 
@@ -111,13 +114,13 @@ function extractEntities(doc) {
 	  	// addEntityToDocument(entity, doc);
 	  	doc.text = S(doc.text).replaceAll(entity.text, '<'+entity.type+'>'+entity.text+'</'+entity.type+'>').s;
 	  });
-	  createDocument(doc, entities);
+	  createDocument(doc, entities, deferred);
 	  // console.log(text);
 	  // Do something with data
 	});
 }
 
-function createDocument(doc, entities) {
+function createDocument(doc, entities, deferred) {
 	var query = [
 			"MERGE (n:Document { name: {name} })",
       'ON CREATE SET n = {props}',
@@ -139,6 +142,8 @@ function createDocument(doc, entities) {
       entities.forEach(function(entity) {
       	addEntityToDocument(entity, createdDoc)
       });
+      // console.log("deferred");
+      deferred.resolve(createdDoc);
   });
 }
 function readZip(path, reply) {
@@ -146,26 +151,86 @@ function readZip(path, reply) {
   var zip = new AdmZip(path);
   var zipEntries = zip.getEntries(); // an array of ZipEntry records 
  	var i = 0;
+  var promises = [];
  	while(i < 10) {
  		var zipEntry = zipEntries[i];
  		var name = zipEntry.entryName;
  		if(name.match(/\.(txt)/g) && !S(name).startsWith("__MACOSX")){
  			console.log(zipEntry.entryName);
+      var deferred = Q.defer();
  			var doc = {
  				name: name,
  				text: zip.readAsText(zipEntry.entryName).replace(/[^\x00-\x7F]/g, "")
  			}
- 			extractEntities(doc);
+ 			extractEntities(doc, deferred);
+      promises.push(deferred.promise);
  		}
  		i++;
  	}
- 	reply("Successful Upload");
+  console.log(promises);
+ 	Q.all(promises)
+    .then(function() {
+      // console.log("loaded")
+      reply("successfully loaded");
+    })
  	// createDocument(doc, reply);
  	// console.log(zip.readAsText(zipEntry.entryName));
   // zipEntries.forEach(function(zipEntry) {
   //     // console.log(zipEntry.toString()); // outputs zip entries information 
   //     console.log(zip.readAsText(zipEntry.entryName)); 
   // });
+}
+
+function setTFDIF(reply) {
+  var query = [
+    'MATCH n',
+    'WHERE n:Document OR n:Entity',
+    'RETURN n',
+  ].join('\n')
+
+  db.cypher({
+      query: query,
+  }, function (err, results) {
+      if (err) return reply(err);
+      console.log('enter');
+      var documents = results.filter(function(doc) {
+        return doc['n'].labels.indexOf('Document') > -1;
+      });
+      var entities = results.filter(function(entity) {
+        return entity['n'].labels.indexOf('Entity') > -1;
+      });
+      // console.log(documents, entities);
+      tfidf = new TfIdf();
+      documents.forEach(function(doc) {
+        tfidf.addDocument(doc['n'].properties.text);
+      });
+      entities.forEach(function(entity) {
+        var totalMeasureArr = tfidf.tfidfs(entity['n'].properties.text, function(i, measure) {
+            return measure;
+        });
+        var totalMeasure = _.reduce(totalMeasureArr, function(total, n) {
+          return total + n;
+        });
+        var query = [
+          'MATCH (n:Entity {text: {name}})',
+          'SET n.tfidf = {measure}',
+          'RETURN n',
+        ].join('\n');
+        var params = {
+            name: entity['n'].properties.text,
+            measure: totalMeasure
+        };
+
+        db.cypher({
+            query: query,
+            params: params,
+        }, function (err, results) {
+          // console.log(results);
+        });
+      })
+      console.log('exit');
+      reply("Done setTFDIF");
+  });
 }
 
 function getDocuments(reply) {
@@ -253,6 +318,15 @@ server.register([
         handler: function (request, reply) {
         	// console.log(request);
          	getEntities(reply);
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path:'/api/tfidf', 
+        handler: function (request, reply) {
+          // console.log(request);
+          setTFDIF(reply);
         }
     });
 
