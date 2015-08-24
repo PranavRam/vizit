@@ -59,23 +59,22 @@ var upload = function(files, reply) {
 
 function addEntity(entity, cb) {
 		var query = [
-				"MERGE (n:Entity {text: {text}, type: {type}} )",
+				"MERGE (n:Entity {text: {text}})",
 	      'ON CREATE SET n = {props}',
-        'ON MATCH SET n.count = n.count + {count}',
+        'ON MATCH SET n.count = n.count + 1',
 	      'RETURN n',
 	  ].join('\n');
 
 	  var props = {
-	  	type: entity.type,
-	  	text: entity.text,
-      count: +entity.count
+	  	type: entity["NER"],
+	  	text: entity.word,
+      count: 1
 	  };
 
 	  var params = {
 	      props: props,
-	      text: entity.text,
-        type: entity.type,
-        count: +entity.count
+	      text: entity.word,
+        type: entity["NER"]
 	  };
 
 	  db.cypher({
@@ -97,40 +96,62 @@ function addEntityToDocument(entity, doc) {
 		var query = [
 			"MATCH (a:Document),(b:Entity)",
 			"WHERE id(a) = {document_id} AND id(b) = {entity_id}",
-			"CREATE UNIQUE (a)-[r:DOCENTITY]->(b)",
+			"MERGE (a)-[r:DOCENTITY]->(b)",
+      "ON CREATE SET r.startOffset = [{startOffset}], r.endOffset = [{endOffset}]",
+      "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
 			"RETURN r"
 		].join('\n');
 
 		var params = {
 		    document_id: doc._id,
-		    entity_id: createdEntity._id
+		    entity_id: createdEntity._id,
+        startOffset: entity.CharacterOffsetBegin,
+        endOffset: entity.CharacterOffsetEnd,
 		};
+
 		db.cypher({
 		    query: query,
 		    params: params,
 		}, function (err, results) {
 		    if (err) {}
-		    var createdRelation = results[0]['r'];
-        console.log('deferred');
+		    var createdRelation = results
+        console.log(createdRelation);
 		    // console.log(createdRelation);
 		});
 	});
 }
 
 function extractEntities(doc, deferred) {
-	alchemy.entities(doc.text, {}, function(err, response) {
-	  if (err) throw err;
+	// alchemy.entities(doc.text, {}, function(err, response) {
+	//   if (err) throw err;
 
-	  // See http://www.alchemyapi.com/api/entity/htmlc.html for format of returned object
-	  var entities = response.entities;
-	  entities.forEach(function(entity) {
-	  	// addEntityToDocument(entity, doc);
-	  	doc.text = S(doc.text).replaceAll(entity.text, '<'+entity.type+'>'+entity.text+'</'+entity.type+'>').s;
-	  });
-	  createDocument(doc, entities, deferred);
-	  // console.log(text);
-	  // Do something with data
-	});
+	//   // See http://www.alchemyapi.com/api/entity/htmlc.html for format of returned object
+	//   var entities = response.entities;
+	//   entities.forEach(function(entity) {
+	//   	// addEntityToDocument(entity, doc);
+	//   	doc.text = S(doc.text).replaceAll(entity.text, '<'+entity.type+'>'+entity.text+'</'+entity.type+'>').s;
+	//   });
+	//   createDocument(doc, entities, deferred);
+	//   // console.log(text);
+	//   // Do something with data
+	// });
+  coreNLP.process(doc.text, function(err, result) {
+      if(err)
+        throw err;
+      else
+        var sentences = result.document.sentences.sentence;
+        var allEntities = [];
+      // console.log(sentences);
+        sentences.forEach(function(sentence) {
+          var tokens = sentence.tokens.token;
+          var entities = tokens.filter(function(token) {
+            return token["NER"] !== "O";
+          });
+          allEntities = allEntities.concat(entities);
+        });
+        console.log(allEntities);
+        createDocument(doc, allEntities, deferred);
+  });
 }
 
 function createDocument(doc, entities, deferred) {
@@ -153,7 +174,7 @@ function createDocument(doc, entities, deferred) {
 
       var createdDoc = results[0]['n'];
       entities.forEach(function(entity) {
-      	addEntityToDocument(entity, createdDoc)
+      	addEntityToDocument(entity, createdDoc);
       });
       // console.log("deferred");
       deferred.resolve(createdDoc);
@@ -165,7 +186,7 @@ function readZip(path, reply) {
   var zipEntries = zip.getEntries(); // an array of ZipEntry records 
  	var i = 0;
   var promises = [];
- 	while(i < 10) {
+ 	while(i < 3) {
  		var zipEntry = zipEntries[i];
  		var name = zipEntry.entryName;
  		if(name.match(/\.(txt)/g) && !S(name).startsWith("__MACOSX")){
@@ -249,6 +270,7 @@ function setTFDIF(reply) {
 function getDocuments(reply) {
 	var query = [
     'MATCH (n:Document)-[:DOCENTITY]->(e)',
+    'WHERE e.tfidf > 0',
     'RETURN n, collect(e) as entities',
   ].join('\n')
 
@@ -259,6 +281,15 @@ function getDocuments(reply) {
       var documents = results.map(function(doc) {
           // console.log(doc['n']);
           var obj = doc['n'].properties;
+          var text = obj.text;
+          // console.log(doc['entities']);
+          doc['entities'].forEach(function(entity) {
+            var id = entity._id;
+            entity = entity.properties;
+            text = S(text).replaceAll(entity.text, '<'+entity.type+' data-entity-id="' + id + '">'+entity.text+'</'+entity.type+'>').s;
+          });
+          console.log(text);
+          obj.text = text;
           obj.entities = _.groupBy(doc['entities'].map(function(entity) {
             var obj = entity.properties;
             obj._id = entity._id;

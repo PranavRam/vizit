@@ -9,56 +9,56 @@ ng-md-icon svg {
   margin: auto;
 }
 
-.Person, person {
+.PERSON, PERSON {
 	background-color: #2962ff;
 	border-radius: 3px;
 	color: white;
 	padding: 2px;
 }
 
-.City, city {
+.DURATION, DURATION {
 	background-color: #0091ea;
 	border-radius: 3px;
 	color: white;
 	padding: 2px;
 }
 
-.Quantity, quantity {
+.QUANTITY, QUANTITY {
 	background-color: #00b8d4;
 	border-radius: 3px;
 	color: white;
 	padding: 2px;
 }
 
-.JobTitle, jobtitle {
+.DATE, DATE {
 	background-color: #00bfa5;
 	border-radius: 3px;
 	color: white;
 	padding: 2px;
 }
 
-.Organization, organization {
+.ORGANIZATION, ORGANIZATION {
 	background-color: #6200ea;
 	border-radius: 3px;
 	color: white;
 	padding: 2px;
 }
 
-.FieldTerminology, fieldterminology {
+.TIME, TIME {
 	background-color: #d50000;
 	border-radius: 3px;
 	color: white;
 	padding: 2px;
 }
 
-.Company, company {
+.NUMBER, NUMBER {
 	background-color: #dd2c00;
 	border-radius: 3px;
 	color: white;
 	padding: 2px;
 }
 
-.GeographicFeature, geographicfeature {
+.LOCATION, LOCATION {
 	background-color: #c51162;
 	border-radius: 3px;
 	color: white;
