@@ -12,7 +12,7 @@ var _ = require('lodash');
 var Q = require('q');
 var natural = require('natural'),
     TfIdf = natural.TfIdf;
-
+var Promise = require('bluebird');
 var openNLP = require("opennlp");
 var NLP = require('stanford-corenlp');
 var config = {
@@ -50,7 +50,11 @@ var upload = function(files, reply) {
         fs.writeFile(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename, data, function(err) {
             if (err) return reply(err);
 
-            readZip(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename, reply);
+            var result = readZip(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
+                  result.then(function() {
+                    console.log("loaded", arguments);
+                    setTFDIF(reply);
+                  })
             // return reply('File uploaded to: ' + Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
 
         });
@@ -58,73 +62,73 @@ var upload = function(files, reply) {
 };
 
 function addEntity(entity, cb) {
-		var query = [
-				"MERGE (n:Entity {text: {text}})",
-	      'ON CREATE SET n = {props}',
-        'ON MATCH SET n.count = n.count + 1',
-	      'RETURN n',
-	  ].join('\n');
+   return Q.Promise(function(resolve, reject, notify) {
+  		var query = [
+  				"MERGE (n:Entity {text: {text}})",
+  	      'ON CREATE SET n = {props}',
+          'ON MATCH SET n.count = n.count + 1',
+  	      'RETURN n',
+  	  ].join('\n');
 
-	  var props = {
-	  	type: entity["NER"],
-	  	text: entity.word,
-      count: 1
-	  };
+  	  var props = {
+  	  	type: entity["NER"],
+  	  	text: entity.word,
+        count: 1
+  	  };
 
-	  var params = {
-	      props: props,
-	      text: entity.word,
-        type: entity["NER"]
-	  };
+  	  var params = {
+  	      props: props,
+  	      text: entity.word,
+          type: entity["NER"]
+  	  };
 
-	  db.cypher({
-	      query: query,
-	      params: params,
-	  }, function (err, results) {
-	      if (err) return cb(err);
+  	  db.cypher({
+  	      query: query,
+  	      params: params,
+  	  }, function (err, results) {
+  	      if (err) return cb(err);
 
-	      var createdEntity = results[0]['n'];
-	      cb(null, createdEntity);
-	  });
+  	      var createdEntity = results[0]['n'];
+  	      resolve(createdEntity);
+  	  });
+    });
 }
 function addEntityToDocument(entity, doc) {
-  var deferred = Q.defer();
-	addEntity(entity, function(err, result) {
-		if(err) {
-			throw (err);
-		}
-		var createdEntity = result;
-		var query = [
-			"MATCH (a:Document),(b:Entity)",
-			"WHERE id(a) = {document_id} AND id(b) = {entity_id}",
-			"MERGE (a)-[r:DOCENTITY]->(b)",
-      "ON CREATE SET r.startOffset = [{startOffset}], r.endOffset = [{endOffset}]",
-      "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
-			"RETURN r"
-		].join('\n');
+  return Q.Promise(function(resolve, reject, notify) {
+      addEntity(entity)
+        .then(function(result) {
+          var createdEntity = result;
+          var query = [
+            "MATCH (a:Document),(b:Entity)",
+            "WHERE id(a) = {document_id} AND id(b) = {entity_id}",
+            "MERGE (a)-[r:DOCENTITY]->(b)",
+            "ON CREATE SET r.startOffset = [{startOffset}], r.endOffset = [{endOffset}]",
+            "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+            "RETURN r"
+          ].join('\n');
 
-		var params = {
-		    document_id: doc._id,
-		    entity_id: createdEntity._id,
-        startOffset: entity.CharacterOffsetBegin,
-        endOffset: entity.CharacterOffsetEnd,
-		};
+          var params = {
+              document_id: doc._id,
+              entity_id: createdEntity._id,
+              startOffset: entity.CharacterOffsetBegin,
+              endOffset: entity.CharacterOffsetEnd,
+          };
 
-		db.cypher({
-		    query: query,
-		    params: params,
-		}, function (err, results) {
-		    if (err) {}
-		    var createdRelation = results
-        deferred.resolve(createdRelation);
-        // console.log(createdRelation);
-		    // console.log(createdRelation);
-		});
-	});
-  return deferred.promise;
+          db.cypher({
+              query: query,
+              params: params,
+          }, function (err, results) {
+              if (err) {}
+              var createdRelation = results
+              resolve(createdRelation);
+              // console.log(createdRelation);
+              // console.log(createdRelation);
+          });
+        })
+  })
 }
 
-function extractEntities(doc, deferred) {
+function extractEntities(doc) {
 	// alchemy.entities(doc.text, {}, function(err, response) {
 	//   if (err) throw err;
 
@@ -138,23 +142,30 @@ function extractEntities(doc, deferred) {
 	//   // console.log(text);
 	//   // Do something with data
 	// });
-  coreNLP.process(doc.text, function(err, result) {
-      if(err)
-        throw err;
-      else
-        var sentences = result.document.sentences.sentence;
-        var allEntities = [];
-      // console.log(sentences);
-        sentences.forEach(function(sentence) {
-          var tokens = sentence.tokens.token;
-          var entities = tokens.filter(function(token) {
-            return token["NER"] !== "O";
+  return Q.Promise(function(resolve, reject, notify) {
+    coreNLP.process(doc.text, function(err, result) {
+        if(err)
+          throw err;
+        else
+          var sentences = result.document.sentences.sentence;
+          var allEntities = [];
+        // console.log(sentences);
+          sentences.forEach(function(sentence) {
+            var tokens = sentence.tokens.token;
+            var entities = tokens.filter(function(token) {
+              return token["NER"] !== "O";
+            });
+            allEntities = allEntities.concat(entities);
           });
-          allEntities = allEntities.concat(entities);
-        });
-        // console.log(allEntities);
-        createDocument(doc, allEntities, deferred);
-  });
+          // console.log(allEntities);
+          createDocument(doc, allEntities)
+            .then(function() {
+              console.log("Done with doc creation!", doc.name);
+              resolve('done document', doc.name)
+            });
+    });
+    console.log("before done!", doc.name);
+  })
 }
 
 function prepareText(doc, entities) {
@@ -171,65 +182,98 @@ function prepareText(doc, entities) {
   return text;
 }
 
-function createDocument(doc, entities, deferred) {
-  doc.text = prepareText(doc, entities);
-  // console.log(doc.text);
-	var query = [
-			"MERGE (n:Document { name: {name} })",
-      'ON CREATE SET n = {props}',
-      'RETURN n',
-  ].join('\n');
+function createDocument(doc, entities) {
+  console.log('process', doc.name);
+  return Q.Promise(function(resolve, reject, notify) {
+    doc.text = prepareText(doc, entities);
+    // console.log(doc.text);
+  	var query = [
+  			"MERGE (n:Document { name: {name} })",
+        'ON CREATE SET n = {props}',
+        'RETURN n',
+    ].join('\n');
 
-  var params = {
-      props: doc,
-      name: doc.name
-  };
+    var params = {
+        props: doc,
+        name: doc.name
+    };
 
-  db.cypher({
-      query: query,
-      params: params,
-  }, function (err, results) {
-      if (err) return reply(err);
+    db.cypher({
+        query: query,
+        params: params,
+    }, function (err, results) {
+        if (err) return reply(err);
 
-      var createdDoc = results[0]['n'];
-      var funcs = [];
-      entities.forEach(function(entity) {
-        funcs.push(function() {
-          return addEntityToDocument(entity, createdDoc);
-        }())
-      });
-      // console.log("deferred");
-      // return result;
-      deferred.resolve(funcs.reduce(Q.when, Q(0)));
-  });
+        var createdDoc = results[0]['n'];
+        var funcs = [];
+        entities.forEach(function(entity) {
+          funcs.push(function(entity) {
+            return function() {
+              return addEntityToDocument(entity, createdDoc);
+            }
+          }(entity))
+        });
+        // console.log("deferred");
+        // return result;
+        var result = Q();
+        funcs.forEach(function (f) {
+            result = result.then(f);
+        });
+        // console.log('start:e');
+        // funcs.forEach(function(promise) {
+        //   console.log(promise);
+        // });
+        // console.log('end:e');
+        result
+            .then(function() {
+              console.log('defff',createdDoc.properties.name);
+              resolve(createdDoc.properties.name);
+            })
+              // .then();
+    });
+  })
 }
-function readZip(path, reply) {
+function readZip(path) {
 	// reading archives 
   var zip = new AdmZip(path);
   var zipEntries = zip.getEntries(); // an array of ZipEntry records 
  	var i = 0;
   var promises = [];
- 	while(i < 1) {
+ 	while(i < 3) {
  		var zipEntry = zipEntries[i];
  		var name = zipEntry.entryName;
  		if(name.match(/\.(txt)/g) && !S(name).startsWith("__MACOSX")){
  			console.log(zipEntry.entryName);
-      var deferred = Q.defer();
  			var doc = {
  				name: name,
  				text: zip.readAsText(zipEntry.entryName).replace(/[^\x00-\x7F]/g, "")
  			}
- 			extractEntities(doc, deferred);
-      promises.push(deferred.promise);
+      promises.push(function(doc){
+        return function() {
+          return extractEntities(doc);
+        }
+      }(doc));
+      // promises.push(deferred.promise);
  		}
  		i++;
  	}
-  console.log(promises);
- 	Q.all(promises)
-    .then(function() {
-      // console.log("loaded")
-      reply("successfully loaded");
-    })
+  // console.log(promises);
+  // promises.reduce(Q.when, Q(0))
+  // console.log('start');
+  // promises.forEach(function(promise) {
+  //   console.log(promise);
+  // });
+  // console.log('end');
+  // promises.map(function (f) {
+  //     return f();
+  // });
+  // var result = Q(0);
+  // promises.forEach(function (f) {
+  //     result = result.then(f);
+  // });
+  // return result;
+  return promises.reduce(Q.when, Q(0));
+ 	// return Q.all(promises)
  	// createDocument(doc, reply);
  	// console.log(zip.readAsText(zipEntry.entryName));
   // zipEntries.forEach(function(zipEntry) {

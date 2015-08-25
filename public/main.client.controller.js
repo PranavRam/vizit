@@ -6,7 +6,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
   $scope.entities = [];
   $scope.selectedDocument = {};
   $scope.entityType = "Person";
-  $scope.entityTypes = ["Person", "Organization", "City", "Quantity", "JobTitle", "FieldTerminology"];
+  $scope.entityTypes = ["Person", "Organization", "Duration", "Number", "Date", "Location", "Time"];
   $scope.showDocumentText = true;
   var entityCountScale = d3.scale.linear();
   $scope.ach = {
