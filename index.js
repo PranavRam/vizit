@@ -88,6 +88,7 @@ function addEntity(entity, cb) {
 	  });
 }
 function addEntityToDocument(entity, doc) {
+  var deferred = Q.defer();
 	addEntity(entity, function(err, result) {
 		if(err) {
 			throw (err);
@@ -115,10 +116,12 @@ function addEntityToDocument(entity, doc) {
 		}, function (err, results) {
 		    if (err) {}
 		    var createdRelation = results
-        console.log(createdRelation);
+        deferred.resolve(createdRelation);
+        // console.log(createdRelation);
 		    // console.log(createdRelation);
 		});
 	});
+  return deferred.promise;
 }
 
 function extractEntities(doc, deferred) {
@@ -149,12 +152,28 @@ function extractEntities(doc, deferred) {
           });
           allEntities = allEntities.concat(entities);
         });
-        console.log(allEntities);
+        // console.log(allEntities);
         createDocument(doc, allEntities, deferred);
   });
 }
 
+function prepareText(doc, entities) {
+  var offset = 0;
+  var text = doc.text;
+  entities.forEach(function(entity) {
+    var start = +entity.CharacterOffsetBegin;
+    var end = +entity.CharacterOffsetEnd;
+    var entityLength = entity["NER"].length;
+    var entityType = entity["NER"];
+    text = text.substr(0, start + offset) + "<" + entityType + ">" + entity.word + "</" + entityType +">" + text.substr(end + offset, text.length);
+    offset += (5 + 2 * entityLength);
+  });
+  return text;
+}
+
 function createDocument(doc, entities, deferred) {
+  doc.text = prepareText(doc, entities);
+  // console.log(doc.text);
 	var query = [
 			"MERGE (n:Document { name: {name} })",
       'ON CREATE SET n = {props}',
@@ -173,11 +192,15 @@ function createDocument(doc, entities, deferred) {
       if (err) return reply(err);
 
       var createdDoc = results[0]['n'];
+      var funcs = [];
       entities.forEach(function(entity) {
-      	addEntityToDocument(entity, createdDoc);
+        funcs.push(function() {
+          return addEntityToDocument(entity, createdDoc);
+        }())
       });
       // console.log("deferred");
-      deferred.resolve(createdDoc);
+      // return result;
+      deferred.resolve(funcs.reduce(Q.when, Q(0)));
   });
 }
 function readZip(path, reply) {
@@ -186,7 +209,7 @@ function readZip(path, reply) {
   var zipEntries = zip.getEntries(); // an array of ZipEntry records 
  	var i = 0;
   var promises = [];
- 	while(i < 3) {
+ 	while(i < 1) {
  		var zipEntry = zipEntries[i];
  		var name = zipEntry.entryName;
  		if(name.match(/\.(txt)/g) && !S(name).startsWith("__MACOSX")){
@@ -269,9 +292,9 @@ function setTFDIF(reply) {
 
 function getDocuments(reply) {
 	var query = [
-    'MATCH (n:Document)-[:DOCENTITY]->(e)',
+    'MATCH (n:Document)-[r:DOCENTITY]->(e)',
     'WHERE e.tfidf > 0',
-    'RETURN n, collect(e) as entities',
+    'RETURN n, collect(e) as entities, collect(r) as offsets',
   ].join('\n')
 
   db.cypher({
@@ -286,9 +309,8 @@ function getDocuments(reply) {
           doc['entities'].forEach(function(entity) {
             var id = entity._id;
             entity = entity.properties;
-            text = S(text).replaceAll(entity.text, '<'+entity.type+' data-entity-id="' + id + '">'+entity.text+'</'+entity.type+'>').s;
+            // text = S(text).replaceAll(entity.text, '<'+entity.type+' data-entity-id="' + id + '">'+entity.text+'</'+entity.type+'>').s;
           });
-          console.log(text);
           obj.text = text;
           obj.entities = _.groupBy(doc['entities'].map(function(entity) {
             var obj = entity.properties;
