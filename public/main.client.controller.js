@@ -47,8 +47,10 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
   $http.get('/api/entities').
     then(function(response) {
       var entities = response.data;
+      var extent = d3.extent(entities, function(d) { return d.tfidf; });
+      // console.log(extent);
       entityCountScale
-          .domain(d3.extent(entities, function(d) { return d.tfidf; }))
+          .domain(extent)
           .range([1, entityCountWidth]);
       $scope.entities = entities;
     }, function(response) {
@@ -61,12 +63,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
         <md-menu-content>
             <md-menu-item>
               <md-button class="menu-container-item" ng-click="log(selectedDocument.selectedText)">
-                add to selected Hypothesis
-              </md-button>
-            </md-menu-item>
-            <md-menu-item>
-              <md-button class="menu-container-item" ng-click="log(selectedDocument.selectedText)">
-                add as an Evidence
+                add to {{selectedHypothesis.name}} 
               </md-button>
             </md-menu-item>
         </md-menu-content>
@@ -82,6 +79,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
     top: 0,
     left: 0,
     open: function(event) {
+      if(!$scope.selectedHypothesis) return;
       RightClickMenuCtrl.left = event.clientX;
       RightClickMenuCtrl.top = event.clientY;
       $mdMenu.show({

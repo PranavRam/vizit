@@ -45,19 +45,25 @@ swig.setDefaults({ varControls: ['[[', ']]'] });
 // Create a server with a host and port
 var server = new Hapi.Server();
 
-var upload = function(files, reply) {
-    fs.readFile(files.file[0].path, function(err, data) {
-        fs.writeFile(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename, data, function(err) {
-            if (err) return reply(err);
-
-            var result = readZip(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
-                  result.then(function() {
-                    console.log("loaded", arguments);
-                    setTFDIF(reply);
+var upload = function(files) {
+    console.log('upload function');
+    return Q.Promise(function(resolve, reject, notify) {
+      fs.readFile(files.file[0].path, function(err, data) {
+          fs.writeFile(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename, data, function(err) {
+              if (err) return reply(err);
+              console.log('uploading');
+              var result = readZip(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
+              result.then(function() {
+                console.log("loaded", arguments);
+                setTFDIF()
+                  .then(function(){
+                    resolve("done with NER");
                   })
-            // return reply('File uploaded to: ' + Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
+              })
+              // return reply('File uploaded to: ' + Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
 
-        });
+          });
+      });
     });
 };
 
@@ -102,8 +108,8 @@ function addEntityToDocument(entity, doc) {
             "MATCH (a:Document),(b:Entity)",
             "WHERE id(a) = {document_id} AND id(b) = {entity_id}",
             "MERGE (a)-[r:DOCENTITY]->(b)",
-            "ON CREATE SET r.startOffset = [{startOffset}], r.endOffset = [{endOffset}]",
-            "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+            // "ON CREATE SET r.startOffset = [{startOffset}], r.endOffset = [{endOffset}]",
+            // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
             "RETURN r"
           ].join('\n');
 
@@ -143,6 +149,7 @@ function extractEntities(doc) {
 	//   // Do something with data
 	// });
   return Q.Promise(function(resolve, reject, notify) {
+    console.log("extracting entities", doc.name);
     coreNLP.process(doc.text, function(err, result) {
         if(err)
           throw err;
@@ -164,7 +171,6 @@ function extractEntities(doc) {
               resolve('done document', doc.name)
             });
     });
-    console.log("before done!", doc.name);
   })
 }
 
@@ -183,10 +189,10 @@ function prepareText(doc, entities) {
 }
 
 function createDocument(doc, entities) {
-  console.log('process', doc.name);
   return Q.Promise(function(resolve, reject, notify) {
-    doc.text = prepareText(doc, entities);
+    doc.text = prepareText(doc, entities).replace(/\r?\n/g, '<br />');
     // console.log(doc.text);
+    // return resolve(doc.text);
   	var query = [
   			"MERGE (n:Document { name: {name} })",
         'ON CREATE SET n = {props}',
@@ -203,15 +209,15 @@ function createDocument(doc, entities) {
         params: params,
     }, function (err, results) {
         if (err) return reply(err);
-
+        console.log('Created doc', doc.name);
         var createdDoc = results[0]['n'];
         var funcs = [];
         entities.forEach(function(entity) {
-          funcs.push(function(entity) {
+          funcs.push(function(entity, createdDoc) {
             return function() {
               return addEntityToDocument(entity, createdDoc);
             }
-          }(entity))
+          }(entity, createdDoc))
         });
         // console.log("deferred");
         // return result;
@@ -226,7 +232,7 @@ function createDocument(doc, entities) {
         // console.log('end:e');
         result
             .then(function() {
-              console.log('defff',createdDoc.properties.name);
+              console.log('Created Entities',createdDoc.properties.name);
               resolve(createdDoc.properties.name);
             })
               // .then();
@@ -239,6 +245,7 @@ function readZip(path) {
   var zipEntries = zip.getEntries(); // an array of ZipEntry records 
  	var i = 0;
   var promises = [];
+  console.log('zip entries');
  	while(i < 3) {
  		var zipEntry = zipEntries[i];
  		var name = zipEntry.entryName;
@@ -257,6 +264,7 @@ function readZip(path) {
  		}
  		i++;
  	}
+  console.log('zip entries end');
   // console.log(promises);
   // promises.reduce(Q.when, Q(0))
   // console.log('start');
@@ -283,61 +291,62 @@ function readZip(path) {
 }
 
 function setTFDIF(reply) {
-  var query = [
-    'MATCH n',
-    'WHERE n:Document OR n:Entity',
-    'RETURN n',
-  ].join('\n')
+  return Q.Promise(function(resolve, reject, notify) {
+    var query = [
+      'MATCH n',
+      'WHERE n:Document OR n:Entity',
+      'RETURN n',
+    ].join('\n')
 
-  db.cypher({
-      query: query,
-  }, function (err, results) {
-      if (err) return reply(err);
-      console.log('enter');
-      var documents = results.filter(function(doc) {
-        return doc['n'].labels.indexOf('Document') > -1;
-      });
-      var entities = results.filter(function(entity) {
-        return entity['n'].labels.indexOf('Entity') > -1;
-      });
-      // console.log(documents, entities);
-      tfidf = new TfIdf();
-      documents.forEach(function(doc) {
-        tfidf.addDocument(doc['n'].properties.text);
-      });
-      entities.forEach(function(entity) {
-        var totalMeasureArr = tfidf.tfidfs(entity['n'].properties.text, function(i, measure) {
-            return measure;
+    db.cypher({
+        query: query,
+    }, function (err, results) {
+        if (err) return reply(err);
+        console.log('enter');
+        var documents = results.filter(function(doc) {
+          return doc['n'].labels.indexOf('Document') > -1;
         });
-        var totalMeasure = _.reduce(totalMeasureArr, function(total, n) {
-          return total + n;
+        var entities = results.filter(function(entity) {
+          return entity['n'].labels.indexOf('Entity') > -1;
         });
-        var query = [
-          'MATCH (n:Entity {text: {name}})',
-          'SET n.tfidf = {measure}',
-          'RETURN n',
-        ].join('\n');
-        var params = {
-            name: entity['n'].properties.text,
-            measure: totalMeasure
-        };
+        // console.log(documents, entities);
+        tfidf = new TfIdf();
+        documents.forEach(function(doc) {
+          tfidf.addDocument(doc['n'].properties.text);
+        });
+        entities.forEach(function(entity) {
+          var totalMeasureArr = tfidf.tfidfs(entity['n'].properties.text, function(i, measure) {
+              return measure;
+          });
+          var totalMeasure = _.reduce(totalMeasureArr, function(total, n) {
+            return total + n;
+          });
+          var query = [
+            'MATCH (n:Entity {text: {name}})',
+            'SET n.tfidf = {measure}',
+            'RETURN n',
+          ].join('\n');
+          var params = {
+              name: entity['n'].properties.text,
+              measure: totalMeasure
+          };
 
-        db.cypher({
-            query: query,
-            params: params,
-        }, function (err, results) {
-          // console.log(results);
-        });
-      })
-      console.log('exit');
-      reply("Done setTFDIF");
-  });
+          db.cypher({
+              query: query,
+              params: params,
+          }, function (err, results) {
+            // console.log(results);
+          });
+        })
+        console.log('exit');
+        resolve("Done setTFDIF");
+    });
+  })
 }
 
 function getDocuments(reply) {
 	var query = [
     'MATCH (n:Document)-[r:DOCENTITY]->(e)',
-    'WHERE e.tfidf > 0',
     'RETURN n, collect(e) as entities, collect(r) as offsets',
   ].join('\n')
 
@@ -468,12 +477,20 @@ server.register([
 			      output: 'stream',
 			      parse: false
         },
+        timeout: {
+          socket: false
+        }
     	},
 	    handler: function (request, reply) {
         var form = new multiparty.Form();
         form.parse(request.payload, function(err, fields, files) {
+            console.log('upload handler')
             if (err) return reply(err);
-            else upload(files, reply);
+            upload(files, reply)
+                      .then(function() {
+                        console.log("Finally Done");
+                        reply("Finally Done");
+                      });
         });
       }
     });

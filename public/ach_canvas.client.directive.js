@@ -38,15 +38,18 @@ function achCanvas($timeout) {
     			achCanvas.height() - 8 - minimapHeight
     		]
     		
-    		hypotheses = hypotheses.data([{x: 100, y: 100}]);
+    		hypotheses = hypotheses.data([{x: 100, y: 100, name: "Hypothesis 0"}]);
     		evidences = evidences.data([{x: 300, y: 300}]);
 
-    		var fb = hypotheses
+    		var hp = hypotheses
     							.enter()
     							.append('g')
-  					      .call(hypothesis);
+  					      .call(hypothesis)
+  					      .on('click.hypothesis', function(d) {
+  					      	scope.selectedHypothesis = d;
+  					      });
 
-	  		var fb = evidences
+	  		var ev = evidences
 	  							.enter()
 	  							.append('g')
 						      .call(evidence);								  	

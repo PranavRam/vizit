@@ -20,7 +20,7 @@
   <!-- <button type="file" ngf-select="uploadFiles($file)"
            accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">
        Select File</button> -->
-	<md-button class="md-raised md-primary" ng-click="upload(file)">
+	<md-button class="md-raised md-primary" ng-click="upload(file)" ng-disabled="uploading">
 		Upload
 	</md-button>
 </div>

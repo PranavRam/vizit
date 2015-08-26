@@ -25,7 +25,7 @@
 			    	</div>
 			    	<div class="entity" layout="row">
 							<div class="entity-count">
-								<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.count) }"></div>
+								<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
 							</div>
 			    		<span flex class="entity-text">{{entity.text}}</span>
 			    	</div>
@@ -144,7 +144,7 @@
 		<!-- </div> -->
 		<md-content layout-padding class="document-viewer" layout="column" flex>
 		  <md-content flex>
-				<p ng-show="showDocumentText" class="document-text" ng-bind-html="selectedDocument.text | sentences | to_trusted:this" compile-template></p>
+				<p ng-show="showDocumentText" class="document-text" ng-bind-html="selectedDocument.text | sentences | to_trusted" compile-template></p>
 				<div ng-hide="showDocumentText" class="document-entities">
 					<div class="document-entity-type" ng-repeat="(entityType, entityArray) in selectedDocument.entities">
 						<span class="{{entityType}}">{{entityType}}</span>
