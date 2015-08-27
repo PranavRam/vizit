@@ -1,7 +1,7 @@
 angular.module('vizit')
 			.controller('MainCtrl', MainCtrl);
 
-function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
+function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout) {
 	$scope.documents = [];
   $scope.entities = [];
   $scope.selectedDocument = {};
@@ -87,6 +87,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
       entityCountScale
           .domain(extent)
           .range([1, entityCountWidth]);
+      
       $scope.entities = entities;
     }, function(response) {
       // called asynchronously if an error occurs

@@ -10,13 +10,8 @@
     <!-- </md-button> -->
   </div>
 </md-toolbar>
-<md-content flex layout="row">
-	<md-content ui-view="entityList" class="entity-list" layout="column" layout-padding flex="20" ng-hide="ach.fullscreen">
-		
-	</md-content>
-	<md-content flex layout-padding class="ach-browser" ui-view="achCanvas">
-		
-	</md-content>
+<md-content flex layout="row" ui-view="topView">
+	
 </md-content>
 <md-content flex="25" layout="column" ng-hide="ach.fullscreen">
 	<div layout="row">

@@ -68,15 +68,20 @@ angular.module('vizit')
 		})
 		.directive('autoHeight', function($timeout, $window) {
 		    return function (scope, element, attrs) {
-		    		// $timeout(function() {
-		    			var height = $('.entity-list-container').height();
-		    			element.css('height', height - 48);
+		    			function setHeight() {
+		    				var height = $('.entity-list-container').height();
+		    				element.css('height', height - 48);
+		    			}
+		    			setHeight();
 		    		// })
+							$timeout(function() {
+							  setHeight();
+							});
 							var w = angular.element($window);
 							w.bind('resize', function () {
-			            var height = $('.entity-list-container').height();
-			            element.css('height', height - 48);
+			            setHeight();
 			        });
+						// });
 		        // element.height($(window).height() - $('.header').outerHeight());
 		    }
 		});
