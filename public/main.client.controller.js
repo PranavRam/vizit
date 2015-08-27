@@ -43,6 +43,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $compile) {
   };
 
   $scope.getConnectionStrength = function(entity) {
+    if(!entity) return 'white';
     if(entity._id === $scope.selectedEntity._id) return '#ff9600';
     var found = false;
     $scope.selectedEntityConnections.forEach(function(connection) {

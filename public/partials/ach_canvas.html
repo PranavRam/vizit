@@ -1,0 +1,41 @@
+<div ach-canvas class="ach-canvas"></div>
+<div class="search-input">
+	<md-input-container class="md-icon-float" >
+	      <!-- Use floating label instead of placeholder -->
+    <label>ACH</label>
+    <md-icon><ng-md-icon icon="create"></ng-md-icon></md-icon>
+    <input ng-model="ach.searchInput" type="text">
+  </md-input-container>
+</div>
+<div class="editor-tools" layout="row">
+	<md-button class="md-icon-button md-primary" aria-label="fullscreen_exit" ng-click="ach.fullscreen = false">
+	  <ng-md-icon icon="fullscreen_exit" size="32"
+	  ng-class="{selected: !ach.fullscreen}"></ng-md-icon> 
+	</md-button>
+	<md-button class="md-icon-button md-primary" aria-label="fullscreen" ng-click="ach.fullscreen = true">
+	  <ng-md-icon icon="fullscreen" size="32"
+	  ng-class="{selected: ach.fullscreen}"></ng-md-icon>
+	</md-button>
+</div>
+<md-fab-speed-dial md-open="ach.toolbar.isOpen" md-direction="right" class="ach-toolbar">
+  <md-fab-trigger>
+    <md-button aria-label="menu" class="md-fab md-warn">
+      <ng-md-icon icon="menu" style="fill: white;"></ng-md-icon>
+    </md-button>
+  </md-fab-trigger>
+  <md-fab-actions>
+    <md-button aria-label="add" class="md-fab md-raised md-mini">
+      <ng-md-icon icon="add"></ng-md-icon> 
+    </md-button>
+  </md-fab-actions>
+  <md-fab-actions>
+    <md-button aria-label="delete" class="md-fab md-raised md-mini">
+      <ng-md-icon icon="clear"></ng-md-icon> 
+    </md-button>
+  </md-fab-actions>
+  <md-fab-actions>
+    <md-button aria-label="provenance" class="md-fab md-raised md-mini">
+      <ng-md-icon icon="trending_up"></ng-md-icon> 
+    </md-button>
+  </md-fab-actions>
+</md-fab-speed-dial>

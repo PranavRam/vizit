@@ -19,7 +19,7 @@ function UploadCtrl($scope, $state, Upload) {
       }).success(function (data, status, headers, config) {
           console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
           $scope.uploading = false;
-          $state.go('main');
+          $state.go('main.start');
       }).error(function (data, status, headers, config) {
           console.log('error status: ' + status);
           $scope.uploading = false;

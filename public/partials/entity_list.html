@@ -1,0 +1,48 @@
+<md-input-container class="entity-selection">
+  <label>Entity Type</label>
+  <md-select ng-model="entityType">
+    <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
+  </md-select>
+</md-input-container>
+<md-content class="entity-list-container" flex>
+  <md-card>
+		<md-card-content>
+			<md-virtual-repeat-container auto-height id="vertical-container">
+	      <div ng-click="getConnections(entity)" md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
+          	<div class="entity-relevance">
+          	</div>
+          	<div class="entity" layout="row">
+      				<div class="entity-count">
+      					<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
+      				</div>
+          		<span flex class="entity-text">{{entity.text}}</span>
+          	</div>
+	      </div>
+	    </md-virtual-repeat-container>
+	    <!-- <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity-container">
+	    	<div class="entity-relevance">
+	    	</div>
+	    	<div class="entity" layout="row">
+					<div class="entity-count">
+						<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
+					</div>
+	    		<span flex class="entity-text">{{entity.text}}</span>
+	    	</div>
+	    </div> -->
+		</md-card-content>
+  </md-card>
+</md-content>
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	<md-button class="md-icon-button md-primary" aria-label="search">
+    <ng-md-icon icon="search"></ng-md-icon>
+  </md-button>
+  <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
+    <ng-md-icon icon="sort"></ng-md-icon>
+  </md-button>
+  <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
+    <ng-md-icon icon="filter_list"></ng-md-icon>
+  </md-button>
+  <md-button class="md-icon-button" aria-label="sort_connection">
+    <ng-md-icon icon="swap_calls"></ng-md-icon>
+  </md-button>
+</section>
