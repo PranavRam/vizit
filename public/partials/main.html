@@ -17,10 +17,22 @@
         <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
       </md-select>
     </md-input-container>
-    <md-content flex>
+    <md-content class="entity-list-container" flex>
       <md-card>
 				<md-card-content>
-			    <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity-container">
+					<md-virtual-repeat-container auto-height id="vertical-container">
+			      <div md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex>
+	            	<div class="entity-relevance">
+	            	</div>
+	            	<div class="entity" layout="row">
+	        				<div class="entity-count">
+	        					<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
+	        				</div>
+	            		<span flex class="entity-text">{{entity.text}}</span>
+	            	</div>
+			      </div>
+			    </md-virtual-repeat-container>
+			    <!-- <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity-container">
 			    	<div class="entity-relevance">
 			    	</div>
 			    	<div class="entity" layout="row">
@@ -29,7 +41,7 @@
 							</div>
 			    		<span flex class="entity-text">{{entity.text}}</span>
 			    	</div>
-			    </div>
+			    </div> -->
 				</md-card-content>
       </md-card>
     </md-content>

@@ -99,6 +99,13 @@ ng-md-icon svg {
 .document-text {
 	margin-top: 0;
 }
+
+#vertical-container {
+	/*height: 400px;*/
+}
+.entity-container {
+	height: 25px;
+}
 .entity-container .entity {
 	padding: 2px 0;
 	cursor: pointer;
