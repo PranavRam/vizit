@@ -4,6 +4,7 @@
       <span>Vizit</span>
     </h2>
     <span flex></span>
+    	<!-- <md-progress-circular class="md-warn" md-diameter="24" md-mode="indeterminate"></md-progress-circular> -->
     <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
       <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon> 
     <!-- </md-button> -->
@@ -21,7 +22,7 @@
       <md-card>
 				<md-card-content>
 					<md-virtual-repeat-container auto-height id="vertical-container">
-			      <div md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex>
+			      <div ng-click="getConnections(entity)" md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
 	            	<div class="entity-relevance">
 	            	</div>
 	            	<div class="entity" layout="row">
@@ -46,6 +47,9 @@
       </md-card>
     </md-content>
     <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+    	<md-button class="md-icon-button md-primary" aria-label="search">
+        <ng-md-icon icon="search"></ng-md-icon>
+      </md-button>
       <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
         <ng-md-icon icon="sort"></ng-md-icon>
       </md-button>
@@ -164,8 +168,8 @@
 					</div>
 				</div>
 		  </md-content>
-		  <div layout="row">
-		  	<span flex=""></span>
+		  <div layout="row" layout="row" layout-align="space-between center">
+		  	<h4>{{selectedDocument.name}}</h4>
 		  	<md-input-container class="md-icon-float" >
 			      <!-- Use floating label instead of placeholder -->
 		      <label>Current Document</label>

@@ -96,6 +96,10 @@ ng-md-icon svg {
 .document-viewer md-input-container {
 	padding-bottom: 0;
 }
+
+.document-viewer .document-info {
+	
+}
 .document-text {
 	margin-top: 0;
 }

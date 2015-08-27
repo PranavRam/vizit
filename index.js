@@ -12,19 +12,8 @@ var _ = require('lodash');
 var Q = require('q');
 var natural = require('natural'),
     TfIdf = natural.TfIdf;
-var Promise = require('bluebird');
-var openNLP = require("opennlp");
-var NLP = require('stanford-corenlp');
-var config = {
-  'nlpPath': Path.join ( __dirname, '/corenlp'), //the path of corenlp
-  'version':'3.5.2', //what version of corenlp are you using
-  'annotators': ['tokenize','ssplit','pos','parse','sentiment','depparse','quote','lemma', 'ner'], //optional!
-  'extra' : {
-      'depparse.extradependencie': 'MAXIMAL'
-    }
 
-};
-var coreNLP = new NLP.StanfordNLP(config);
+var http = require('request');
 
 var alchemy = new AlchemyAPI('e611893e79748690d9a387240bab8b64f14b9a2b');
 
@@ -150,22 +139,9 @@ function extractEntities(doc) {
 	// });
   return Q.Promise(function(resolve, reject, notify) {
     console.log("extracting entities", doc.name);
-    coreNLP.process(doc.text, function(err, result) {
-        if(err)
-          throw err;
-        else
-          var sentences = result.document.sentences.sentence;
-          var allEntities = [];
-        // console.log(sentences);
-          sentences.forEach(function(sentence) {
-            var tokens = sentence.tokens.token;
-            var entities = tokens.filter(function(token) {
-              return token["NER"] !== "O";
-            });
-            allEntities = allEntities.concat(entities);
-          });
-          // console.log(allEntities);
-          createDocument(doc, allEntities)
+    http.post({url:'http://localhost:9000/corenlp', form: {text: doc.text}}, function(err,httpResponse,body){
+          var entities = JSON.parse(body);
+          createDocument(doc, entities)
             .then(function() {
               console.log("Done with doc creation!", doc.name);
               resolve('done document', doc.name)
@@ -185,6 +161,8 @@ function prepareText(doc, entities) {
     text = text.substr(0, start + offset) + "<" + entityType + ">" + entity.word + "</" + entityType +">" + text.substr(end + offset, text.length);
     offset += (5 + 2 * entityLength);
   });
+  console.log(doc.text);
+
   return text;
 }
 
@@ -493,6 +471,36 @@ server.register([
                       });
         });
       }
+    });
+
+    server.route({
+        method: 'GET',
+        path:'/api/connections/{id}', 
+        handler: function (request, reply) {
+          // console.log(request);
+          var id = encodeURIComponent(request.params.id);
+          var query = [
+            'MATCH (n:Entity)-[r:DOCENTITY*2..2]-(e:Entity)',
+            'WHERE id(n) = {id}',
+            'RETURN e',
+          ].join('\n')
+
+          db.cypher({
+              query: query,
+              params: {
+                id: +id
+              }
+          }, function (err, results) {
+              if (err) return reply(err);
+              var connections = results;
+              connections = connections.map(function(connection) {
+                var obj = connection['e'].properties;
+                obj._id = connection['e']._id;
+                return obj;
+              })
+              reply(connections);
+          });
+        }
     });
 
     server.route({
