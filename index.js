@@ -84,6 +84,7 @@ function addEntity(entity, cb) {
   	      if (err) return cb(err);
 
   	      var createdEntity = results[0]['n'];
+          entity.id = createdEntity._id;
   	      resolve(createdEntity);
   	  });
     });
@@ -158,17 +159,17 @@ function prepareText(doc, entities) {
     var end = +entity.CharacterOffsetEnd;
     var entityLength = entity["NER"].length;
     var entityType = entity["NER"];
-    text = text.substr(0, start + offset) + "<" + entityType + ">" + entity.word + "</" + entityType +">" + text.substr(end + offset, text.length);
-    offset += (5 + 2 * entityLength);
+    var entityId = entity.id;
+    var entityIdLength = S(entityId).length;
+    text = text.substr(0, start + offset) + "<" + entityType + " data-entity-id='" + entityId + "'>" + entity.word + "</" + entityType +">" + text.substr(end + offset, text.length);
+    offset += (5 + 2 * entityLength + 18 + entityIdLength);
   });
-  console.log(doc.text);
-
   return text;
 }
 
 function createDocument(doc, entities) {
   return Q.Promise(function(resolve, reject, notify) {
-    doc.text = prepareText(doc, entities).replace(/\r?\n/g, '<br />');
+    // doc.text = prepareText(doc, entities).replace(/\r?\n/g, '<br />');
     // console.log(doc.text);
     // return resolve(doc.text);
   	var query = [
@@ -211,7 +212,28 @@ function createDocument(doc, entities) {
         result
             .then(function() {
               console.log('Created Entities',createdDoc.properties.name);
-              resolve(createdDoc.properties.name);
+              var text = prepareText(doc, entities).replace(/\r?\n/g, '<br />');
+              var query = [
+                  "MATCH (n:Document)",
+                  "WHERE id(n) = {id}",
+                  'SET n.parsedText = {text}',
+                  'RETURN n',
+              ].join('\n');
+
+              var params = {
+                  text: text,
+                  id: +createdDoc._id
+              };
+
+              db.cypher({
+                  query: query,
+                  params: params,
+              }, function (err, results) {
+                  console.log('updated doc text', doc.name);
+                  if (err) return reject(err);
+                  resolve(createdDoc.properties.name);
+                });
+              
             })
               // .then();
     });
