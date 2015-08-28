@@ -6,24 +6,26 @@
     <span flex></span>
     	<!-- <md-progress-circular class="md-warn" md-diameter="24" md-mode="indeterminate"></md-progress-circular> -->
     <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
-  	<md-button class="md-icon-button" ng-click="go('vizit.entity_ach')" aria-label="ach-canvas">
-  		<md-tooltip>
-       ACH Canvas
-      </md-tooltip>
-      <ng-md-icon icon="picture_in_picture" ng-style="{fill: currentState === 'vizit.entity_ach' ? 'white' : '#7E7E7E'}"></ng-md-icon>
-    </md-button>
-  	<md-button class="md-icon-button md-primary" ng-click="go('vizit.entity_view')" aria-label="entity-view">
-			<md-tooltip>
-	     Entity View
-	    </md-tooltip>
-      <ng-md-icon icon="view_column" ng-style="{fill: currentState === 'vizit.entity_view' ? 'white' : '#7E7E7E'}"></ng-md-icon>
-    </md-button>
-  	<md-button class="md-icon-button md-primary" aria-label="ach-summary">
-			<md-tooltip>
-	     ACH Summary
-	    </md-tooltip>
-      <ng-md-icon icon="view_list" ng-style="{fill: currentState === 'vizit.entity' ? 'white' : '#7E7E7E'}"></ng-md-icon>
-    </md-button>
+  	<span>
+	  	<md-button class="md-icon-button" ng-click="go('vizit.entity_ach')" aria-label="ach-canvas">
+	  		<md-tooltip>
+	       ACH Canvas
+	      </md-tooltip>
+	      <ng-md-icon icon="picture_in_picture" ng-style="{fill: currentState === 'vizit.entity_ach' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+	    </md-button>
+	  	<md-button class="md-icon-button md-primary" ng-click="go('vizit.entity_view')" aria-label="entity-view">
+				<md-tooltip>
+		     Entity View
+		    </md-tooltip>
+	      <ng-md-icon icon="view_column" ng-style="{fill: currentState === 'vizit.entity_view' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+	    </md-button>
+	  	<md-button class="md-icon-button md-primary" aria-label="ach-summary">
+				<md-tooltip>
+		     ACH Summary
+		    </md-tooltip>
+	      <ng-md-icon icon="view_list" ng-style="{fill: currentState === 'vizit.entity' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+	    </md-button>
+  	</span>
     <!-- <ng-md-icon icon="picture_in_picture" style="fill: black;"></ng-md-icon> 
     <ng-md-icon icon="view_column" style="fill: white;"></ng-md-icon> 
     <ng-md-icon icon="view_list" style="fill: white;"></ng-md-icon> -->
