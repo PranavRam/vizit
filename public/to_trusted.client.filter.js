@@ -72,6 +72,7 @@ angular.module('vizit')
 		    			var reduce = +attrs["height"] || 48;
 		    			function setHeight() {
 		    				var height = $('.'+target).height();
+		    				if(height < 500) height = 500;
 		    				element.css('height', height - reduce);
 		    				// console.log(height);
 		    			}
