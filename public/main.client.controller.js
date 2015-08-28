@@ -12,6 +12,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
   $scope.entityViewer = {
     selectedEntityType: "Person"
   };
+  $scope.currentState = $state.current.name;
   $scope.showDocumentText = true;
   var entityCountScale = d3.scale.linear();
   var colorScale = d3.scale.linear() // <-A
@@ -46,6 +47,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
   };
   $scope.go = function(stateLoc) {
     $state.go(stateLoc);
+    $scope.currentState = stateLoc;
   }
   $scope.getConnectionStrength = function(entity) {
     if(!entity) return 'white';
