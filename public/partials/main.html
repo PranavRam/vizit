@@ -6,11 +6,26 @@
     <span flex></span>
     	<!-- <md-progress-circular class="md-warn" md-diameter="24" md-mode="indeterminate"></md-progress-circular> -->
     <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
-      <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon> 
+  	<md-button class="md-icon-button" ng-click="go('vizit.entity_ach')" aria-label="ach-canvas">
+      <ng-md-icon icon="picture_in_picture" style="fill: white;"></ng-md-icon>
+    </md-button>
+  	<md-button class="md-icon-button md-primary" ng-click="go('vizit.entity_view')" aria-label="entity-view">
+      <ng-md-icon icon="view_column" style="fill: white;"></ng-md-icon>
+    </md-button>
+  	<md-button class="md-icon-button md-primary" aria-label="ach-summary">
+      <ng-md-icon icon="view_list" style="fill: white;"></ng-md-icon>
+    </md-button>
+    <!-- <ng-md-icon icon="picture_in_picture" style="fill: white;"></ng-md-icon> 
+    <ng-md-icon icon="view_column" style="fill: white;"></ng-md-icon> 
+    <ng-md-icon icon="view_list" style="fill: white;"></ng-md-icon> -->
+    <span flex="5"></span>
+  	<md-button class="md-icon-button md-primary" aria-label="sort">
+      <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon>
+    </md-button>
     <!-- </md-button> -->
   </div>
 </md-toolbar>
-<md-content flex layout="row" ui-view="topView">
+<md-content flex ui-view="topView" class="top-view">
 	
 </md-content>
 <md-content flex="25" layout="column" ng-hide="ach.fullscreen">

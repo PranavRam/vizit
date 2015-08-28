@@ -68,9 +68,12 @@ angular.module('vizit')
 		})
 		.directive('autoHeight', function($timeout, $window) {
 		    return function (scope, element, attrs) {
+		    			var target = attrs["autoHeight"] || 'entity-list-container';
+		    			var reduce = +attrs["height"] || 48;
 		    			function setHeight() {
-		    				var height = $('.entity-list-container').height();
-		    				element.css('height', height - 48);
+		    				var height = $('.'+target).height();
+		    				element.css('height', height - reduce);
+		    				// console.log(height);
 		    			}
 		    			setHeight();
 		    		// })

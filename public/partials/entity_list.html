@@ -7,7 +7,7 @@
 <md-content class="entity-list-container" flex>
   <md-card>
 		<md-card-content>
-			<md-virtual-repeat-container auto-height id="vertical-container">
+			<md-virtual-repeat-container auto-height="top-view" id="vertical-container" height="190">
 	      <div ng-click="getConnections(entity)" md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
           	<div class="entity-relevance">
           	</div>
@@ -42,7 +42,7 @@
   <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
     <ng-md-icon icon="filter_list"></ng-md-icon>
   </md-button>
-  <md-button class="md-icon-button" aria-label="sort_connection" ui-sref="vizit.entity_view">
+  <md-button class="md-icon-button" aria-label="sort_connection">
     <ng-md-icon icon="swap_calls"></ng-md-icon>
   </md-button>
 </section>

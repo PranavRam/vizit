@@ -225,3 +225,25 @@ ng-md-icon svg {
   width: 0px;
   height: 0px;
 }
+
+.entity-viewer .entity-list-item {
+	cursor: pointer;
+}
+.entity-viewer .entity-list-item.selected {
+	background-color: #ffffe0;
+}
+
+.entity-viewer .entity-list-item.selected md-content{
+	background-color: #ffffe0;
+}
+
+.entity-viewer .entity-list-item.selected md-content md-card{
+	background-color: #ffffe0;
+}
+
+.entity-top-view .entity-search {
+	padding-bottom: 0;
+}
+.top-view {
+	overflow-y: hidden;
+}

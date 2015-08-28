@@ -1,7 +1,7 @@
 angular.module('vizit')
 			.controller('MainCtrl', MainCtrl);
 
-function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout) {
+function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
 	$scope.documents = [];
   $scope.entities = [];
   $scope.selectedDocument = {};
@@ -9,6 +9,9 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout) {
   $scope.selectedEntityConnections = [];
   $scope.entityType = "Person";
   $scope.entityTypes = ["Person", "Organization", "Duration", "Number", "Date", "Location", "Time"];
+  $scope.entityViewer = {
+    selectedEntityType: "Person"
+  };
   $scope.showDocumentText = true;
   var entityCountScale = d3.scale.linear();
   var colorScale = d3.scale.linear() // <-A
@@ -41,7 +44,9 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout) {
         // or server returns response with an error status.
       });
   };
-
+  $scope.go = function(stateLoc) {
+    $state.go(stateLoc);
+  }
   $scope.getConnectionStrength = function(entity) {
     if(!entity) return 'white';
     if(entity._id === $scope.selectedEntity._id) return '#ff9600';
