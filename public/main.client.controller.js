@@ -1,7 +1,7 @@
 angular.module('vizit')
 			.controller('MainCtrl', MainCtrl);
 
-function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
+function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile) {
 	$scope.documents = [];
   $scope.entities = [];
   $scope.selectedDocument = {};
@@ -14,6 +14,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
   };
   $scope.currentState = $state.current.name;
   $scope.showDocumentText = true;
+  $scope.evidences = [];
   var entityCountScale = d3.scale.linear();
   var colorScale = d3.scale.linear() // <-A
          // .domain([0, min, max])
@@ -23,7 +24,8 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
       isOpen: false
     },
     searchInput: "",
-    fullscreen: false
+    fullscreen: false,
+    selectedHypothesis: null
   };
   $scope.config = {}; // use defaults
   $scope.model = {}; // always pass empty object
@@ -106,7 +108,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
         <md-menu-content>
             <md-menu-item>
               <md-button class="menu-container-item" ng-click="log(selectedDocument.selectedText)">
-                add to {{selectedHypothesis.name}} 
+                add to {{ach.selectedHypothesis.name}} 
               </md-button>
             </md-menu-item>
         </md-menu-content>
@@ -122,7 +124,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
     top: 0,
     left: 0,
     open: function(event) {
-      if(!$scope.selectedHypothesis) return;
+      if(!$scope.ach.selectedHypothesis) return;
       RightClickMenuCtrl.left = event.clientX;
       RightClickMenuCtrl.top = event.clientY;
       $mdMenu.show({
@@ -142,5 +144,23 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state) {
   };
   $scope.check = function($event) {
     RightClickMenuCtrl.open($event);
+  }
+
+  $scope.addEvidence = function() {
+    var sentences = angular.element('.document-viewer .document-text .select-text');
+    var evidence = {
+      x: 100,
+      y: 100,
+      name: $scope.selectedDocument.name
+    };
+    var content = []
+    sentences.each(function() { 
+      content.push({
+        name: $scope.selectedDocument.name,
+        text: this.innerHTML
+      })
+    });
+    evidence.content = content
+    $scope.evidences.push(evidence);
   }
 }

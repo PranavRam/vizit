@@ -20,6 +20,10 @@
 		    .on("dragend", function(d) {
 		    	draggable = false;
 		    })
+		var zoomDisabled = d3.behavior.zoom()
+		    .on("zoom", function() {
+		    	d3.event.sourceEvent.stopImmediatePropagation();
+		    });
 
 		function dragmove(d) {
 			if(!draggable) return;
@@ -109,6 +113,7 @@
 				});
 
 				fo.call(drag);
+				body.call(zoomDisabled);
 			})
 		}
 		return component;

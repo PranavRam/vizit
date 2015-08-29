@@ -12,7 +12,7 @@ angular.module('vizit')
     		if(!text) return text;
     		var result = text.match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
     		return result = result.map(function(sentence, i) {
-    			return '<span context-menu data-target="menu-'+i+'" hover-class="select-text" ng-click="check($event)">'+sentence+'</span>';
+    			return '<span context-menu data-target="menu-'+i+'" hover-class="select-text">'+sentence+'</span>';
     		}).join(" ");
     	}
     })
@@ -34,35 +34,40 @@ angular.module('vizit')
 		        restrict: 'A',
 		        link: function (scope, element, attrs) {
 		        		var clicked = false;
-		            element.on('mouseenter', function() {
+		            element.on('click', function() {
+		            	if(clicked){
+		            		clicked = false;
+		            		return element.removeClass(attrs["hoverClass"]);
+		            	}
 	                element.addClass(attrs["hoverClass"]);
+	                clicked = true;
 		            });
-		            element.on('mouseleave', function() {
-		            	if(clicked) return;
-	                element.removeClass(attrs["hoverClass"]);
-	                clicked = false;
-		            });
-		            $document.bind('click.selectedText', function(event){
-		            		if(event.target === element[0]) {
-		            			element.addClass(attrs["hoverClass"]);
-		            			clicked = true;
-		            			return;
-		            		}
+		            // element.on('mouseleave', function() {
+		            // 	if(clicked) return;
+	             //    element.removeClass(attrs["hoverClass"]);
+	             //    clicked = false;
+		            // });
+		            // $document.bind('click.selectedText', function(event){
+		            // 		if(event.target === element[0]) {
+		            // 			element.addClass(attrs["hoverClass"]);
+		            // 			clicked = true;
+		            // 			return;
+		            // 		}
 
-                    var isClickedElementChildOfPopup = element
-                        .find(event.target)
-                        .length > 0;
+              //       var isClickedElementChildOfPopup = element
+              //           .find(event.target)
+              //           .length > 0;
 
-                    if (isClickedElementChildOfPopup){
-                    	clicked = true;
-                      return;
-                    }
+              //       if (isClickedElementChildOfPopup){
+              //       	clicked = true;
+              //         return;
+              //       }
 
-                    // scope.$apply(function(){
-                    element.removeClass(attrs["hoverClass"]);
-                    clicked = false;
-                    // });
-                });
+              //       // scope.$apply(function(){
+              //       element.removeClass(attrs["hoverClass"]);
+              //       clicked = false;
+              //       // });
+              //   });
 		        }
 		    };
 		})

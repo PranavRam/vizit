@@ -61,10 +61,16 @@
 			      <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;"></ng-md-icon>
 			    </md-button>
 		      <span flex></span>
-		      <md-button class="md-icon-button md-primary" aria-label="add">
+		      <md-button class="md-icon-button md-primary" aria-label="add" ng-click="addEvidence()">
+		      	<md-tooltip md-direction="top">
+		      	   Add as Evidence
+	      	  </md-tooltip>
 		        <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
 		      </md-button>
 		      <md-button class="md-icon-button md-primary" aria-label="note_add">
+		      	<md-tooltip md-direction="left">
+		      	  Add as Evidence Into Hypothesis
+	      	  </md-tooltip>
 		        <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon>
 		      </md-button>
 			    <!-- </md-button> -->

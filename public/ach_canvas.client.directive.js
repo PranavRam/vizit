@@ -39,20 +39,14 @@ function achCanvas($timeout) {
     		]
     		
     		hypotheses = hypotheses.data([{x: 100, y: 100, name: "Hypothesis 0"}]);
-    		evidences = evidences.data([{x: 300, y: 300}]);
 
     		var hp = hypotheses
     							.enter()
     							.append('g')
   					      .call(hypothesis)
   					      .on('click.hypothesis', function(d) {
-  					      	scope.selectedHypothesis = d;
-  					      });
-
-	  		var ev = evidences
-	  							.enter()
-	  							.append('g')
-						      .call(evidence);								  	
+  					      	scope.ach.selectedHypothesis = d;
+  					      });						  	
 
 			  var zoom = d3.behavior.zoom()
 			      .scaleExtent([0.1, 1])
@@ -102,6 +96,16 @@ function achCanvas($timeout) {
 								.y(achCanvas.height() - 8 - minimapHeight)
 								.render()
 						})
+					}
+				})
+				scope.$watchCollection('evidences', function(newVal, oldVal) {
+					if(newVal !== oldVal) {
+							console.log(scope.evidences);
+							evidences = evidences.data(scope.evidences);
+				  		var ev = evidences
+				  							.enter()
+				  							.append('g')
+									      .call(evidence);
 					}
 				})
     	}

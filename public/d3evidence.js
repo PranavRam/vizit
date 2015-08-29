@@ -20,6 +20,10 @@
 		    .on("dragend", function(d) {
 		    	draggable = false;
 		    })
+		var zoomDisabled = d3.behavior.zoom()
+		    .on("zoom", function() {
+		    	d3.event.sourceEvent.stopImmediatePropagation();
+		    });
 
 		function dragmove(d) {
 			if(!draggable) return;
@@ -36,23 +40,35 @@
 			selection.each(function(data, i) {
 				// debugger;
 				var parent = d3.select(this);
-				var fo = parent.append("foreignObject")
+				var fo = parent.selectAll('foreignObject');
+				var container = parent.selectAll('.evidence');
+				var header = parent.selectAll('.header');
+				var body = parent.selectAll('.body');
+				var title = parent.selectAll('.title');
+				var count = parent.selectAll('.count');
+				var showHide = parent.selectAll('.show-hide');
+
+				if(fo.empty()){
+					fo = parent
+									.append("foreignObject")
     					    .attr({
     					    	x:data.x,
     					    	y:data.y
     					    })
-				var wrapper = fo.append("xhtml:body")
 
-				var container = wrapper
-													.append("xhtml:div")
-													.attr("class", "evidence");
+					var wrapper = fo.append("xhtml:body")
 
-				var header = container.append("xhtml:div").attr("class", "header");
-				var body = container.append("xhtml:div").attr("class", "body");
+					container = wrapper
+												.append("xhtml:div")
+												.attr("class", "evidence");
 
-				var title = header.append("xhtml:p").attr("class", "title");
-				var count = header.append("xhtml:div").attr("class", "count");
-				var showHide = header.append("xhtml:div").attr("class", "show-hide");
+					header = container.append("xhtml:div").attr("class", "header");
+					body = container.append("xhtml:div").attr("class", "body");
+
+					title = header.append("xhtml:p").attr("class", "title");
+					count = header.append("xhtml:div").attr("class", "count");
+					showHide = header.append("xhtml:div").attr("class", "show-hide");
+				}
 
 				container.style({
 					"color": "white"
@@ -70,7 +86,7 @@
 					})
 
 
-				title.text("Evidence "+i)
+				title.text(function(d){ return d.name })
 							.attr({
 								flex: ""
 							});
@@ -99,16 +115,27 @@
 
 				body.style({
 					width: opts.width+"px",
-					"min-height": 150+"px",
-				})
+					"height": 150+"px",
+					color: 'black',
+					'font-size': '11px',
+					'overflow-y': 'auto'
+				});
+				var content = body.selectAll('.content').data(data.content);
 
-				var node = $(container.node());
+				content.enter().append('p')
+					.attr('class', 'content')
+					.html(function(d) { return d.name + '<br />' + d.text});
+				content.exit().remove();
+				// var text = 'A Special Asparagus Season<br>Story by: <person data-entity-id="2635">Ellie</person> <person data-entity-id="2636">Olmsen</person><br><person data-entity-id="2637">Date</person> Published to Web: <date data-entity-id="2638">7/3/2004</date><br><br><organization data-entity-id="2639">ALDERWOOD</organization> - Local asparagus is on the stands <date data-entity-id="2640">early</date> <date data-entity-id="2641">this</date> <date data-entity-id="2642">year</date> in <location data-entity-id="2643">Eastern</location> <location data-entity-id="2644">Washington</location>, catching both farmers and consumers off guard.'
+				// body.html(text);
+				// var node = $(container.node());
 				fo.attr({
 					width: opts.width,
-					height: node.height()
+					height: 200
 				});
 
 				fo.call(drag);
+				body.call(zoomDisabled);
 			})
 		}
 		return component;
