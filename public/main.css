@@ -107,7 +107,7 @@ ng-md-icon svg {
 #vertical-container {
 	/*height: 400px;*/
 }
-.entity-container {
+.entity-container, .evidence-container {
 	height: 25px;
 }
 .entity-container .entity {

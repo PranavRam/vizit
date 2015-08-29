@@ -86,7 +86,7 @@
 					})
 
 
-				title.text(function(d){ return d.name })
+				title.text(data.name)
 							.attr({
 								flex: ""
 							});

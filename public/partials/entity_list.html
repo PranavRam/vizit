@@ -1,48 +1,62 @@
-<md-input-container class="entity-selection">
-  <label>Entity Type</label>
-  <md-select ng-model="entityType">
-    <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
-  </md-select>
-</md-input-container>
-<md-content class="entity-list-container" flex>
-  <md-card>
-		<md-card-content>
-			<md-virtual-repeat-container auto-height="top-view" id="vertical-container" height="190">
-	      <div ng-click="getConnections(entity)" md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
-          	<div class="entity-relevance">
-          	</div>
-          	<div class="entity" layout="row">
-      				<div class="entity-count">
-      					<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
-      				</div>
-          		<span flex class="entity-text">{{entity.text}}</span>
-          	</div>
-	      </div>
-	    </md-virtual-repeat-container>
-	    <!-- <div ng-repeat="entity in entities | filter: {type: entityType}" class="entity-container">
-	    	<div class="entity-relevance">
-	    	</div>
-	    	<div class="entity" layout="row">
-					<div class="entity-count">
-						<div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
-					</div>
-	    		<span flex class="entity-text">{{entity.text}}</span>
-	    	</div>
-	    </div> -->
-		</md-card-content>
-  </md-card>
-</md-content>
-<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-	<md-button class="md-icon-button md-primary" aria-label="search">
-    <ng-md-icon icon="search"></ng-md-icon>
-  </md-button>
-  <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
-    <ng-md-icon icon="sort"></ng-md-icon>
-  </md-button>
-  <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
-    <ng-md-icon icon="filter_list"></ng-md-icon>
-  </md-button>
-  <md-button class="md-icon-button" aria-label="sort_connection">
-    <ng-md-icon icon="swap_calls"></ng-md-icon>
-  </md-button>
-</section>
+<md-tabs flex>
+      <md-tab label="Entities">
+        <md-content>
+          <md-input-container class="entity-selection">
+            <!-- <label>Entity Type</label> -->
+            <md-select ng-model="entityType">
+              <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
+            </md-select>
+          </md-input-container>
+          <md-content class="entity-list-container" flex>
+            <md-card>
+              <md-card-content>
+                <md-virtual-repeat-container auto-height="top-view" id="vertical-container" height="210">
+                  <div ng-click="getConnections(entity)" md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
+                      <div class="entity-relevance">
+                      </div>
+                      <div class="entity" layout="row">
+                        <div class="entity-count">
+                          <div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
+                        </div>
+                        <span flex class="entity-text">{{entity.text}}</span>
+                      </div>
+                  </div>
+                </md-virtual-repeat-container>
+              </md-card-content>
+            </md-card>
+          </md-content>
+          <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+            <md-button class="md-icon-button md-primary" aria-label="search">
+              <ng-md-icon icon="search"></ng-md-icon>
+            </md-button>
+            <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
+              <ng-md-icon icon="sort"></ng-md-icon>
+            </md-button>
+            <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
+              <ng-md-icon icon="filter_list"></ng-md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="sort_connection">
+              <ng-md-icon icon="swap_calls"></ng-md-icon>
+            </md-button>
+          </section>
+        </md-content>
+      </md-tab>
+      <md-tab label="Evidences">
+        <md-content class="md-padding" layout="column">
+          <md-content class="evidences" flex>
+            <md-content class="evidence" ng-repeat="evidence in evidences">
+              {{evidence.name}}
+            </md-content>
+          </md-content>
+          <md-content ng-show="evidences.length" flex="30">
+            {{evidences[0].content[0].text}}
+          </md-content>
+        </md-content>
+      </md-tab>
+      <md-tab label="Hypothesis">
+        <md-content class="md-padding">
+          <h1 class="md-display-2">Tab Three</h1>
+          <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+        </md-content>
+      </md-tab>
+    </md-tabs>
