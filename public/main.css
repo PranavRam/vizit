@@ -247,3 +247,7 @@ ng-md-icon svg {
 .top-view {
 	overflow-y: hidden;
 }
+
+md-tab-content, md-tab-content > div, md-tab-content > div > md-content {
+	height: 100%;
+}
