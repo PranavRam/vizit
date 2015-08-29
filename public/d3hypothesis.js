@@ -40,24 +40,35 @@
 			selection.each(function(data, i) {
 				// debugger;
 				var parent = d3.select(this);
-				var fo = parent.append("foreignObject")
+				var fo = parent.selectAll('foreignObject');
+				var container = parent.selectAll('.hypothesis');
+				var header = parent.selectAll('.header');
+				var body = parent.selectAll('.body');
+				var title = parent.selectAll('.title');
+				var count = parent.selectAll('.count');
+				var showHide = parent.selectAll('.show-hide');
+
+				if(fo.empty()){
+					fo = parent
+									.append("foreignObject")
     					    .attr({
     					    	x:data.x,
     					    	y:data.y
     					    })
-				var wrapper = fo.append("xhtml:body")
 
-				var container = wrapper
-													.append("xhtml:div")
-													.attr("class", "hypothesis");
+					var wrapper = fo.append("xhtml:body")
 
-				var header = container.append("xhtml:div").attr("class", "header");
-				var body = container.append("xhtml:div").attr("class", "body");
+					container = wrapper
+												.append("xhtml:div")
+												.attr("class", "hypothesis");
 
-				var title = header.append("xhtml:p").attr("class", "title");
-				var count = header.append("xhtml:div").attr("class", "count");
-				var showHide = header.append("xhtml:div").attr("class", "show-hide");
+					header = container.append("xhtml:div").attr("class", "header");
+					body = container.append("xhtml:div").attr("class", "body");
 
+					title = header.append("xhtml:p").attr("class", "title");
+					count = header.append("xhtml:div").attr("class", "count");
+					showHide = header.append("xhtml:div").attr("class", "show-hide");
+				}
 				container.style({
 					"color": "white"
 				})
@@ -103,13 +114,14 @@
 
 				body.style({
 					width: opts.width+"px",
-					"min-height": 150+"px",
+					"height": 150+"px",
+					"overflow-y": "auto"
 				})
 
 				var node = $(container.node());
 				fo.attr({
 					width: opts.width,
-					height: node.height()
+					height: 200
 				});
 
 				fo.call(drag);
