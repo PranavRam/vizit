@@ -146,6 +146,36 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
     RightClickMenuCtrl.open($event);
   }
 
+  function getEntitiesInSentence(sentence) {
+    var parsedHTML = $.parseHTML(sentence);
+    var entities = {};
+    $scope.entityTypes.forEach(function(entityType) {
+      var entitiesFilter = parsedHTML.filter(function(node) {
+        return node.tagName === entityType.toUpperCase();
+      });
+      if(entitiesFilter.length){
+        entities[entityType] = entitiesFilter.map(function(entity) {
+          return  {
+            name: entity.innerHTML,
+            id: +entity.getAttribute('data-entity-id')
+          }
+        });
+      }
+    });
+    // console.log(entities)
+    return entities;
+  }
+
+  function getWeightsOfEntities(entities) {
+    var count = 0;
+    for(entityType in entities){
+      if(entities.hasOwnProperty(entityType)){
+        count += entities[entityType].length;
+      }
+    }
+    return count;
+  }
+
   $scope.addEvidence = function() {
     var sentences = angular.element('.document-viewer .document-text .select-text');
     var evidence = {
@@ -153,14 +183,18 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
       y: 100,
       name: $scope.selectedDocument.name
     };
-    var content = []
+    var content = [];
+    var weight = 0;
     sentences.each(function() { 
       content.push({
         name: $scope.selectedDocument.name,
         text: this.innerHTML
-      })
+      });
+      var entities = getEntitiesInSentence(this.innerHTML);
+      weight += getWeightsOfEntities(entities);
     });
-    evidence.content = content
+    evidence.content = content;
+    evidence.weight = weight;
     $scope.evidences.push(evidence);
   }
 }

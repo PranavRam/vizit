@@ -99,7 +99,7 @@
 					height: 25+"px",
 					padding: "8px"
 				})
-				.text("3")
+				.text(data.weight)
 				.attr({
 					// flex: "5"
 				})

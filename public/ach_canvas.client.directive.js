@@ -48,6 +48,15 @@ function achCanvas($timeout) {
   					      	scope.ach.selectedHypothesis = d;
   					      });						  	
 
+  			function render() {
+						evidences = evidences.data(scope.evidences);
+			  		var ev = evidences
+			  							.enter()
+			  							.append('g')
+								      .call(evidence);
+						evidences.exit().remove();
+  			}
+  			render();
 			  var zoom = d3.behavior.zoom()
 			      .scaleExtent([0.1, 1])
 			      .on("zoom", zoomHandler);
@@ -100,12 +109,8 @@ function achCanvas($timeout) {
 				})
 				scope.$watchCollection('evidences', function(newVal, oldVal) {
 					if(newVal !== oldVal) {
-							console.log(scope.evidences);
-							evidences = evidences.data(scope.evidences);
-				  		var ev = evidences
-				  							.enter()
-				  							.append('g')
-									      .call(evidence);
+							// console.log(scope.evidences);
+							render();
 					}
 				})
     	}
