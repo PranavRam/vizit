@@ -1,1 +1,1 @@
-angular.module('vizit', ['ngMaterial', 'ui.router', 'ngFileUpload', 'ngMdIcons']);
+angular.module('vizit', ['ngMaterial', 'ui.router', 'ngFileUpload', 'ngMdIcons', 'xeditable']);

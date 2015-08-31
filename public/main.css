@@ -251,3 +251,15 @@ ng-md-icon svg {
 md-tab-content, md-tab-content > div, md-tab-content > div > md-content {
 	height: 100%;
 }
+
+.evidences .evidence {
+
+}
+
+.evidences .evidence.selected {
+	border-right: solid 2px rgb(244, 67, 54);
+}
+
+.evidence-content {
+	font-size: small;
+}

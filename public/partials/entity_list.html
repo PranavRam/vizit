@@ -44,12 +44,14 @@
       <md-tab label="Evidences">
         <md-content class="md-padding" layout="column">
           <md-content class="evidences" flex>
-            <md-content class="evidence" ng-repeat="evidence in evidences">
-              {{evidence.name}}
+            <md-content class="evidence" ng-repeat="evidence in evidences" ng-click="ach.selectedEvidence = evidence" ng-class="{selected: evidence === ach.selectedEvidence}">
+              <span onaftersave="ach.updateACH()" editable-text="evidence.name">{{evidence.name}}</span>
             </md-content>
           </md-content>
-          <md-content ng-show="evidences.length" flex="30">
-            {{evidences[0].content[0].text}}
+          <md-content ng-show="ach.selectedEvidence" flex="30">
+            <div>
+              <p ng-repeat="content in ach.selectedEvidence.content" ng-bind-html="content.text | to_trusted" class="evidence-content"></p>
+            </div>
           </md-content>
         </md-content>
       </md-tab>

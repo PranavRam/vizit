@@ -90,6 +90,13 @@ angular.module('vizit')
 							w.bind('resize', function () {
 			            setHeight();
 			        });
+			        scope.$watch('ach.showDocumentViewer', function(newVal, oldVal) {
+			        	if(newVal !== oldVal) {
+			        		$timeout(function() {
+			        			setHeight();
+			        		})
+			        	}
+			        })
 						// });
 		        // element.height($(window).height() - $('.header').outerHeight());
 		    }

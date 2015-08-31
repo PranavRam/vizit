@@ -39,7 +39,18 @@
 <md-content flex ui-view="topView" class="top-view">
 	
 </md-content>
-<md-content flex="25" layout="column" ng-hide="ach.fullscreen">
+<md-content>
+    <md-toolbar flex class="top-bar" ng-hide="ach.showDocumentViewer">
+      <div class="md-toolbar-tools" layout="row" layout-align="start center">
+        <span flex></span>
+        <md-button class="md-icon-button md-primary" aria-label="minimize-document-viewer" ng-click="ach.showDocumentViewer = !ach.showDocumentViewer">
+          <ng-md-icon icon="{{ach.showDocumentViewer ? 'expand_more' : 'expand_less'}}" style="fill: white;"></ng-md-icon>
+        </md-button>
+        <!-- </md-button> -->
+      </div>
+    </md-toolbar>
+</md-content>
+<md-content flex="25" layout="column" ng-hide="ach.fullscreen || !ach.showDocumentViewer">
 	<div layout="row">
 			<md-toolbar flex="20" class="top-bar">
 			  <div class="md-toolbar-tools" layout="row" layout-align="center center">
@@ -68,10 +79,13 @@
 		        <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
 		      </md-button>
 		      <md-button class="md-icon-button md-primary" aria-label="note_add">
-		      	<md-tooltip md-direction="left">
+		      	<md-tooltip md-direction="top">
 		      	  Add as Evidence Into Hypothesis
 	      	  </md-tooltip>
 		        <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon>
+		      </md-button>
+		      <md-button class="md-icon-button md-primary" aria-label="minimize-document-viewer" ng-click="ach.showDocumentViewer = !ach.showDocumentViewer">
+		        <ng-md-icon icon="{{ach.showDocumentViewer ? 'expand_more' : 'expand_less'}}" style="fill: white;"></ng-md-icon>
 		      </md-button>
 			    <!-- </md-button> -->
 			  </div>

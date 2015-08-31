@@ -25,7 +25,9 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
     },
     searchInput: "",
     fullscreen: false,
-    selectedHypothesis: null
+    selectedHypothesis: null,
+    selectedEvidence: null,
+    showDocumentViewer: true
   };
   $scope.config = {}; // use defaults
   $scope.model = {}; // always pass empty object

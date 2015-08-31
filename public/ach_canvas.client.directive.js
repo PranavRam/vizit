@@ -50,11 +50,10 @@ function achCanvas($timeout) {
 
   			function render() {
 						evidences = evidences.data(scope.evidences);
-			  		var ev = evidences
-			  							.enter()
-			  							.append('g')
-								      .call(evidence);
+			  		evidences.enter().append('g');
 						evidences.exit().remove();
+						evidences.call(evidence);
+
   			}
   			render();
 			  var zoom = d3.behavior.zoom()
@@ -89,7 +88,33 @@ function achCanvas($timeout) {
 
 		    zoom.scale(scale);
 		    zoomHandler(scale);
+		    scope.ach.updateACH = function() {
+		    	render();
+		    }
+		    scope.$watch('ach.showDocumentViewer', function(newVal, oldVal) {
+		    	if(newVal !== oldVal) {
+		    		$timeout(function() {
+		    			svg
+		    				// .transition()
+		    				.attr({
+		    					width: achCanvas.width(),
+		    					height: achCanvas.height()
+		    				});
+		    			container
+		    				// .transition()
+		    				.attr({
+		    					width: achCanvas.width(),
+		    					height: achCanvas.height()
+		    				});
 
+		    			minimap
+		    				.target(container)
+		    				.x(achCanvas.width() - 8 - minimapWidth)
+		    				.y(achCanvas.height() - 8 - minimapHeight)
+		    				.render()
+		    		})
+		    	}
+		    })
 				scope.$watch('ach.fullscreen', function(newVal, oldVal) {
 					if(newVal !== oldVal) {
 						$timeout(function() {
@@ -99,8 +124,15 @@ function achCanvas($timeout) {
 									width: achCanvas.width(),
 									height: achCanvas.height()
 								});
+							container
+		    				// .transition()
+		    				.attr({
+		    					width: achCanvas.width(),
+		    					height: achCanvas.height()
+		    				});
 
 							minimap
+								.target(container)
 								.x(achCanvas.width() - 8 - minimapWidth)
 								.y(achCanvas.height() - 8 - minimapHeight)
 								.render()
