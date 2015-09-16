@@ -40,7 +40,7 @@
 	
 </md-content>
 <md-content>
-    <md-toolbar flex class="top-bar" ng-hide="ach.showDocumentViewer">
+    <md-toolbar flex class="top-bar" ng-hide="ach.showDocumentViewer || ach.fullscreen">
       <div class="md-toolbar-tools" layout="row" layout-align="start center">
         <span flex></span>
         <md-button class="md-icon-button md-primary" aria-label="minimize-document-viewer" ng-click="ach.showDocumentViewer = !ach.showDocumentViewer">
@@ -78,7 +78,7 @@
 	      	  </md-tooltip>
 		        <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
 		      </md-button>
-		      <md-button class="md-icon-button md-primary" aria-label="note_add">
+		      <md-button class="md-icon-button md-primary" aria-label="note_add" ng-click="addEvidence(true)">
 		      	<md-tooltip md-direction="top">
 		      	  Add as Evidence Into Hypothesis
 	      	  </md-tooltip>

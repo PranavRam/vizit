@@ -442,6 +442,34 @@ server.register([
 
     server.route({
         method: 'GET',
+        path:'/api/entities/{id}', 
+        handler: function (request, reply) {
+          // console.log(request);
+          var id = encodeURIComponent(request.params.id);
+          // console.log(request.payload);
+          // reply(request.payload);
+          var query = [
+            'MATCH (n:Entity)',
+            'WHERE id(n) = {id}',
+            'RETURN n'
+          ].join('\n')
+
+          db.cypher({
+              query: query,
+              params: {
+                id: +id,
+              }
+          }, function (err, results) {
+              if (err) return reply(err);
+              console.log(results);
+              var entities = results.map(function(entity) { return entity['n']});
+              reply(entities);
+          });
+        }
+    });
+
+    server.route({
+        method: 'GET',
         path:'/api/tfidf', 
         handler: function (request, reply) {
           // console.log(request);
@@ -521,6 +549,94 @@ server.register([
                 return obj;
               })
               reply(connections);
+          });
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path:'/api/entities/{id}', 
+        handler: function (request, reply) {
+          // console.log(request);
+          var id = encodeURIComponent(request.params.id);
+          // console.log(request.payload);
+          // reply(request.payload);
+          var query = [
+            'MATCH (n:Entity)',
+            'WHERE id(n) = {id}',
+            'SET n.weight = n.weight + {count}',
+            'RETURN n'
+          ].join('\n')
+
+          db.cypher({
+              query: query,
+              params: {
+                id: +id,
+                count: +request.payload.count
+              }
+          }, function (err, results) {
+              if (err) return reply(err);
+              // console.log(results);
+              var entity = results['n'];
+              reply(entity);
+          });
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path:'/api/evidences', 
+        handler: function (request, reply) {
+          // console.log(request);
+          var evidence = request.payload;
+          // console.log(request.payload);
+          // reply(request.payload);
+          var query = [
+              "MERGE (n:Evidence { name: {name} })",
+              'ON CREATE SET n = {props}',
+              'RETURN n',
+          ].join('\n');
+
+          var params = {
+              props: evidence,
+              name: evidence.name
+          };
+
+          db.cypher({
+              query: query,
+              params: params,
+          }, function (err, results) {
+              if (err) return reply(err);
+              console.log(results);
+          });
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path:'/api/snippet', 
+        handler: function (request, reply) {
+          // console.log(request);
+          var snippet = request.payload.snippet;
+          // console.log(request.payload);
+          // reply(request.payload);
+          var query = [
+              "MERGE (n:Snippet { text: {text} })",
+              'ON CREATE SET n = {props}',
+              'RETURN n',
+          ].join('\n');
+
+          var params = {
+              props: snippet,
+              text: snippet.text
+          };
+
+          db.cypher({
+              query: query,
+              params: params,
+          }, function (err, results) {
+              if (err) return reply(err);
+              console.log(results);
           });
         }
     });

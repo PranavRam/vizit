@@ -48,11 +48,6 @@
               <span onaftersave="ach.updateACH()" editable-text="evidence.name">{{evidence.name}}</span>
             </md-content>
           </md-content>
-          <md-content ng-show="ach.selectedEvidence" flex="30">
-            <div>
-              <p ng-repeat="content in ach.selectedEvidence.content" ng-bind-html="content.text | to_trusted" class="evidence-content"></p>
-            </div>
-          </md-content>
         </md-content>
       </md-tab>
       <md-tab label="Hypothesis">

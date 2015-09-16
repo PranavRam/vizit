@@ -53,7 +53,6 @@ function achCanvas($timeout) {
 			  		evidences.enter().append('g');
 						evidences.exit().remove();
 						evidences.call(evidence);
-
   			}
   			render();
 			  var zoom = d3.behavior.zoom()
@@ -90,6 +89,8 @@ function achCanvas($timeout) {
 		    zoomHandler(scale);
 		    scope.ach.updateACH = function() {
 		    	render();
+		    	minimap.render();
+
 		    }
 		    scope.$watch('ach.showDocumentViewer', function(newVal, oldVal) {
 		    	if(newVal !== oldVal) {

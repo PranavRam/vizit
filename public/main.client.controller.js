@@ -1,7 +1,7 @@
 angular.module('vizit')
 			.controller('MainCtrl', MainCtrl);
 
-function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile) {
+function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile, $q) {
 	$scope.documents = [];
   $scope.entities = [];
   $scope.selectedDocument = {};
@@ -164,39 +164,132 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
         });
       }
     });
-    // console.log(entities)
     return entities;
   }
 
-  function getWeightsOfEntities(entities) {
-    var count = 0;
+  function getEntitiesForEvidence(entities) {
+    var promises = [];
     for(entityType in entities){
       if(entities.hasOwnProperty(entityType)){
-        count += entities[entityType].length;
+        var arrayEntities = _.uniq(entities[entityType], 'id');
+        angular.forEach(arrayEntities, function(entity) {
+          var promise = $http({
+              url   : 'api/entities/' + entity.id,
+              method: 'GET'
+          });
+          promises.push(promise);
+        })
       }
     }
-    return count;
+    return $q.all(promises);;
   }
 
-  $scope.addEvidence = function() {
+  function setEntityWeights(entities) {
+    var promises = [];
+
+    for(entityType in entities){
+      if(entities.hasOwnProperty(entityType)){
+        var arrayEntities = entities[entityType];
+        angular.forEach(arrayEntities, function(entity) {
+          var promise = $http({
+              url   : 'api/entities/' + entity.id,
+              method: 'POST',
+              data  : {count: 1}
+          });
+
+          promises.push(promise);
+        })
+      }
+    }
+
+    return $q.all(promises);
+    
+  }
+
+  $scope.addEvidence = function(wholeDocument) {
+    var promises = [];
     var sentences = angular.element('.document-viewer .document-text .select-text');
     var evidence = {
       x: 100,
       y: 100,
-      name: $scope.selectedDocument.name
+      name: 'Evidence ' + $scope.evidences.length
     };
     var content = [];
-    var weight = 0;
-    sentences.each(function() { 
+    var evidenceEntities = {};
+    $scope.entityTypes.forEach(function(entityType){
+      evidenceEntities[entityType] = [];
+    })
+
+    if(!wholeDocument){
+      sentences.each(function() { 
+        content.push({
+          name: $scope.selectedDocument.name,
+          text: this.innerHTML
+        });
+        var entities = getEntitiesInSentence(this.innerHTML);
+        _.merge(evidenceEntities, entities, function(a, b) {
+          // console.log(a, b);
+          if (_.isArray(b)) {
+            return a.concat(b);
+          }
+        });
+        var promise = $http({
+            url   : 'api/snippet/',
+            method: 'POST',
+            data  : {
+              snippet: content,
+              entities: entities
+            }
+        });
+
+        promises.push(promise);
+        // weight += getWeightsOfEntities(entities);
+      });
+    }
+    else{
+      content = [];
+      // weight = 0;
       content.push({
         name: $scope.selectedDocument.name,
-        text: this.innerHTML
+        text: $scope.selectedDocument.parsedText
       });
-      var entities = getEntitiesInSentence(this.innerHTML);
-      weight += getWeightsOfEntities(entities);
-    });
-    evidence.content = content;
-    evidence.weight = weight;
-    $scope.evidences.push(evidence);
+      var entities = getEntitiesInSentence($scope.selectedDocument.parsedText);
+      _.merge(evidenceEntities, entities, function(a, b) {
+        // console.log(a, b);
+        if (_.isArray(b)) {
+          return a.concat(b);
+        }
+      });
+      // var promise = $http({
+      //     url   : 'api/snippet/',
+      //     method: 'POST',
+      //     data  : {
+      //       snippet: content,
+      //       entities: entities
+      //     }
+      // });
+
+      // promises.push(promise);
+      // weight += getWeightsOfEntities(entities);
+    }
+    $q.all(promises)
+      .then(function(snippets) {
+        setEntityWeights(evidenceEntities)
+          .then(function() {
+            evidence.content = content;
+            getEntitiesForEvidence(evidenceEntities)
+              .then(function(entities) {
+                entities = entities.map(function(entity) { return entity.data[0] });
+                var weight = 0;
+                angular.forEach(entities, function(entity) {
+                  weight += entity.properties.weight;
+                });
+                evidence.weight = weight;
+                evidence.entities = evidenceEntities;
+                $scope.evidences.push(evidence);
+                $scope.ach.updateACH();
+              });
+          });
+      })
   }
 }
