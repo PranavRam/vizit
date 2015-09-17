@@ -1,1 +1,1 @@
-angular.module('vizit', ['ngMaterial', 'ui.router', 'ngFileUpload', 'ngMdIcons', 'xeditable']);
+angular.module('vizit', ['ngMaterial', 'ui.router', 'ngFileUpload', 'ngMdIcons', 'xeditable', 'gridshore.c3js.chart']);

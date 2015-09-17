@@ -19,6 +19,11 @@
     "lodash": "~3.10.1",
     "svg-morpheus": "~0.1.8",
     "font-awesome": "~4.4.0",
-    "angular-xeditable": "~0.1.9"
+    "angular-xeditable": "~0.1.9",
+    "c3-angular": "~0.7.1"
+  },
+  "resolutions": {
+    "angular": "1.4.4",
+    "d3": "<=3.5.0"
   }
 }

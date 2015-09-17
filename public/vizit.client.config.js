@@ -46,6 +46,20 @@ function config($stateProvider, $urlRouterProvider) {
           }
       }
     })
+    .state('vizit.provenance', {
+      url: "/provenance",
+      views: {
+          'topView@vizit': {
+              templateUrl: '/public/partials/provenance.html'
+          },
+          'entityList@vizit.provenance': {
+              templateUrl: '/public/partials/entity_list.html'
+          },
+          'achProvenance@vizit.provenance': {
+              templateUrl: '/public/partials/ach_provenance.html'
+          }
+      }
+    })
     .state('upload', {
       url: "/upload",
       templateUrl: "/public/partials/upload.html",

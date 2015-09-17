@@ -110,7 +110,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
       var evidences = response.data;
       // console.log(extent);
       $scope.evidences = evidences;
-      $scope.ach.updateACH();
+      if($scope.ach.updateACH) $scope.ach.updateACH();
     }, function(response) {
       // called asynchronously if an error occurs
       // or server returns response with an error status.
