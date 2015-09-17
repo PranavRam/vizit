@@ -1,6 +1,40 @@
 angular.module('vizit')
 			.controller('MainCtrl', MainCtrl);
 
+angular.module('vizit').controller('AchSummaryCtrl', ['$scope', '$http', function ($scope, $http) {
+  $scope.gridOptions = {
+  };
+
+  $scope.gridOptions.columnDefs = [
+    { field:'name' },
+    { field:'gender' },
+    { field: 'spark', cellTemplate: '/public/partials/sparkline-cell.html', width: 100 }
+  ];
+
+  $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/100.json')
+    .success(function(data) {
+      data.forEach(function (d) {
+        d.spark = {
+          options: {
+            chart: {
+              type: 'sparklinePlus',
+              height: 20,
+              width: 100,
+              x: function(xd, i) { return i; }
+            }
+          },
+          data: []
+        };
+        
+        // Generate random X values
+        for (i=0; i<10; i++) {
+          d.spark.data.push({ x: i, y: Math.floor(Math.random()*(100-1+1)+1) });
+        }
+      });
+      
+      $scope.gridOptions.data = data;
+    });
+}]);
 function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile, $q) {
 	$scope.documents = [];
   $scope.entities = [];

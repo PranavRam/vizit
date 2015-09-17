@@ -1,8 +1,10 @@
 {% block header %}
 		<!-- bower:css -->
+	  <link rel="stylesheet" href="/public/lib/angular-ui-grid/ui-grid.css">
 	  <link rel="stylesheet" href="/public/lib/angular-xeditable/dist/css/xeditable.css">
-	  <link rel="stylesheet" href="/public/lib/c3/c3.css">
 	  <link rel="stylesheet" href="/public/lib/angular-material/angular-material.css">
+	  <link rel="stylesheet" href="/public/lib/c3/c3.css">
+	  <link rel="stylesheet" href="/public/lib/nvd3/build/nv.d3.css">
 	  <!-- endinject -->
     {% for item in assets.css %}
         <link rel="stylesheet" href="[[item]]"/>

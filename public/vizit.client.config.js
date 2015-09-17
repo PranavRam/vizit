@@ -46,6 +46,14 @@ function config($stateProvider, $urlRouterProvider) {
           }
       }
     })
+    .state('vizit.ach_summary', {
+      url: "/ach_summary",
+      views: {
+          'topView@vizit': {
+              templateUrl: '/public/partials/ach_summary.html'
+          }
+      }
+    })
     .state('vizit.provenance', {
       url: "/provenance",
       views: {

@@ -263,3 +263,12 @@ md-tab-content, md-tab-content > div, md-tab-content > div > md-content {
 .evidence-content {
 	font-size: small;
 }
+
+.grid {
+  width: 100%;
+  height: 250px;
+}
+
+.nv-sparklineplus text {
+  display: none;
+}
