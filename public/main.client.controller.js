@@ -105,6 +105,17 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
       // or server returns response with an error status.
     });
 
+  $http.get('/api/evidences').
+    then(function(response) {
+      var evidences = response.data;
+      // console.log(extent);
+      $scope.evidences = evidences;
+      $scope.ach.updateACH();
+    }, function(response) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+    });
+
   var template = `
     <div class="md-open-menu-container md-whiteframe-z2">
         <md-menu-content>
@@ -221,11 +232,12 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
     })
 
     if(!wholeDocument){
-      sentences.each(function() { 
-        content.push({
+      sentences.each(function() {
+        var snippet = {
           name: $scope.selectedDocument.name,
           text: this.innerHTML
-        });
+        };
+        content.push(snippet);
         var entities = getEntitiesInSentence(this.innerHTML);
         _.merge(evidenceEntities, entities, function(a, b) {
           // console.log(a, b);
@@ -234,10 +246,10 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
           }
         });
         var promise = $http({
-            url   : 'api/snippet/',
+            url   : 'api/snippet',
             method: 'POST',
             data  : {
-              snippet: content,
+              snippet: snippet,
               entities: entities
             }
         });
@@ -274,22 +286,32 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
     }
     $q.all(promises)
       .then(function(snippets) {
-        setEntityWeights(evidenceEntities)
-          .then(function() {
-            evidence.content = content;
-            getEntitiesForEvidence(evidenceEntities)
-              .then(function(entities) {
-                entities = entities.map(function(entity) { return entity.data[0] });
-                var weight = 0;
-                angular.forEach(entities, function(entity) {
-                  weight += entity.properties.weight;
-                });
-                evidence.weight = weight;
-                evidence.entities = evidenceEntities;
-                $scope.evidences.push(evidence);
-                $scope.ach.updateACH();
-              });
+        snippets = snippets.map(function(snippet) { return snippet.data; });
+        getEntitiesForEvidence(evidenceEntities)
+          .then(function(entities) {
+            entities = entities.map(function(entity) { return entity.data[0] });
+            var weight = 0;
+            angular.forEach(entities, function(entity) {
+              weight += entity.properties.weight;
+            });
+            evidence.weight = weight;
+            var promise = $http({
+                url   : 'api/evidences',
+                method: 'POST',
+                data  : {
+                  evidence: evidence,
+                  snippets: snippets
+                }
+            });
+
+            promise.then(function() {
+              evidence.content = content;
+              $scope.evidences.push(evidence);
+              $scope.ach.updateACH();
+            })
+            // evidence.entities = evidenceEntities;
           });
+      // });
       })
   }
 }

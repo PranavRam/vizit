@@ -377,6 +377,40 @@ function getDocuments(reply) {
   });
 }
 
+function getEvidences(reply) {
+  var query = [
+    'MATCH (n:Evidence)-[r:EVIDENCESNIPPET]->(e)',
+    'RETURN n, collect(e) as snippets',
+  ].join('\n')
+
+  db.cypher({
+      query: query,
+  }, function (err, results) {
+      if (err) return reply(err);
+      var evidences = results.map(function(result) {
+          var evidence = result['n'];
+          var id = evidence._id;
+          evidence = evidence.properties;
+          evidence.id = id;
+          evidence.content = result['snippets'].map(function(snippet) {
+            var id = snippet._id;
+            snippet = snippet.properties;
+            snippet.id = id;
+            return snippet;
+            // text = S(text).replaceAll(entity.text, '<'+entity.type+' data-entity-id="' + id + '">'+entity.text+'</'+entity.type+'>').s;
+          });
+          // obj.entities = _.groupBy(doc['entities'].map(function(entity) {
+          //   var obj = entity.properties;
+          //   obj._id = entity._id;
+          //   return obj;
+          // }), 'type');
+          // obj._id = doc['n']._id
+          return evidence;
+      });
+      reply(evidences);
+  });
+}
+
 function getEntities(reply) {
 	var query = [
     'MATCH (n:Entity)',
@@ -437,6 +471,15 @@ server.register([
         handler: function (request, reply) {
         	// console.log(request);
          	getEntities(reply);
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path:'/api/evidences', 
+        handler: function (request, reply) {
+          // console.log(request);
+          getEvidences(reply);
         }
     });
 
@@ -588,18 +631,19 @@ server.register([
         path:'/api/evidences', 
         handler: function (request, reply) {
           // console.log(request);
-          var evidence = request.payload;
-          // console.log(request.payload);
-          // reply(request.payload);
+          var evidence = request.payload.evidence;
+          var snippets = request.payload.snippets;
+          var snippetIds = snippets.map(function(snippet) {
+            return snippet._id;
+          })
           var query = [
-              "MERGE (n:Evidence { name: {name} })",
+              "MERGE (n:Evidence)",
               'ON CREATE SET n = {props}',
               'RETURN n',
           ].join('\n');
 
           var params = {
               props: evidence,
-              name: evidence.name
           };
 
           db.cypher({
@@ -607,7 +651,31 @@ server.register([
               params: params,
           }, function (err, results) {
               if (err) return reply(err);
-              console.log(results);
+              var evidence = results[0]['n'];
+              var query = [
+                "MATCH (a:Evidence),(b:Snippet)",
+                "WHERE id(a) = {evidence_id} AND id(b) in {snippetIds}",
+                "MERGE (a)-[r:EVIDENCESNIPPET]->(b)",
+                // "ON CREATE SET b.weight = b.weight + 1",
+                // "ON MATCH SET b.weight = b.weight + 1",
+                // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                "RETURN r"
+              ].join('\n');
+
+              var params = {
+                  snippetIds: snippetIds,
+                  evidence_id: evidence._id,
+              };
+
+              db.cypher({
+                  query: query,
+                  params: params,
+              }, function (err, results) {
+                  if (err) return reply(err);
+                  console.log('relationship evidence snippet', results);
+                  reply(evidence);
+                  
+              });
           });
         }
     });
@@ -620,6 +688,18 @@ server.register([
           var snippet = request.payload.snippet;
           // console.log(request.payload);
           // reply(request.payload);
+          var entities = request.payload.entities;
+          var entityIds = [];
+          for(entityType in entities){
+            if(entities.hasOwnProperty(entityType)){
+              var ids = entities[entityType].map(function(entity) {
+                return +entity.id;
+              })
+              entityIds = entityIds.concat(ids)
+            }
+          }
+          console.log(entityIds, snippet);
+          // reply(entities);
           var query = [
               "MERGE (n:Snippet { text: {text} })",
               'ON CREATE SET n = {props}',
@@ -636,7 +716,32 @@ server.register([
               params: params,
           }, function (err, results) {
               if (err) return reply(err);
-              console.log(results);
+              console.log('snippet', results);
+              var snippet = results[0]['n'];
+              var query = [
+                "MATCH (a:Snippet),(b:Entity)",
+                "WHERE id(a) = {snippet_id} AND id(b) in {entityIds}",
+                "MERGE (a)-[r:SNIPPETENTITY]->(b)",
+                "ON CREATE SET b.weight = b.weight + 1",
+                "ON MATCH SET b.weight = b.weight + 1",
+                // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                "RETURN r"
+              ].join('\n');
+
+              var params = {
+                  entityIds: entityIds,
+                  snippet_id: snippet._id,
+              };
+
+              db.cypher({
+                  query: query,
+                  params: params,
+              }, function (err, results) {
+                  if (err) return reply(err);
+                  // console.log('relationship snippet', results);
+                  reply(snippet);
+                  
+              });
           });
         }
     });
