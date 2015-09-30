@@ -86,10 +86,16 @@
 		      </md-button>
 		      <md-button class="md-icon-button md-primary" aria-label="note_add" ng-click="addEvidence(true)">
 		      	<md-tooltip md-direction="top">
-		      	  Add as Evidence Into Hypothesis
+		      	  Add as Evidence into Hypothesis
 	      	  </md-tooltip>
 		        <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon>
 		      </md-button>
+  	      <md-button class="md-icon-button md-primary" aria-label="my_library_add" ng-click="addHypothesis()">
+  	      	<md-tooltip md-direction="top">
+  	      	  Add a Hypothesis
+        	  </md-tooltip>
+  	        <ng-md-icon icon="my_library_add" style="fill: white;"></ng-md-icon>
+  	      </md-button>
 		      <md-button class="md-icon-button md-primary" aria-label="minimize-document-viewer" ng-click="ach.showDocumentViewer = !ach.showDocumentViewer">
 		        <ng-md-icon icon="{{ach.showDocumentViewer ? 'expand_more' : 'expand_less'}}" style="fill: white;"></ng-md-icon>
 		      </md-button>

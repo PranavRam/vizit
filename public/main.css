@@ -256,7 +256,16 @@ md-tab-content, md-tab-content > div, md-tab-content > div > md-content {
 
 }
 
-.evidences .evidence.selected {
+.evidences .evidence .evidence-weight, .hypotheses .hypothesis .hypothesis-weight {
+	height: 10px;
+}
+
+.evidences .evidence .evidence-weight .bar, .hypotheses .hypothesis .hypothesis-weight .bar {
+	height: 10px;
+	background-color: black;
+}
+
+.evidences .evidence.selected, .hypotheses .hypothesis.selected  {
 	border-right: solid 2px rgb(244, 67, 54);
 }
 
@@ -266,9 +275,17 @@ md-tab-content, md-tab-content > div, md-tab-content > div > md-content {
 
 .grid {
   width: 100%;
-  height: 250px;
+  height: 500px;
 }
 
 .nv-sparklineplus text {
   display: none;
+}
+
+md-input-container.editable-controls {
+  padding: 0;
+}
+
+md-input-container.editable-controls [ng-message] {
+  position: static;
 }

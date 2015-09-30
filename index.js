@@ -637,13 +637,14 @@ server.register([
             return snippet._id;
           })
           var query = [
-              "MERGE (n:Evidence)",
+              "MERGE (n:Evidence {name: {evidence_name}})",
               'ON CREATE SET n = {props}',
               'RETURN n',
           ].join('\n');
 
           var params = {
               props: evidence,
+              evidence_name: evidence.name
           };
 
           db.cypher({

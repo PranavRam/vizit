@@ -85,7 +85,7 @@
 					})
 
 
-				title.text("Hypothesis "+i)
+				title.text(data.name)
 							.attr({
 								flex: ""
 							});
@@ -98,7 +98,7 @@
 					height: 25+"px",
 					padding: "8px"
 				})
-				.text("5")
+				.text(data.weight)
 				.attr({
 					// flex: "5"
 				})

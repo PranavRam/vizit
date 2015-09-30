@@ -38,21 +38,30 @@ function achCanvas($timeout) {
     			achCanvas.height() - 8 - minimapHeight
     		]
     		
-    		hypotheses = hypotheses.data([{x: 100, y: 100, name: "Hypothesis 0"}]);
+    		// hypotheses = hypotheses.data([{x: 100, y: 100, name: "Hypothesis 0"}]);
 
-    		var hp = hypotheses
-    							.enter()
-    							.append('g')
-  					      .call(hypothesis)
-  					      .on('click.hypothesis', function(d) {
-  					      	scope.ach.selectedHypothesis = d;
-  					      });						  	
+    		// var hp = hypotheses
+    		// 					.enter()
+    		// 					.append('g')
+  				// 	      .call(hypothesis)
+  				// 	      .on('click.hypothesis', function(d) {
+  				// 	      	scope.ach.selectedHypothesis = d;
+  				// 	      });						  	
 
   			function render() {
 						evidences = evidences.data(scope.evidences);
 			  		evidences.enter().append('g');
 						evidences.exit().remove();
 						evidences.call(evidence);
+
+						hypotheses = hypotheses.data(scope.hypotheses);
+			  		hypotheses.enter().append('g');
+						hypotheses.exit().remove();
+						hypotheses.call(hypothesis);
+						hypotheses
+									.on('click.hypothesis', function(d) {
+  					      	scope.ach.selectedHypothesis = d;
+  					      });	
   			}
   			render();
 			  var zoom = d3.behavior.zoom()
@@ -141,6 +150,12 @@ function achCanvas($timeout) {
 					}
 				})
 				scope.$watchCollection('evidences', function(newVal, oldVal) {
+					if(newVal !== oldVal) {
+							// console.log(scope.evidences);
+							render();
+					}
+				})
+				scope.$watchCollection('hypotheses', function(newVal, oldVal) {
 					if(newVal !== oldVal) {
 							// console.log(scope.evidences);
 							render();

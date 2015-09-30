@@ -49,6 +49,15 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
   $scope.currentState = $state.current.name;
   $scope.showDocumentText = true;
   $scope.evidences = [];
+  $scope.evidenceList = {
+    hover: '',
+    selected: ''
+  }
+  $scope.hypotheses = [];
+  $scope.hypothesesList = {
+    hover: '',
+    selected: ''
+  }
   var entityCountScale = d3.scale.linear();
   var colorScale = d3.scale.linear() // <-A
          // .domain([0, min, max])
@@ -102,6 +111,14 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
 
   $scope.getOccurenceWidth = function(count) {
     return Math.round(entityCountScale(count)) + 'px';
+  }
+
+  $scope.getEvidenceWidth = function(weight) {
+    return Math.round(weight * 5) + 'px';
+  }
+
+  $scope.getHypothesisWidth = function(weight) {
+    return Math.round(weight * 5) + 'px';
   }
 
   $scope.selectDocument = function(doc) {
@@ -251,6 +268,9 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $timeout, $state, $compile
     
   }
 
+  $scope.addHypothesis = function() {
+    $scope.hypotheses.push({x: 100, y: 100, weight: 5, name: "Hypothesis " + $scope.hypotheses.length});
+  }
   $scope.addEvidence = function(wholeDocument) {
     var promises = [];
     var sentences = angular.element('.document-viewer .document-text .select-text');
