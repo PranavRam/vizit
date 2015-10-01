@@ -1,4 +1,4 @@
-<md-content>
+<md-content flex>
    <md-card-content flex>
    	<div class="document-item" ng-click="selectDocument(document)" ng-repeat="document in documents" layout="row" layout-align="space-between center" ng-class="{selected: document.name === selectedDocument.name}">
    		<span flex="20">{{document.viewCount}}</span>

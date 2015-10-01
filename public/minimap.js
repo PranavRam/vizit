@@ -1,183 +1,186 @@
-(function(d3) {
-	d3.minimap = d3.minimap || {};
-	
-	function getXYFromTranslate(translateString) {
-		var split = translateString.split(",");
-		var x = split[0] ? ~~split[0].split("(")[1] : 0;
-		var y = split[1] ? ~~split[1].split(")")[0] : 0;
-		return [x, y];
-	}
-	function Minimap() {
-		var opts = {
-			x: 0,
-			y: 0,
-			canvasWidth: 0,
-			canvasHeight: 0,
-			minimapWidth: 0,
-			minimapHeight: 0,
-			minimapBgColor: "#e0e0e0",
-			minimapHandleColor: "#757575",
-			minimapHandleX: 0,
-			minimapHandleY: 0,
-			zoom: null,
-			target: null,
-			scale: 1,
-			minimapScale: 0.15
-		}
+(function (d3) {
+    d3.minimap = d3.minimap || {};
 
-		function component(selection) {
-			var svg = selection;
+    function getXYFromTranslate(translateString) {
+        var split = translateString.split(",");
+        var x = split[0] ? ~~split[0].split("(")[1] : 0;
+        var y = split[1] ? ~~split[1].split(")")[0] : 0;
+        return [x, y];
+    }
 
-			var minimapContainer = svg.append("g")
-																.attr("class", "minimap-container");
+    function Minimap() {
+        var opts = {
+            x: 0,
+            y: 0,
+            canvasWidth: 0,
+            canvasHeight: 0,
+            minimapWidth: 0,
+            minimapHeight: 0,
+            minimapBgColor: "#e0e0e0",
+            minimapHandleColor: "#757575",
+            minimapHandleX: 0,
+            minimapHandleY: 0,
+            zoom: null,
+            target: null,
+            scale: 1,
+            minimapScale: 0.15
+        }
 
-			var minimapBg =	minimapContainer
-												.append("rect")
-												.attr("class", "minimap-background");
+        function component(selection) {
+            var svg = selection;
 
-			var minimap = minimapContainer
-												.append("g")
-												.attr("class", "minimap-content");
+            var minimapContainer = svg.append("g")
+                .attr("class", "minimap-container");
 
-			var minimapHandleContainer = minimap.append("g")
-																		.attr("class", "minimap-handle-container");
-			var minimapClone = minimap.append("g").attr("class", "minimap-clone");
+            var minimapBg = minimapContainer
+                .append("rect")
+                .attr("class", "minimap-background");
 
-			var minimapHandle = minimapHandleContainer
-																			.append("rect")
-																			.attr({
-																				"class": "minimap-handle",
-																				"width": opts.canvasWidth,
-																				"height": opts.canvasHeight,
-																			});
+            var minimap = minimapContainer
+                .append("g")
+                .attr("class", "minimap-content");
 
-			function dragstart() {
-				var frameTranslate = getXYFromTranslate(minimapHandleContainer.attr("transform"));
-				opts.minimapHandleX = frameTranslate[0];
-				opts.minimapHandleY = frameTranslate[1];
-			}
+            var minimapHandleContainer = minimap.append("g")
+                .attr("class", "minimap-handle-container");
+            var minimapClone = minimap.append("g").attr("class", "minimap-clone");
 
-			function dragmove() {
-				d3.event.sourceEvent.stopImmediatePropagation();
-				opts.minimapHandleX += d3.event.dx;
-				opts.minimapHandleY += d3.event.dy;
+            var minimapHandle = minimapHandleContainer
+                .append("rect")
+                .attr({
+                    "class": "minimap-handle",
+                    "width": opts.canvasWidth,
+                    "height": opts.canvasHeight,
+                });
 
-				var minimapHandleTransform = [
-					opts.minimapHandleX,
-					opts.minimapHandleY
-				];
+            function dragstart() {
+                var frameTranslate = getXYFromTranslate(minimapHandleContainer.attr("transform"));
+                opts.minimapHandleX = frameTranslate[0];
+                opts.minimapHandleY = frameTranslate[1];
+            }
 
-				minimapHandleContainer
-						.attr({
-							"transform": "translate("+minimapHandleTransform+")"
-						});
+            function dragmove() {
+                d3.event.sourceEvent.stopImmediatePropagation();
+                opts.minimapHandleX += d3.event.dx;
+                opts.minimapHandleY += d3.event.dy;
 
-				var translate = [
-					-opts.minimapHandleX * opts.scale,
-					-opts.minimapHandleY * opts.scale,
-				];
-				// console.log(opts.scale);
-				opts.target
-								.attr({
-									"transform": "translate(" + translate + ")scale(" + opts.scale + ")"
-								})
-				opts.zoom.translate(translate);
-				opts.zoom.event(opts.target);
-			}
-			var drag = d3.behavior.drag()
-									.on("dragstart.minimap", dragstart)
-									.on("drag.minimap", dragmove);
+                var minimapHandleTransform = [
+                    opts.minimapHandleX,
+                    opts.minimapHandleY
+                ];
 
-			var dragDisabled = d3.behavior.drag()
-									.on("dragstart.minimap", function() {
-										d3.event.sourceEvent.stopImmediatePropagation();
-									});
+                minimapHandleContainer
+                    .attr({
+                        "transform": "translate(" + minimapHandleTransform + ")"
+                    });
 
-			var zoomDisabled = d3.behavior.zoom()
-			    .on("zoom", function() {
-			    	d3.event.sourceEvent.stopImmediatePropagation();
-			    });
+                var translate = [
+                    -opts.minimapHandleX * opts.scale,
+                    -opts.minimapHandleY * opts.scale
+                ];
+                // console.log(opts.scale);
+                opts.target
+                    .attr({
+                        "transform": "translate(" + translate + ")scale(" + opts.scale + ")"
+                    })
+                opts.zoom.translate(translate);
+                opts.zoom.event(opts.target);
+            }
 
-			opts.zoom.on("zoom.minimap", function() {
-				opts.scale = d3.event.scale;
-			});
+            var drag = d3.behavior.drag()
+                .on("dragstart.minimap", dragstart)
+                .on("drag.minimap", dragmove);
 
-			minimapHandleContainer.call(drag);
-			minimapBg.call(dragDisabled);
-			minimapBg.call(zoomDisabled);
+            var dragDisabled = d3.behavior.drag()
+                .on("dragstart.minimap", function () {
+                    d3.event.sourceEvent.stopImmediatePropagation();
+                });
 
-			component.render = function() {
-				opts.scale = opts.zoom.scale();
+            var zoomDisabled = d3.behavior.zoom()
+                .on("zoom", function () {
+                    d3.event.sourceEvent.stopImmediatePropagation();
+                });
 
-				minimapContainer
-					.attr({
-						"transform": "translate("+ [opts.x, opts.y] +")"
-					});
+            opts.zoom.on("zoom.minimap", function () {
+                opts.scale = d3.event.scale;
+            });
 
-				minimap
-					.attr({
-						"transform": "scale("+ opts.minimapScale +")"
-					});
+            minimapHandleContainer.call(drag);
+            minimapBg.call(dragDisabled);
+            minimapBg.call(zoomDisabled);
 
-				minimapBg
-						.attr({
-							"width": opts.minimapWidth,
-							"height": opts.minimapHeight
-						})
-						.style({
-							"fill": opts.minimapBgColor
-						})
+            component.render = function () {
+                opts.scale = opts.zoom.scale();
 
-				var targetTranslate = getXYFromTranslate(opts.target.attr("transform"));
-				var minimapHandleTransform = [
-					-targetTranslate[0] / opts.scale,
-					-targetTranslate[1] / opts.scale
-				];
+                minimapContainer
+                    .attr({
+                        "transform": "translate(" + [opts.x, opts.y] + ")"
+                    });
 
-				minimapHandleContainer
-						.attr({
-							"transform": "translate("+ minimapHandleTransform +")"
-						});
+                minimap
+                    .attr({
+                        "transform": "scale(" + opts.minimapScale + ")"
+                    });
 
-				minimapHandle
-								.attr({
-									"width": opts.canvasWidth / opts.scale,
-									"height": opts.canvasHeight / opts.scale,
-								})
-								.style({
-									fill: opts.minimapHandleColor
-								})
-				var clone = opts.target.node().cloneNode(true);
-				clone.removeAttribute("transform");
-				minimapClone.selectAll('.ach-canvas-container').remove();
-				minimapClone.node().appendChild(clone);
+                minimapBg
+                    .attr({
+                        "width": opts.minimapWidth,
+                        "height": opts.minimapHeight
+                    })
+                    .style({
+                        "fill": opts.minimapBgColor
+                    })
 
-			}
-		}
+                var targetTranslate = getXYFromTranslate(opts.target.attr("transform"));
+                var minimapHandleTransform = [
+                    -targetTranslate[0] / opts.scale,
+                    -targetTranslate[1] / opts.scale
+                ];
 
-		function accessor(key) {
-			return function(value) {
-				if(!arguments.length) return opts[key];
-				opts[key] = value;
-				return component;
-			}
-		}
+                minimapHandleContainer
+                    .attr({
+                        "transform": "translate(" + minimapHandleTransform + ")"
+                    });
 
-		for(var n in opts) {
-			if(opts.hasOwnProperty(n)) {
-				component[n] = accessor(n);
-			}
-		}
+                minimapHandle
+                    .attr({
+                        "width": opts.canvasWidth / opts.scale,
+                        "height": opts.canvasHeight / opts.scale,
+                    })
+                    .style({
+                        fill: opts.minimapHandleColor
+                    })
+                var clone = opts.target.node().cloneNode(true);
+                clone.removeAttribute("transform");
+                minimapClone.selectAll('.ach-canvas-container').remove();
+                minimapClone.node().appendChild(clone);
 
-		component.target = function(value) {
-			if(!arguments.length) return opts.target;
-			opts.target = value;
-			opts.canvasWidth = +value.attr("width");
-			opts.canvasHeight = +value.attr("height");
-			return component;
-		}
+            }
+        }
 
-		return component;
-	}
-	d3.minimap = Minimap;
+        function accessor(key) {
+            return function (value) {
+                if (!arguments.length) return opts[key];
+                opts[key] = value;
+                return component;
+            }
+        }
+
+        for (var n in opts) {
+            if (opts.hasOwnProperty(n)) {
+                component[n] = accessor(n);
+            }
+        }
+
+        component.target = function (value) {
+            if (!arguments.length) return opts.target;
+            opts.target = value;
+            opts.canvasWidth = +value.attr("width");
+            opts.canvasHeight = +value.attr("height");
+            return component;
+        }
+
+        return component;
+    }
+
+    d3.minimap = Minimap;
 })(d3);

@@ -24,7 +24,7 @@ gulp.task('browser-sync', ['nodemon'], function() {
       proxy: "localhost:8000",  // local node app address
       port: 5000,  // use *different* port than above
       notify: true,
-      files: ["./public/**/*", "!./public/lib"],
+      files: ["./public/**/*.css", "./public/**/*.js", "./public/**/*.html"],
       browser: "firefox"
   });
 })
@@ -40,13 +40,7 @@ gulp.task('nodemon', ['bower-inject'], function (cb) {
         console.log('nodemon started');
         if (!started) {
           setTimeout(function() {
-            browserSync.init({
-                proxy: "localhost:8000",  // local node app address
-                port: 5000,  // use *different* port than above
-                notify: true,
-                files: ["public/**/*", "!public/lib"],
-                browser: "firefox"
-            });
+              cb();
           }, 1000);
         }
         started = true;

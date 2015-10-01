@@ -1,0 +1,337 @@
+//colors
+$color_royal_blue: #2962ff;
+$white: white;
+$color_azure_radiance: #0091ea;
+$color_cerulean_approx: #00b8d4;
+$color_caribbean_green_approx: #00bfa5;
+$color_electric_violet_approx: #6200ea;
+$color_guardsman_red_approx: #d50000;
+$color_grenadier_approx: #dd2c00;
+$color_lipstick_approx: #c51162;
+$black: black;
+$color_red_orange_approx: rgb(244, 67, 54);
+$color_brink_pink_approx: rgb(255, 104, 140);
+$color_outer_space_approx: #263238;
+$color_bay_of_many_approx: #283593;
+$color_golden_fizz_approx: #ffeb3b;
+$color_half_and_half_approx: #ffffe0;
+
+//@extend-elements
+//original selectors
+//.PERSON, PERSON
+%extend_1 {
+  background-color: $color_royal_blue;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+//original selectors
+//.DURATION, DURATION
+%extend_2 {
+  background-color: $color_azure_radiance;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+//original selectors
+//.QUANTITY, QUANTITY
+%extend_3 {
+  background-color: $color_cerulean_approx;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+//original selectors
+//.DATE, DATE
+%extend_4 {
+  background-color: $color_caribbean_green_approx;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+//original selectors
+//.ORGANIZATION, ORGANIZATION
+%extend_5 {
+  background-color: $color_electric_violet_approx;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+//original selectors
+//.TIME, TIME
+%extend_6 {
+  background-color: $color_guardsman_red_approx;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+//original selectors
+//.NUMBER, NUMBER
+%extend_7 {
+  background-color: $color_grenadier_approx;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+//original selectors
+//.LOCATION, LOCATION
+%extend_8 {
+  background-color: $color_lipstick_approx;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: 3px;
+  color: $white;
+  padding: 2px;
+}
+
+
+.main {
+  height: 100%;
+  overflow-y: hidden;
+}
+.PERSON {
+  @extend %extend_1;
+}
+PERSON {
+  @extend %extend_1;
+}
+.DURATION {
+  @extend %extend_2;
+}
+DURATION {
+  @extend %extend_2;
+}
+.QUANTITY {
+  @extend %extend_3;
+}
+QUANTITY {
+  @extend %extend_3;
+}
+.DATE {
+  @extend %extend_4;
+}
+DATE {
+  @extend %extend_4;
+}
+.ORGANIZATION {
+  @extend %extend_5;
+}
+ORGANIZATION {
+  @extend %extend_5;
+}
+.TIME {
+  @extend %extend_6;
+}
+TIME {
+  @extend %extend_6;
+}
+.NUMBER {
+  @extend %extend_7;
+}
+NUMBER {
+  @extend %extend_7;
+}
+.LOCATION {
+  @extend %extend_8;
+}
+LOCATION {
+  @extend %extend_8;
+}
+.document-viewer {
+  font-size: small;
+  line-height: 20px;
+  md-input-container {
+    padding-bottom: 0;
+  }
+  .document-info {
+  }
+}
+.entity-list {
+  overflow-x: hidden;
+  .entity-selection {
+    padding-bottom: 16px;
+  }
+}
+.entity-container {
+  position: relative;
+  height: 25px;
+  .entity-relevance {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+  }
+  .entity {
+    padding: 2px 0;
+    cursor: pointer;
+    .entity-count {
+      position: relative;
+      width: 50px;
+      .bar {
+        height: 100%;
+        position: absolute;
+        right: 8px;
+        background-color: $black;
+      }
+    }
+  }
+  .entity-text {
+    font-size: small;
+  }
+}
+.document-text {
+  margin-top: 0;
+}
+#vertical-container {
+}
+.evidence-container {
+  height: 25px;
+}
+.ach-browser {
+  position: relative;
+  .search-input {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+  }
+  .ach-toolbar {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+  }
+  .editor-tools {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    ng-md-icon.selected {
+      fill: $color_brink_pink_approx;
+    }
+  }
+  .ach-canvas {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+}
+.minimap-handle-container {
+  fill-opacity: 0.4;
+}
+.select-text {
+  color: $black;
+  background-color: $color_golden_fizz_approx;
+}
+.position-fixed {
+  position: fixed;
+  width: 0;
+  height: 0;
+}
+.top-view {
+  overflow-y: hidden;
+}
+md-tab-content {
+  height: 100%;
+  > div {
+    height: 100%;
+    > md-content {
+      height: 100%;
+    }
+  }
+}
+.evidence-content {
+  font-size: small;
+}
+.grid {
+  width: 100%;
+  height: 500px;
+}
+ng-md-icon svg {
+  pointer-events: none;
+  display: block;
+  margin: auto;
+}
+.document-list-search md-input-container {
+  padding-bottom: 0;
+}
+.document-list .document-item {
+  cursor: pointer;
+  &.selected {
+    border-right: solid 2px $color_red_orange_approx;
+  }
+}
+.document-entities .document-entity-type span {
+  display: inline-block;
+  margin: 4px;
+}
+.hypothesis .body {
+  //Instead of the line below you could use @include box-sizing($bs)
+  box-sizing: border-box;
+  border: 3px solid $color_outer_space_approx;
+}
+.evidence .body {
+  //Instead of the line below you could use @include box-sizing($bs)
+  box-sizing: border-box;
+  border: 3px solid $color_bay_of_many_approx;
+}
+.entity-viewer .entity-list-item {
+  cursor: pointer;
+  &.selected {
+    background-color: $color_half_and_half_approx;
+    md-content {
+      background-color: $color_half_and_half_approx;
+      md-card {
+        background-color: $color_half_and_half_approx;
+      }
+    }
+  }
+}
+.entity-top-view .entity-search {
+  padding-bottom: 0;
+}
+.evidences .evidence {
+  .evidence-weight {
+    height: 10px;
+    .bar {
+      height: 10px;
+      background-color: $black;
+    }
+  }
+  &.selected {
+    border-right: solid 2px $color_red_orange_approx;
+  }
+}
+.hypotheses .hypothesis {
+  .hypothesis-weight {
+    height: 10px;
+    .bar {
+      height: 10px;
+      background-color: $black;
+    }
+  }
+  &.selected {
+    border-right: solid 2px $color_red_orange_approx;
+  }
+}
+.nv-sparklineplus text {
+  display: none;
+}
+md-input-container.editable-controls {
+  padding: 0;
+  [ng-message] {
+    position: static;
+  }
+}
