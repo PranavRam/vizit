@@ -303,6 +303,9 @@ ng-md-icon svg {
   padding-bottom: 0;
 }
 .evidences .evidence {
+  .evidence-title {
+    min-height: 24px;
+  }
   .evidence-weight {
     height: 10px;
     .bar {
@@ -315,6 +318,9 @@ ng-md-icon svg {
   }
 }
 .hypotheses .hypothesis {
+  .hypothesis-title {
+    min-height: 24px;
+  }
   .hypothesis-weight {
     height: 10px;
     .bar {

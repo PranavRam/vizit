@@ -178,6 +178,8 @@ ng-md-icon svg {
 .entity-top-view .entity-search {
   padding-bottom: 0; }
 
+.evidences .evidence .evidence-title {
+  min-height: 24px; }
 .evidences .evidence .evidence-weight {
   height: 10px; }
   .evidences .evidence .evidence-weight .bar {
@@ -186,6 +188,8 @@ ng-md-icon svg {
 .evidences .evidence.selected {
   border-right: solid 2px #f44336; }
 
+.hypotheses .hypothesis .hypothesis-title {
+  min-height: 24px; }
 .hypotheses .hypothesis .hypothesis-weight {
   height: 10px; }
   .hypotheses .hypothesis .hypothesis-weight .bar {
