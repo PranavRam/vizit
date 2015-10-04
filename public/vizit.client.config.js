@@ -50,7 +50,8 @@ function config($stateProvider, $urlRouterProvider) {
       url: "/ach_summary",
       views: {
           'topView@vizit': {
-              templateUrl: '/public/partials/ach_summary.html'
+              templateUrl: '/public/partials/ach_summary.html',
+              controller: function($scope, $timeout){ $scope.viewLoaded = false; $timeout(function() { $scope.viewLoaded = true; console.log('timeline')}); }
           }
       }
     })
@@ -64,7 +65,8 @@ function config($stateProvider, $urlRouterProvider) {
               templateUrl: '/public/partials/entity_list.html'
           },
           'achProvenance@vizit.provenance': {
-              templateUrl: '/public/partials/ach_provenance.html'
+              templateUrl: '/public/partials/ach_provenance.html',
+              controller: function($scope, $timeout){ $scope.viewLoaded = false; $timeout(function() { $scope.viewLoaded = true; console.log('timeline')}); }
           }
       }
     })

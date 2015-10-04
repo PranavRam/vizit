@@ -139,7 +139,7 @@ md-tab-content {
 
 .grid {
   width: 100%;
-  height: 500px; }
+  height: 100%; }
 
 ng-md-icon svg {
   pointer-events: none;
