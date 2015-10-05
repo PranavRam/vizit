@@ -114,10 +114,6 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $templateCache, $state, $c
         return Math.round(entityCountScale(count)) + 'px';
     }
 
-    $scope.getEvidenceWidth = function (weight) {
-        return Math.round(weight * 5) + 'px';
-    }
-
     $scope.getHypothesisWidth = function (weight) {
         return Math.round(weight * 5) + 'px';
     }
@@ -200,71 +196,15 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $templateCache, $state, $c
             return {top: RightClickMenuCtrl.top, left: RightClickMenuCtrl.left};
         }
     };
+
     $scope.check = function ($event) {
         RightClickMenuCtrl.open($event);
-    }
-
-    //function getEntitiesInSentence(sentence) {
-    //    var parsedHTML = $.parseHTML(sentence);
-    //    var entities = {};
-    //    $scope.entityTypes.forEach(function (entityType) {
-    //        var entitiesFilter = parsedHTML.filter(function (node) {
-    //            return node.tagName === entityType.toUpperCase();
-    //        });
-    //        if (entitiesFilter.length) {
-    //            entities[entityType] = entitiesFilter.map(function (entity) {
-    //                return {
-    //                    name: entity.innerHTML,
-    //                    id: +entity.getAttribute('data-entity-id')
-    //                }
-    //            });
-    //        }
-    //    });
-    //    return entities;
-    //}
-
-    function getEntitiesForEvidence(entities) {
-        var promises = [];
-        for (var entityType in entities) {
-            if (entities.hasOwnProperty(entityType)) {
-                var arrayEntities = _.uniq(entities[entityType], 'id');
-                angular.forEach(arrayEntities, function (entity) {
-                    var promise = $http({
-                        url: 'api/entities/' + entity.id,
-                        method: 'GET'
-                    });
-                    promises.push(promise);
-                })
-            }
-        }
-        return $q.all(promises);
-    }
-
-    function setEntityWeights(entities) {
-        var promises = [];
-
-        for (entityType in entities) {
-            if (entities.hasOwnProperty(entityType)) {
-                var arrayEntities = entities[entityType];
-                angular.forEach(arrayEntities, function (entity) {
-                    var promise = $http({
-                        url: 'api/entities/' + entity.id,
-                        method: 'POST',
-                        data: {count: 1}
-                    });
-
-                    promises.push(promise);
-                })
-            }
-        }
-
-        return $q.all(promises);
-
-    }
+    };
 
     $scope.addHypothesis = function () {
         $scope.hypotheses.push({x: 100, y: 100, weight: 5, name: "Hypothesis " + $scope.hypotheses.length});
-    }
+    };
+
     $scope.addEvidence = function (wholeDocument) {
         var promises = [];
         var sentences = angular.element('.document-viewer .document-text .select-text');
@@ -337,7 +277,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $templateCache, $state, $c
                 snippets = snippets.map(function (snippet) {
                     return snippet.data;
                 });
-                getEntitiesForEvidence(evidenceEntities)
+                dataservice.getEntitiesForEvidence(evidenceEntities)
                     .then(function (entities) {
                         entities = entities.map(function (entity) {
                             return entity.data[0]

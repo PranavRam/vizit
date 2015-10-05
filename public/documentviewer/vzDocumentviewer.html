@@ -1,0 +1,11 @@
+<div layout="column">
+    <vz-toolbar></vz-toolbar>
+    <div flex layout="column" ng-hide="ach.fullscreen || !ach.showDocumentViewer">
+        <md-content flex layout="row">
+            <!-- <div layout-padding flex="20" layout="column"> -->
+            <vz-documentlist flex="20"></vz-documentlist>
+            <vz-documentdetail flex></vz-documentdetail>
+            <!-- </div> -->
+        </md-content>
+    </div>
+</div>

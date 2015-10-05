@@ -1,0 +1,20 @@
+<md-content layout-padding class="document-viewer" layout="column">
+    <md-content flex>
+        <p ng-show="showDocumentText" class="document-text" ng-bind-html="selectedDocument.parsedText | sentences | to_trusted" compile-template></p>
+        <div ng-hide="showDocumentText" class="document-entities">
+            <div class="document-entity-type" ng-repeat="(entityType, entityArray) in selectedDocument.entities">
+                <span class="{{entityType}}">{{entityType}}</span>
+                <span ng-repeat="entity in entityArray">{{entity.text}}</span>
+            </div>
+        </div>
+    </md-content>
+    <md-content layout="row" layout="row" layout-align="space-between center">
+        <h4>{{selectedDocument.name}}</h4>
+        <md-input-container class="md-icon-float" >
+            <!-- Use floating label instead of placeholder -->
+            <label>Current Document</label>
+            <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>
+            <input ng-model="ach.searchInput" type="text">
+        </md-input-container>
+    </md-content>
+</md-content>

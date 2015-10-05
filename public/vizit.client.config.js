@@ -15,12 +15,6 @@ function config($stateProvider, $urlRouterProvider) {
           '': {
             templateUrl: "/public/partials/main.html",
             controller: 'MainCtrl'
-          },
-          'documentList@vizit': {
-              templateUrl: '/public/partials/document_list.html',
-          },
-          'documentViewer@vizit': {
-              templateUrl: '/public/partials/document_viewer.html',
           }
       }
     })
@@ -31,7 +25,7 @@ function config($stateProvider, $urlRouterProvider) {
               templateUrl: '/public/partials/entityACH.html'
           },
           'entityList@vizit.entity_ach': {
-              templateUrl: '/public/partials/entity_list.html'
+              templateUrl: '/public/partials/sidebar.html'
           },
           'achCanvas@vizit.entity_ach': {
               templateUrl: '/public/partials/ach_canvas.html'
@@ -62,7 +56,7 @@ function config($stateProvider, $urlRouterProvider) {
               templateUrl: '/public/partials/provenance.html'
           },
           'entityList@vizit.provenance': {
-              templateUrl: '/public/partials/entity_list.html'
+              templateUrl: '/public/partials/sidebar.html'
           },
           'achProvenance@vizit.provenance': {
               templateUrl: '/public/partials/ach_provenance.html',

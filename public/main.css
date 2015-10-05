@@ -139,7 +139,7 @@ md-tab-content {
 
 .grid {
   width: 100%;
-  height: 100%; }
+  height: 500px; }
 
 ng-md-icon svg {
   pointer-events: none;
@@ -178,21 +178,21 @@ ng-md-icon svg {
 .entity-top-view .entity-search {
   padding-bottom: 0; }
 
-.evidences .evidence .evidence-title {
+.evidences .evidence .item-title {
   min-height: 24px; }
-.evidences .evidence .evidence-weight {
+.evidences .evidence .item-weight {
   height: 10px; }
-  .evidences .evidence .evidence-weight .bar {
+  .evidences .evidence .item-weight .bar {
     height: 10px;
     background-color: black; }
 .evidences .evidence.selected {
   border-right: solid 2px #f44336; }
 
-.hypotheses .hypothesis .hypothesis-title {
+.hypotheses .hypothesis .item-title {
   min-height: 24px; }
-.hypotheses .hypothesis .hypothesis-weight {
+.hypotheses .hypothesis .item-weight {
   height: 10px; }
-  .hypotheses .hypothesis .hypothesis-weight .bar {
+  .hypotheses .hypothesis .item-weight .bar {
     height: 10px;
     background-color: black; }
 .hypotheses .hypothesis.selected {

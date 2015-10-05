@@ -44,38 +44,42 @@
       <md-tab label="Evidences">
         <md-content class="md-padding" layout="column">
           <md-content class="evidences" flex>
-            <md-content class="evidence" ng-repeat="evidence in evidences" ng-click="ach.selectedEvidence = evidence" ng-class="{selected: evidence === ach.selectedEvidence}"
-              ng-mouseover="evidenceList.hover = evidence" ng-mouseout="evidenceList.hover = ''">
-              <div class="evidence-title" layout="row" layout-align="space-between center">
-                <span editable-text="evidence.name" e-form="textBtnForm" onaftersave="ach.updateACH()">
-                    {{ evidence.name || 'empty' }}
-                  </span>
-                <ng-md-icon icon="edit" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible || evidenceList.hover !== evidence"></ng-md-icon>
-              </div>
-              <div class="evidence-weight">
-                <div class="bar" ng-style="{ 'width' : getEvidenceWidth(evidence.weight) }"></div>
-              </div>
-              <!-- <span onaftersave="ach.updateACH()" editable-text="evidence.name">{{evidence.name}}</span> -->
+            <md-content ng-repeat="evidence in evidences" class="evidence" ng-click="ach.selectedEvidence = evidence" ng-class="{selected: evidence === ach.selectedEvidence}">
+              <vz-editable-list-item item="evidence" on-save="ach.updateACH()"></vz-editable-list-item>
             </md-content>
+            <!--<md-content class="evidence" ng-repeat="evidence in evidences" ng-click="ach.selectedEvidence = evidence" ng-class="{selected: evidence === ach.selectedEvidence}"-->
+              <!--ng-mouseover="evidenceList.hover = evidence" ng-mouseout="evidenceList.hover = ''">-->
+              <!--<div class="evidence-title" layout="row" layout-align="space-between center">-->
+                <!--<span editable-text="evidence.name" e-form="textBtnForm" onaftersave="ach.updateACH()">-->
+                    <!--{{ evidence.name || 'empty' }}-->
+                  <!--</span>-->
+                <!--<ng-md-icon icon="edit" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible || evidenceList.hover !== evidence"></ng-md-icon>-->
+              <!--</div>-->
+              <!--<div class="evidence-weight">-->
+                <!--<div class="bar" ng-style="{ 'width' : getEvidenceWidth(evidence.weight) }"></div>-->
+              <!--</div>-->
+            <!--</md-content>-->
           </md-content>
         </md-content>
       </md-tab>
       <md-tab label="Hypothesis">
         <md-content class="md-padding" layout="column">
           <md-content class="hypotheses" flex>
-            <md-content class="hypothesis" ng-repeat="hypothesis in hypotheses" ng-click="ach.selectedHypothesis = hypothesis" ng-class="{selected: hypothesis === ach.selectedHypothesis}"
-              ng-mouseover="hypothesesList.hover = hypothesis" ng-mouseout="hypothesesList.hover = ''">
-              <div class="hypothesis-title" layout="row" layout-align="space-between center">
-                <span editable-text="hypothesis.name" e-form="textBtnForm" onaftersave="ach.updateACH()">
-                    {{ hypothesis.name || 'empty' }}
-                  </span>
-                <ng-md-icon icon="edit" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible || hypothesesList.hover !== hypothesis"></ng-md-icon>
-              </div>
-              <div class="hypothesis-weight">
-                <div class="bar" ng-style="{ 'width' : getHypothesisWidth(hypothesis.weight) }"></div>
-              </div>
-              <!-- <span onaftersave="ach.updateACH()" editable-text="evidence.name">{{evidence.name}}</span> -->
+            <md-content ng-repeat="hypothesis in hypotheses" class="hypothesis" ng-click="ach.selectedHypothesis = hypothesis" ng-class="{selected: hypothesis === ach.selectedHypothesis}">
+              <vz-editable-list-item item="hypothesis" on-save="ach.updateACH()"></vz-editable-list-item>
             </md-content>
+            <!--<md-content class="hypothesis" ng-repeat="hypothesis in hypotheses" ng-click="ach.selectedHypothesis = hypothesis" ng-class="{selected: hypothesis === ach.selectedHypothesis}"-->
+              <!--ng-mouseover="hypothesesList.hover = hypothesis" ng-mouseout="hypothesesList.hover = ''">-->
+              <!--<div class="hypothesis-title" layout="row" layout-align="space-between center">-->
+                <!--<span editable-text="hypothesis.name" e-form="textBtnForm" onaftersave="ach.updateACH()">-->
+                    <!--{{ hypothesis.name || 'empty' }}-->
+                  <!--</span>-->
+                <!--<ng-md-icon icon="edit" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible || hypothesesList.hover !== hypothesis"></ng-md-icon>-->
+              <!--</div>-->
+              <!--<div class="hypothesis-weight">-->
+                <!--<div class="bar" ng-style="{ 'width' : getHypothesisWidth(hypothesis.weight) }"></div>-->
+              <!--</div>-->
+            <!--</md-content>-->
           </md-content>
         </md-content>
       </md-tab>
