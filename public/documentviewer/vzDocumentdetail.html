@@ -8,7 +8,7 @@
             </div>
         </div>
     </md-content>
-    <md-content layout="row" layout="row" layout-align="space-between center">
+    <div layout="row" layout-align="space-between center">
         <h4>{{selectedDocument.name}}</h4>
         <md-input-container class="md-icon-float" >
             <!-- Use floating label instead of placeholder -->
@@ -16,5 +16,5 @@
             <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>
             <input ng-model="ach.searchInput" type="text">
         </md-input-container>
-    </md-content>
+    </div>
 </md-content>

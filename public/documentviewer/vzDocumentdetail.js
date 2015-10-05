@@ -24,7 +24,7 @@
             //    item: '=',
             //    onSave: '&'
             //},
-            //replace: true,
+            replace: true,
             //controller: function($scope) {
             //    $scope.item.hover = false;
             //    $scope.getWeightWidth = function (weight) {

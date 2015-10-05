@@ -1,6 +1,6 @@
 <div layout="row">
     <md-toolbar flex="20" class="top-bar" >
-        <div class="md-toolbar-tools" layout="row" layout-align="center center" ng-hide="ach.fullscreen || !ach.showDocumentViewer">
+        <div class="md-toolbar-tools" layout="row" layout-align="center center" ng-show="ach.showDocumentViewer">
             <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
             <md-button class="md-icon-button md-primary" aria-label="sort">
                 <ng-md-icon icon="sort" style="fill: white;"></ng-md-icon>
@@ -16,11 +16,11 @@
             <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
             <!-- <ng-md-icon icon="text_format" style="fill: white;"></ng-md-icon> -->
 
-            <md-button ng-hide="ach.fullscreen || !ach.showDocumentViewer" class="md-icon-button md-primary" aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
+            <md-button ng-show="ach.showDocumentViewer" class="md-icon-button md-primary" aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
                 <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;"></ng-md-icon>
             </md-button>
             <span flex></span>
-            <div ng-hide="ach.fullscreen || !ach.showDocumentViewer" layout="row">
+            <div ng-show="ach.showDocumentViewer" layout="row">
                 <md-button class="md-icon-button md-primary" aria-label="add" ng-click="addEvidence()">
                     <md-tooltip md-direction="top">
                         Add as Evidence
