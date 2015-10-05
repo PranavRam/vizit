@@ -36,7 +36,8 @@ angular.module('vizit').controller('AchSummaryCtrl', ['$scope', '$http', functio
             $scope.gridOptions.data = data;
         });
 }]);
-function MainCtrl($scope, $http, $mdMenu, $rootScope, $templateCache, $state, $compile, $q, dataservice, textparser) {
+function MainCtrl($scope, $http, $rootScope, $state, $q, dataservice, textparser,
+                  hypotheses, evidences, entities, documents) {
     $scope.documents = [];
     $scope.entities = [];
     $scope.selectedDocument = {};
@@ -77,6 +78,39 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $templateCache, $state, $c
     $scope.model = {}; // always pass empty object
     var entityCountWidth = 40;
 
+    activate();
+
+    function activate() {
+        documents.get()
+            .then(function (data) {
+                $scope.documents = data.map(function (data) {
+                    data.viewCount = 0;
+                    return data;
+                });
+                // console.log($scope.documents);
+                $scope.selectedDocument = $scope.documents[0];
+                return $scope.documents;
+            });
+
+        entities.get()
+            .then(function (data) {
+                var entities = data;
+                var extent = d3.extent(entities, function (d) {
+                    return d.tfidf;
+                });
+                // console.log(extent);
+                entityCountScale
+                    .domain(extent)
+                    .range([1, entityCountWidth]);
+
+                $scope.entities = entities;
+            });
+
+        evidences.get().then(function(data) { $scope.evidences = data; });
+
+        hypotheses.get().then(function(data) { $scope.hypotheses = data; });
+    }
+
     $scope.getConnections = function (entity) {
         $scope.selectedEntity = entity;
         dataservice.getConnections(entity._id)
@@ -112,11 +146,7 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $templateCache, $state, $c
 
     $scope.getOccurenceWidth = function (count) {
         return Math.round(entityCountScale(count)) + 'px';
-    }
-
-    $scope.getHypothesisWidth = function (weight) {
-        return Math.round(weight * 5) + 'px';
-    }
+    };
 
     $scope.selectDocument = function (doc) {
         if ($scope.selectedDocument._id !== doc._id) {
@@ -126,83 +156,17 @@ function MainCtrl($scope, $http, $mdMenu, $rootScope, $templateCache, $state, $c
         $scope.selectedDocument = doc;
     };
 
-    dataservice.getDocuments()
-        .then(function (data) {
-            $scope.documents = data.map(function (data) {
-                data.viewCount = 0;
-                return data;
-            });
-            // console.log($scope.documents);
-            $scope.selectedDocument = $scope.documents[0];
-            return $scope.documents;
-        })
 
-    dataservice.getEntities()
-        .then(function (data) {
-            var entities = data;
-            var extent = d3.extent(entities, function (d) {
-                return d.tfidf;
-            });
-            // console.log(extent);
-            entityCountScale
-                .domain(extent)
-                .range([1, entityCountWidth]);
-
-            $scope.entities = entities;
-        });
-
-    dataservice.getEvidences()
-        .then(function (data) {
-            $scope.evidences = data;
-            if ($scope.ach.updateACH) $scope.ach.updateACH();
-            return $scope.evidneces;
-        });
-
-    var template = $templateCache.get('/partials/documentMenu.html');
-    //console.log(template);
-
-    var documentMenu = _.template(template);
     // var myCustomMenu = angular.element($compile()($scope));
 
     $scope.log = function (sentence) {
         console.log(sentence)
     };
 
-    var RightClickMenuCtrl = {
-        top: 0,
-        left: 0,
-        open: function (event) {
-            if (!$scope.ach.selectedHypothesis) return;
-            RightClickMenuCtrl.left = event.clientX;
-            RightClickMenuCtrl.top = event.clientY;
-            $mdMenu.show({
-                scope: $scope,
-                mdMenuCtrl: RightClickMenuCtrl,
-                element: function () {
-                    $scope.selectedDocument.selectedText = event.target.innerHTML;
-                    // var menu = documentMenu({sentence: _.escape(event.target.innerHTML)});
-                    return angular.element($compile(template)($scope));
-                }(),
-                target: 'body' // used for where the menu animates out of
-            });
-        },
-        close: function () {
-            $mdMenu.hide();
-        },
-        positionMode: function () {
-            return {left: 'target', top: 'target'};
-        },
-        offsets: function () {
-            return {top: RightClickMenuCtrl.top, left: RightClickMenuCtrl.left};
-        }
-    };
-
-    $scope.check = function ($event) {
-        RightClickMenuCtrl.open($event);
-    };
 
     $scope.addHypothesis = function () {
-        $scope.hypotheses.push({x: 100, y: 100, weight: 5, name: "Hypothesis " + $scope.hypotheses.length});
+        //$scope.hypotheses.push({x: 100, y: 100, weight: 5, name: "Hypothesis " + $scope.hypotheses.length});
+        hypotheses.add();
     };
 
     $scope.addEvidence = function (wholeDocument) {

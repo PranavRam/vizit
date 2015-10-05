@@ -8,6 +8,7 @@
         .factory('dataservice', function ($http, $q) {
             var service = {
                 getDocuments: getDocuments,
+                getHypotheses: getHypotheses,
                 getEvidences: getEvidences,
                 getEntities: getEntities,
                 getConnections: getConnections,
@@ -21,6 +22,18 @@
                     then(getDocumentsComplete);
 
                 function getDocumentsComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function getHypotheses() {
+                return $q(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve([{x: 100, y: 100, weight: 5, name: "Hypothesis -1"}])
+                    }, 1000);
+                });
+
+                function getHypothesesComplete(data, status, headers, config) {
                     return data.data;
                 }
             }
