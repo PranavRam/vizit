@@ -36,7 +36,7 @@ angular.module('vizit').controller('AchSummaryCtrl', ['$scope', '$http', functio
             $scope.gridOptions.data = data;
         });
 }]);
-function MainCtrl($scope, $http, $rootScope, $state, $q, dataservice, textparser,
+function MainCtrl($scope, $rootScope, $state, dataservice,
                   hypotheses, evidences, entities, documents) {
     $scope.documents = [];
     $scope.entities = [];
@@ -168,108 +168,6 @@ function MainCtrl($scope, $http, $rootScope, $state, $q, dataservice, textparser
         //$scope.hypotheses.push({x: 100, y: 100, weight: 5, name: "Hypothesis " + $scope.hypotheses.length});
         hypotheses.add();
     };
-
-    $scope.addEvidence = function (wholeDocument) {
-        var promises = [];
-        var sentences = angular.element('.document-viewer .document-text .select-text');
-        var evidence = {
-            x: 100,
-            y: 100,
-            name: 'Evidence ' + $scope.evidences.length
-        };
-        var content = [];
-        var evidenceEntities = {};
-        $scope.entityTypes.forEach(function (entityType) {
-            evidenceEntities[entityType] = [];
-        })
-
-        if (!wholeDocument) {
-            sentences.each(function () {
-                var snippet = {
-                    name: $scope.selectedDocument.name,
-                    text: this.innerHTML
-                };
-                content.push(snippet);
-                var entities = textparser.getEntitiesInSentence(this.innerHTML);
-                _.merge(evidenceEntities, entities, function (a, b) {
-                    // console.log(a, b);
-                    if (_.isArray(b)) {
-                        return a.concat(b);
-                    }
-                });
-                var promise = $http({
-                    url: 'api/snippet',
-                    method: 'POST',
-                    data: {
-                        snippet: snippet,
-                        entities: entities
-                    }
-                });
-
-                promises.push(promise);
-                // weight += getWeightsOfEntities(entities);
-            });
-        }
-        else {
-            content = [];
-            // weight = 0;
-            content.push({
-                name: $scope.selectedDocument.name,
-                text: $scope.selectedDocument.parsedText
-            });
-            var entities = textparser.getEntitiesInSentence($scope.selectedDocument.parsedText);
-            _.merge(evidenceEntities, entities, function (a, b) {
-                // console.log(a, b);
-                if (_.isArray(b)) {
-                    return a.concat(b);
-                }
-            });
-            // var promise = $http({
-            //     url   : 'api/snippet/',
-            //     method: 'POST',
-            //     data  : {
-            //       snippet: content,
-            //       entities: entities
-            //     }
-            // });
-
-            // promises.push(promise);
-            // weight += getWeightsOfEntities(entities);
-        }
-        $q.all(promises)
-            .then(function (snippets) {
-                snippets = snippets.map(function (snippet) {
-                    return snippet.data;
-                });
-                dataservice.getEntitiesForEvidence(evidenceEntities)
-                    .then(function (entities) {
-                        entities = entities.map(function (entity) {
-                            return entity.data[0]
-                        });
-                        var weight = 0;
-                        angular.forEach(entities, function (entity) {
-                            weight += entity.properties.weight;
-                        });
-                        evidence.weight = weight;
-                        var promise = $http({
-                            url: 'api/evidences',
-                            method: 'POST',
-                            data: {
-                                evidence: evidence,
-                                snippets: snippets
-                            }
-                        });
-
-                        promise.then(function () {
-                            evidence.content = content;
-                            $scope.evidences.push(evidence);
-                            $scope.ach.updateACH();
-                        })
-                        // evidence.entities = evidenceEntities;
-                    });
-                // });
-            });
-    }
 
     $rootScope.$on('$viewContentLoading',
         function (event, viewConfig) {
