@@ -1,4 +1,4 @@
-<md-content layout-padding class="document-viewer" layout="column">
+<md-content>
     <md-content flex>
         <p ng-show="showDocumentText" class="document-text" ng-bind-html="selectedDocument.parsedText | sentences | to_trusted" compile-template></p>
         <div ng-hide="showDocumentText" class="document-entities">
