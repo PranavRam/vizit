@@ -1,4 +1,4 @@
-angular.module('vizit', ['app.core', 'app.widgets', 'app.documentviewer', 'ngMaterial', 'ui.router', 'ngFileUpload', 'ngMdIcons', 'xeditable', 'gridshore.c3js.chart', 'ui.grid', 'nvd3']);
+angular.module('vizit', ['app.core', 'app.widgets', 'app.documentviewer', 'app.entityviewer','ngMaterial', 'ui.router', 'ngFileUpload', 'ngMdIcons', 'xeditable', 'gridshore.c3js.chart', 'ui.grid', 'nvd3']);
 angular.module('vizit').run(function(editableOptions, editableThemes) {
   editableThemes['angular-material'] = {
     formTpl:      '<form class="editable-wrap"></form>',

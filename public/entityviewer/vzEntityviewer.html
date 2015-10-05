@@ -1,0 +1,18 @@
+<md-content class="entity-list-container" flex>
+    <md-card>
+        <md-card-content>
+            <md-virtual-repeat-container id="vertical-container">
+                <div ng-click="getConnections(entity)" md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
+                    <div class="entity-relevance">
+                    </div>
+                    <div class="entity" layout="row">
+                        <div class="entity-count">
+                            <div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
+                        </div>
+                        <span flex class="entity-text">{{entity.text}}</span>
+                    </div>
+                </div>
+            </md-virtual-repeat-container>
+        </md-card-content>
+    </md-card>
+</md-content>

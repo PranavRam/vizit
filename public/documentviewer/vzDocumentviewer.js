@@ -26,7 +26,7 @@
             },
             replace: true,
             controller: function($scope) {
-                //console.log($scope);
+                console.log($scope);
                 $scope.showDocumentViewer = true;
                 $scope.showDocumentText = true;
                 $scope.selectedDocument = $scope.documents[0];
