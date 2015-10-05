@@ -1,6 +1,6 @@
 <div layout="row">
     <md-toolbar flex="20" class="top-bar" >
-        <div class="md-toolbar-tools" layout="row" layout-align="center center" ng-show="ach.showDocumentViewer">
+        <div class="md-toolbar-tools" layout="row" layout-align="center center" ng-show="showDocumentViewer">
             <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
             <md-button class="md-icon-button md-primary" aria-label="sort">
                 <ng-md-icon icon="sort" style="fill: white;"></ng-md-icon>
@@ -16,11 +16,11 @@
             <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
             <!-- <ng-md-icon icon="text_format" style="fill: white;"></ng-md-icon> -->
 
-            <md-button ng-show="ach.showDocumentViewer" class="md-icon-button md-primary" aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
+            <md-button ng-show="showDocumentViewer" class="md-icon-button md-primary" aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
                 <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;"></ng-md-icon>
             </md-button>
             <span flex></span>
-            <div ng-show="ach.showDocumentViewer" layout="row">
+            <div ng-show="showDocumentViewer" layout="row">
                 <md-button class="md-icon-button md-primary" aria-label="add" ng-click="addEvidence()">
                     <md-tooltip md-direction="top">
                         Add as Evidence
@@ -40,8 +40,8 @@
                     <ng-md-icon icon="my_library_add" style="fill: white;"></ng-md-icon>
                 </md-button>
             </div>
-            <md-button class="md-icon-button md-primary" aria-label="minimize-document-viewer" ng-click="ach.showDocumentViewer = !ach.showDocumentViewer">
-                <ng-md-icon icon="{{ach.showDocumentViewer ? 'expand_more' : 'expand_less'}}" style="fill: white;"></ng-md-icon>
+            <md-button class="md-icon-button md-primary" aria-label="minimize-document-viewer" ng-click="showDocumentViewer = !showDocumentViewer">
+                <ng-md-icon icon="{{showDocumentViewer ? 'expand_more' : 'expand_less'}}" style="fill: white;"></ng-md-icon>
             </md-button>
             <!-- </md-button> -->
         </div>

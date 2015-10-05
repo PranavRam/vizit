@@ -9,7 +9,7 @@
         .directive('vzDocumentviewer', vzDocumentViewer);
 
     /* @ngInject */
-    function vzDocumentViewer ($q, $http, dataservice, textparser) {
+    function vzDocumentViewer ($q, $http, dataservice, textparser, hypotheses) {
         // Opens and closes the sidebar menu.
         // Usage:
         //  <div data-cc-sidebar">
@@ -20,22 +20,31 @@
             link: link,
             restrict: 'EA',
             templateUrl: 'public/documentviewer/vzDocumentviewer.html',
-            //scope: {
-            //    item: '=',
-            //    onSave: '&'
-            //},
+            scope: {
+                documents: '=',
+                //onSave: '&'
+            },
             replace: true,
-            //controller: function($scope) {
-            //    $scope.item.hover = false;
-            //    $scope.getWeightWidth = function (weight) {
-            //        return Math.round(weight * 5) + 'px';
-            //    };
-            //}
+            controller: function($scope) {
+                //console.log($scope);
+                $scope.showDocumentViewer = true;
+                $scope.showDocumentText = true;
+                $scope.selectedDocument = $scope.documents[0];
+                $scope.selectDocument = function (doc) {
+                    if ($scope.selectedDocument._id !== doc._id) {
+                        doc.viewCount = doc.viewCount + 1;
+                    }
+                    $scope.selectedDocument = doc;
+                };
+                $scope.addHypothesis = function () {
+                    hypotheses.add();
+                };
+            }
         };
         return directive;
 
         function link(scope, element, attrs) {
-            scope.$watch('ach.showDocumentViewer', function(newVal) {
+            scope.$watch('showDocumentViewer', function(newVal) {
                 if(newVal) {
                     element.attr('flex', '25');
                 }
@@ -138,7 +147,7 @@
                                     evidence.content = content;
                                     scope.evidences.push(evidence);
                                     scope.ach.updateACH();
-                                })
+                                });
                                 // evidence.entities = evidenceEntities;
                             });
                         // });

@@ -36,30 +36,23 @@ angular.module('vizit').controller('AchSummaryCtrl', ['$scope', '$http', functio
             $scope.gridOptions.data = data;
         });
 }]);
-function MainCtrl($scope, $rootScope, $state, dataservice,
+function MainCtrl($scope, $rootScope, $state, dataservice, model,
                   hypotheses, evidences, entities, documents) {
     $scope.documents = [];
     $scope.entities = [];
     $scope.selectedDocument = {};
     $scope.selectedEntity = {};
     $scope.selectedEntityConnections = [];
-    $scope.entityType = "Person";
-    $scope.entityTypes = ["Person", "Organization", "Duration", "Number", "Date", "Location", "Time"];
+    $scope.entityType = model.entityTypes[0];
+    $scope.entityTypes = model.entityTypes;
     $scope.entityViewer = {
-        selectedEntityType: "Person"
+        selectedEntityType: $scope.entityType
     };
     $scope.currentState = $state.current.name;
     $scope.showDocumentText = true;
     $scope.evidences = [];
-    $scope.evidenceList = {
-        hover: '',
-        selected: ''
-    }
     $scope.hypotheses = [];
-    $scope.hypothesesList = {
-        hover: '',
-        selected: ''
-    }
+
     var entityCountScale = d3.scale.linear();
     var colorScale = d3.scale.linear() // <-A
     // .domain([0, min, max])
@@ -146,27 +139,6 @@ function MainCtrl($scope, $rootScope, $state, dataservice,
 
     $scope.getOccurenceWidth = function (count) {
         return Math.round(entityCountScale(count)) + 'px';
-    };
-
-    $scope.selectDocument = function (doc) {
-        if ($scope.selectedDocument._id !== doc._id) {
-            doc.viewCount = doc.viewCount + 1;
-        }
-        ;
-        $scope.selectedDocument = doc;
-    };
-
-
-    // var myCustomMenu = angular.element($compile()($scope));
-
-    $scope.log = function (sentence) {
-        console.log(sentence)
-    };
-
-
-    $scope.addHypothesis = function () {
-        //$scope.hypotheses.push({x: 100, y: 100, weight: 5, name: "Hypothesis " + $scope.hypotheses.length});
-        hypotheses.add();
     };
 
     $rootScope.$on('$viewContentLoading',
