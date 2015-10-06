@@ -17,7 +17,9 @@
         // Creates:
         //  <div data-cc-sidebar class="sidebar">
         var directive = {
-            link: link,
+            link: {
+                pre:link
+            },
             restrict: 'EA',
             templateUrl: 'public/entityviewer/vzEntityviewer.html',
             scope: {

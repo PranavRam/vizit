@@ -2,7 +2,10 @@
     <md-content flex="">
         <md-card>
             <md-card-content>
-                <div class="document-item" ng-click="selectDocument(document)" ng-repeat="document in documents" layout="row" layout-align="space-between center" ng-class="{selected: document.name === selectedDocument.name}">
+                <div class="document-item" ng-click="selectDocument(document)"
+                     ng-repeat="document in documents | filter:searchInput" layout="row"
+                     layout-align="space-between center"
+                     ng-class="{selected: document.name === selectedDocument.name}">
                     <span flex="20">{{document.viewCount}}</span>
                     <span flex>{{document.name}}</span>
                 </div>
@@ -14,7 +17,7 @@
             <!-- Use floating label instead of placeholder -->
             <label>Documents</label>
             <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>
-            <input ng-model="ach.searchInput" type="text">
+            <input ng-model="searchInput" type="text">
         </md-input-container>
     </div>
 </div>

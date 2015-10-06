@@ -3,37 +3,43 @@ angular.module('vizit')
 
 angular.module('vizit').controller('AchSummaryCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.gridOptions = {};
+    var fields = [];
+    var k = 8;
+    for(var i = 0; i< k; i++) {
+        fields.push('hypothesis ' + i);
+    }
+    $scope.gridOptions.columnDefs = fields.map(function(field) {
+        return {
+         field: field, cellTemplate: '/public/partials/sparkline-cell.html', width: 150
+        };
+    });
 
-    $scope.gridOptions.columnDefs = [
-        {field: 'name'},
-        {field: 'gender'},
-        {field: 'spark', cellTemplate: '/public/partials/sparkline-cell.html', width: 100}
-    ];
 
     $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/100.json')
         .success(function (data) {
             data.forEach(function (d) {
-                d.spark = {
-                    options: {
-                        chart: {
-                            type: 'sparklinePlus',
-                            height: 20,
-                            width: 100,
-                            x: function (xd, i) {
-                                return i;
+                for(var i = 0; i< k; i++) {
+                    d[fields[i]] = {
+                        options: {
+                            chart: {
+                                type: 'sparklinePlus',
+                                height: 20,
+                                width: 100,
+                                x: function (xd, i) {
+                                    return i;
+                                }
                             }
-                        }
-                    },
-                    data: []
-                };
-
-                // Generate random X values
-                for (i = 0; i < 10; i++) {
-                    d.spark.data.push({x: i, y: Math.floor(Math.random() * (100 - 1 + 1) + 1)});
+                        },
+                        data: []
+                    };
+                    // Generate random X values
+                    for (var j = 0; j < 10; j++) {
+                        d[fields[i]].data.push({x: i, y: Math.floor(Math.random() * (150 - 1 + 1) + 1)});
+                    }
                 }
             });
-
             $scope.gridOptions.data = data;
+            //console.log($scope.gridOptions.data);
         });
 }]);
 function MainCtrl($scope, $state, model,
@@ -55,8 +61,8 @@ function MainCtrl($scope, $state, model,
 
     var entityCountScale = d3.scale.linear();
     var entityCountWidth = 40;
-    // .domain([0, min, max])
-    // .range(["white", "#ffdc8c", "#ff9600"]);
+
+
     $scope.ach = {
         toolbar: {
             isOpen: false
