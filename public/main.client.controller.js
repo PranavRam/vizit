@@ -36,7 +36,7 @@ angular.module('vizit').controller('AchSummaryCtrl', ['$scope', '$http', functio
             $scope.gridOptions.data = data;
         });
 }]);
-function MainCtrl($scope, $rootScope, $state, dataservice, model,
+function MainCtrl($scope, $state, model,
                   hypotheses, evidences, entities, documents) {
     $scope.documents = [];
     $scope.entities = [];
@@ -54,7 +54,7 @@ function MainCtrl($scope, $rootScope, $state, dataservice, model,
     $scope.hypotheses = [];
 
     var entityCountScale = d3.scale.linear();
-    var colorScale = d3.scale.linear() // <-A
+    var entityCountWidth = 40;
     // .domain([0, min, max])
     // .range(["white", "#ffdc8c", "#ff9600"]);
     $scope.ach = {
@@ -69,7 +69,6 @@ function MainCtrl($scope, $rootScope, $state, dataservice, model,
     };
     $scope.config = {}; // use defaults
     $scope.model = {}; // always pass empty object
-    var entityCountWidth = 40;
 
     activate();
 
@@ -104,40 +103,9 @@ function MainCtrl($scope, $rootScope, $state, dataservice, model,
         hypotheses.get().then(function(data) { $scope.hypotheses = data; });
     }
 
-    $scope.getConnections = function (entity) {
-        $scope.selectedEntity = entity;
-        dataservice.getConnections(entity._id)
-            .then(function (data) {
-                var connections = data;
-                var extent = d3.extent(connections, function (d) {
-                    return d.count;
-                });
-                // console.log(extent);
-                colorScale
-                    .domain(extent)
-                    .range(["#ffdc8c", '#ffd278', '#ffc864', '#ffbe50', '#ffb43c', '#ffaa28', '#ffa014']);
-                $scope.selectedEntityConnections = connections;
-            })
-    };
 
     $scope.go = function (stateLoc) {
         $state.go(stateLoc);
         $scope.currentState = stateLoc;
-    }
-    $scope.getConnectionStrength = function (entity) {
-        if (!entity) return 'white';
-        if (entity._id === $scope.selectedEntity._id) return '#ff9600';
-        var found = false;
-        $scope.selectedEntityConnections.forEach(function (connection) {
-            if (connection._id === entity._id) {
-                found = colorScale(entity.count);
-            }
-        });
-        if (!found) return 'white';
-        return found;
-    }
-
-    $scope.getOccurenceWidth = function (count) {
-        return Math.round(entityCountScale(count)) + 'px';
     };
 }
