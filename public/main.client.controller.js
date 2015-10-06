@@ -140,14 +140,4 @@ function MainCtrl($scope, $rootScope, $state, dataservice, model,
     $scope.getOccurenceWidth = function (count) {
         return Math.round(entityCountScale(count)) + 'px';
     };
-
-    $rootScope.$on('$viewContentLoading',
-        function (event, viewConfig) {
-            console.log('view loading', arguments);
-        });
-
-    $scope.$on('$viewContentLoaded',
-        function (event) {
-            console.log('view loaded', arguments);
-        });
 }

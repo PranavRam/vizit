@@ -1,18 +1,29 @@
-<md-content class="entity-list-container" flex>
-    <md-card>
-        <md-card-content>
-            <md-virtual-repeat-container id="vertical-container">
-                <div ng-click="getConnections(entity)" md-virtual-repeat="entity in entities | filter: {type: entityType}" class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
-                    <div class="entity-relevance">
-                    </div>
-                    <div class="entity" layout="row">
-                        <div class="entity-count">
-                            <div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
+<div>
+    <md-input-container class="entity-selection" ng-show="useSelector">
+         <!--<label>{{entityType}}</label>-->
+        <md-select ng-model="entityType">
+            <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
+        </md-select>
+    </md-input-container>
+    <span ng-hide="useSelector">{{entityType}}</span>
+    <md-content class="entity-list-container" flex>
+        <md-card>
+            <md-card-content>
+                <md-virtual-repeat-container class="vertical-container">
+                    <div ng-click="getConnections(entity)"
+                         md-virtual-repeat="entity in filteredEntities"
+                         class="entity-container" flex ng-style="{'background-color' : getConnectionStrength(entity)}">
+                        <div class="entity-relevance">
                         </div>
-                        <span flex class="entity-text">{{entity.text}}</span>
+                        <div class="entity" layout="row">
+                            <div class="entity-count">
+                                <div class="bar" ng-style="{ 'width' : getOccurenceWidth(entity.tfidf) }"></div>
+                            </div>
+                            <span flex class="entity-text">{{entity.text}}</span>
+                        </div>
                     </div>
-                </div>
-            </md-virtual-repeat-container>
-        </md-card-content>
-    </md-card>
-</md-content>
+                </md-virtual-repeat-container>
+            </md-card-content>
+        </md-card>
+    </md-content>
+</div>

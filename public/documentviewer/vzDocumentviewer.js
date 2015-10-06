@@ -26,7 +26,6 @@
             },
             replace: true,
             controller: function($scope) {
-                console.log($scope);
                 $scope.showDocumentViewer = true;
                 $scope.showDocumentText = true;
                 $scope.selectedDocument = $scope.documents[0];
@@ -39,6 +38,9 @@
                 $scope.addHypothesis = function () {
                     hypotheses.add();
                 };
+                $scope.$watch('documents', function(newVal) {
+                    $scope.selectedDocument = $scope.documents[0];
+                })
             }
         };
         return directive;
@@ -51,6 +53,7 @@
                 else {
                     element.removeAttr('flex')
                 }
+                scope.$emit('showDocumentViewer:changed')
             });
             scope.addEvidence = function (wholeDocument) {
                 var promises = [];

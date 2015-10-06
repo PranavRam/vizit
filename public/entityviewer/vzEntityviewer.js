@@ -9,7 +9,7 @@
         .directive('vzEntityviewer', vzEntityviewer);
 
     /* @ngInject */
-    function vzEntityviewer ($timeout) {
+    function vzEntityviewer ($rootScope, $timeout, $compile, dataservice, model) {
         // Opens and closes the sidebar menu.
         // Usage:
         //  <div data-cc-sidebar">
@@ -22,21 +22,22 @@
             templateUrl: 'public/entityviewer/vzEntityviewer.html',
             scope: {
                 entities: '=',
-                //onSave: '&'
+                entityType: '@',
+                useSelector: '@'
             },
             replace: true,
             controller: function($scope) {
+                $scope.useSelector = $scope.useSelector === 'true' ? true : false;
                 $scope.selectedEntity = {};
+                $scope.selectedEntityConnections = [];
+                $scope.entityTypes = model.entityTypes;
+                $scope.entityType = $scope.entityType || model.entityTypes[0];
+
                 var entityCountWidth = 40;
                 var entityCountScale = d3.scale.linear();
-                var entities = $scope.entities;
-                var extent = d3.extent(entities, function (d) {
-                    return d.tfidf;
-                });
-                // console.log(extent);
-                entityCountScale
-                    .domain(extent)
-                    .range([1, entityCountWidth]);
+                var colorScale = d3.scale.linear()
+                var extent = null;
+
                 $scope.getOccurenceWidth = function (count) {
                     return Math.round(entityCountScale(count)) + 'px';
                 };
@@ -51,7 +52,7 @@
                             // console.log(extent);
                             colorScale
                                 .domain(extent)
-                                .range(["#ffdc8c", '#ffd278', '#ffc864', '#ffbe50', '#ffb43c', '#ffaa28', '#ffa014']);
+                                .range(model.entitySpectrum);
                             $scope.selectedEntityConnections = connections;
                         })
                 };
@@ -67,6 +68,27 @@
                     if (!found) return 'white';
                     return found;
                 }
+
+                function setupScale() {
+                    extent = d3.extent($scope.entities, function (d) {
+                        return d.tfidf;
+                    });
+                    // console.log(extent);
+                    entityCountScale
+                        .domain(extent)
+                        .range([1, entityCountWidth]);
+                }
+                function filterResults() {
+                    $scope.filteredEntities = $scope.entities.filter(function(entity) {
+                        return entity.type === $scope.entityType.toUpperCase();
+                    });
+                }
+                $scope.$watchGroup(['entityType', 'entities'], function(newVals) {
+                    setupScale();
+                    filterResults();
+                });
+                setupScale();
+                filterResults();
             }
         };
         return directive;
@@ -81,34 +103,33 @@
                         height += angular.element(children[i]).outerHeight();
                     }
                 }
+                var siblings = element.children();
+                for (var i = 0; i < siblings.length; i++) {
+                    if(element.find('.entity-list-container')[0] !== siblings[i]){
+                        height += angular.element(siblings[i]).outerHeight();
+                    }
+                }
+
+                height = scope.useSelector ? (height + 48) : height + 24;
                 return height;
             }
 
             function setHeight() {
-                var virtualContainer = element.find('#vertical-container');
+                var virtualContainer = angular.element(element.find('.vertical-container')[0]);
                 var parentHeight = element.parent().height();
                 var siblingHeight = getSiblingHeight();
-                //console.log(parentHeight, siblingHeight);
-                virtualContainer.css('height', (parentHeight - siblingHeight - 48) + 'px');
+                console.log(parentHeight, siblingHeight);
+                virtualContainer.css('height', (parentHeight - siblingHeight) + 'px');
             }
-            setHeight();
-            //$timeout(setHeight);
-            //var $sidebarInner = element.find('.sidebar-inner');
-            //var $dropdownElement = element.find('.sidebar-dropdown a');
-            //element.addClass('sidebar');
-            //$dropdownElement.click(dropdown);
-            //
-            //function dropdown(e) {
-            //    var dropClass = 'dropy';
-            //    e.preventDefault();
-            //    if (!$dropdownElement.hasClass(dropClass)) {
-            //        $sidebarInner.slideDown(350, scope.whenDoneAnimating);
-            //        $dropdownElement.addClass(dropClass);
-            //    } else if ($dropdownElement.hasClass(dropClass)) {
-            //        $dropdownElement.removeClass(dropClass);
-            //        $sidebarInner.slideUp(350, scope.whenDoneAnimating);
-            //    }
-            //}
+            //setHeight();
+            $timeout(function() {
+                setHeight();
+            });
+            $rootScope.$on('showDocumentViewer:changed', function(event, mass) {
+                $timeout(function() {
+                    setHeight();
+                })
+            });
         }
     }
 })();

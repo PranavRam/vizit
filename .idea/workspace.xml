@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6937447b-6a9a-45d6-8d3d-b5daea646bd4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/views/includes/footer.html" afterPath="$PROJECT_DIR$/server/views/includes/footer.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/partials/entity_view.html" afterPath="$PROJECT_DIR$/public/partials/entity_view.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/main.client.controller.js" afterPath="$PROJECT_DIR$/public/main.client.controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/data/model.js" afterPath="$PROJECT_DIR$/public/data/model.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/partials/sidebar.html" afterPath="$PROJECT_DIR$/public/partials/sidebar.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/vizit.client.module.js" afterPath="$PROJECT_DIR$/public/vizit.client.module.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.js" afterPath="$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.html" afterPath="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.js" afterPath="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="vizit.iws" />
@@ -26,14 +29,14 @@
     <favorites_list name="vizit" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.46662346">
       <split-first>
         <leaf>
           <file leaf-file-name="vzDocumentviewer.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+                  <caret line="116" column="46" selection-start-line="116" selection-start-column="46" selection-end-line="116" selection-end-column="46" />
                   <folding>
                     <element signature="e#0#43#0" expanded="false" />
                   </folding>
@@ -41,24 +44,12 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="vzDocumentviewer.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.html">
+          <file leaf-file-name="main.scss" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/sass/main.scss">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-1.25">
-                  <caret line="2" column="43" selection-start-line="2" selection-start-column="43" selection-end-line="2" selection-end-column="43" />
+                <state vertical-scroll-proportion="-5.470588">
+                  <caret line="167" column="9" selection-start-line="167" selection-start-column="1" selection-end-line="167" selection-end-column="9" />
                   <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="evidences.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/data/evidences.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="6" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#43#0" expanded="false" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -67,7 +58,7 @@
             <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentlist.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
+                  <caret line="17" column="45" selection-start-line="17" selection-start-column="45" selection-end-line="17" selection-end-column="45" />
                   <folding>
                     <element signature="e#0#43#0" expanded="false" />
                   </folding>
@@ -75,21 +66,45 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="sidebar.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/public/partials/sidebar.html">
+          <file leaf-file-name="entityACH.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/partials/entityACH.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.15606937">
-                  <caret line="9" column="45" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
+                <state vertical-scroll-proportion="-1.875">
+                  <caret line="3" column="17" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
+                  <folding>
+                    <element signature="n#style#0;n#md-content#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="entity_view.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/partials/entity_view.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-1.1764706">
+                  <caret line="4" column="73" selection-start-line="4" selection-start-column="73" selection-end-line="4" selection-end-column="73" />
+                  <folding>
+                    <element signature="n#style#0;n#md-content#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="vizit.client.config.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/vizit.client.config.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="to_trusted.client.filter.js" pinned="false" current-in-tab="false">
+          <file leaf-file-name="to_trusted.client.filter.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/to_trusted.client.filter.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="78" column="61" selection-start-line="78" selection-start-column="55" selection-end-line="78" selection-end-column="61" />
+                <state vertical-scroll-proportion="0.6126126">
+                  <caret line="85" column="28" selection-start-line="85" selection-start-column="28" selection-end-line="87" selection-end-column="31" />
                   <folding />
                 </state>
               </provider>
@@ -115,26 +130,6 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="data.module.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/data/data.module.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="9" column="32" selection-start-line="0" selection-start-column="0" selection-end-line="22" selection-end-column="5" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="model.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/data/model.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
         </leaf>
       </split-first>
       <split-second>
@@ -154,11 +149,21 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="sidebar.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/partials/sidebar.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-1.875">
+                  <caret line="3" column="65" selection-start-line="3" selection-start-column="65" selection-end-line="3" selection-end-column="65" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="main.client.controller.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/main.client.controller.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="31" />
+                  <caret line="141" column="6" selection-start-line="141" selection-start-column="6" selection-end-line="141" selection-end-column="6" />
                   <folding />
                 </state>
               </provider>
@@ -179,8 +184,8 @@
           <file leaf-file-name="vzEntityviewer.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/public/entityviewer/vzEntityviewer.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.088863894">
-                  <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+                <state vertical-scroll-proportion="0.8310811">
+                  <caret line="130" column="18" selection-start-line="130" selection-start-column="18" selection-end-line="130" selection-end-column="18" />
                   <folding>
                     <element signature="e#0#43#0" expanded="false" />
                   </folding>
@@ -188,11 +193,21 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="model.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/public/data/model.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="16" column="14" selection-start-line="16" selection-start-column="14" selection-end-line="16" selection-end-column="14" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="vzEntityviewer.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/public/entityviewer/vzEntityviewer.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-9.375">
-                  <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+                <state vertical-scroll-proportion="-6.25">
+                  <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
                   <folding />
                 </state>
               </provider>
@@ -218,28 +233,6 @@
                   <folding>
                     <element signature="e#0#43#0" expanded="false" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="dataservice.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/core/dataservice.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="31" column="84" selection-start-line="31" selection-start-column="84" selection-end-line="31" selection-end-column="84" />
-                  <folding>
-                    <element signature="e#0#43#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="main.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/public/partials/main.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-20.0">
-                  <caret line="32" column="18" selection-start-line="32" selection-start-column="18" selection-end-line="32" selection-end-column="18" />
-                  <folding />
                 </state>
               </provider>
             </entry>
@@ -279,7 +272,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/public/ach_canvas.client.directive.js" />
         <option value="$PROJECT_DIR$/public/partials/ach_provenance.html" />
         <option value="$PROJECT_DIR$/public/main.css" />
         <option value="$PROJECT_DIR$/public/partials/ach_summary.html" />
@@ -288,7 +280,6 @@
         <option value="$PROJECT_DIR$/public/core/core.js" />
         <option value="$PROJECT_DIR$/public/partials/documentMenu.html" />
         <option value="$PROJECT_DIR$/public/data/data.module.js" />
-        <option value="$PROJECT_DIR$/public/data/model.js" />
         <option value="$PROJECT_DIR$/public/core/core.module.js" />
         <option value="$PROJECT_DIR$/public/core/textparser.js" />
         <option value="$PROJECT_DIR$/public/widgets/widget.module.js" />
@@ -320,16 +311,18 @@
         <option value="$PROJECT_DIR$/public/partials/main.html" />
         <option value="$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.html" />
         <option value="$PROJECT_DIR$/public/documentviewer/vzToolbar.html" />
-        <option value="$PROJECT_DIR$/public/main.client.controller.js" />
         <option value="$PROJECT_DIR$/public/entityviewer/entityviewer.module.js" />
         <option value="$PROJECT_DIR$/public/entityviewer/entityviewer.js" />
         <option value="$PROJECT_DIR$/server/views/includes/footer.html" />
         <option value="$PROJECT_DIR$/public/vizit.client.module.js" />
-        <option value="$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.js" />
-        <option value="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.html" />
         <option value="$PROJECT_DIR$/public/to_trusted.client.filter.js" />
-        <option value="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.js" />
+        <option value="$PROJECT_DIR$/public/data/model.js" />
         <option value="$PROJECT_DIR$/public/partials/sidebar.html" />
+        <option value="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.html" />
+        <option value="$PROJECT_DIR$/public/partials/entity_view.html" />
+        <option value="$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.js" />
+        <option value="$PROJECT_DIR$/public/main.client.controller.js" />
+        <option value="$PROJECT_DIR$/public/entityviewer/vzEntityviewer.js" />
       </list>
     </option>
   </component>
@@ -557,6 +550,42 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vizit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vizit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="documentviewer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vizit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vizit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -571,7 +600,7 @@
     <property name="js.buildTools.gulp.gulp_package_dir" value="/usr/local/lib/node_modules/gulp" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="FullScreen" value="false" />
-    <property name="SearchEverywhereHistoryKey" value="side&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/partials/sidebar.html&#10;docu&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/documentviewer/vzDocumentviewer.js&#10;viz&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/vizit.client.module.js&#10;modu&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/data/data.module.js&#10;main&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/partials/main.html&#10;viewe&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/documentviewer/vzDocumentviewer.js&#10;footer&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/server/views/includes/footer.html&#10;data&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/core/dataservice.js" />
+    <property name="SearchEverywhereHistoryKey" value="side&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/partials/sidebar.html&#10;entity&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/partials/entity_view.html&#10;main&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/sass/main.scss&#10;docu&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/documentviewer/vzDocumentviewer.js&#10;viz&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/vizit.client.module.js&#10;modu&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/data/data.module.js&#10;viewe&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/documentviewer/vzDocumentviewer.js&#10;footer&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/server/views/includes/footer.html&#10;data&#9;FILE&#9;file:///Users/pranavram/Programming/Hapi/vizit/public/core/dataservice.js" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -642,14 +671,14 @@
     <frame x="4" y="23" width="1916" height="1177" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18575197" sideWeight="0.521265" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18575197" sideWeight="0.52074236" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32934684" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24960423" sideWeight="0.4945055" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18575197" sideWeight="0.478735" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18575197" sideWeight="0.47925764" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15639375" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1573137" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25224274" sideWeight="0.510989" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32934684" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -685,14 +714,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/server/views/includes/footer.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/partials/document_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -823,24 +844,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/partials/entity_view.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.75">
-          <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/partials/documentMenu.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.25">
           <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/vizit.client.config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -863,14 +870,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.15509601">
           <caret line="7" column="10" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sass/main.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="310" column="10" selection-start-line="310" selection-start-column="10" selection-end-line="310" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -940,14 +939,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/data/model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.25">
@@ -1013,16 +1004,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentlist.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#43#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/views/includes/footer.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.625">
@@ -1039,28 +1020,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.js">
+    <entry file="file://$PROJECT_DIR$/public/vizit.client.config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#43#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/to_trusted.client.filter.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="61" selection-start-line="78" selection-start-column="55" selection-end-line="78" selection-end-column="61" />
+          <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/entityviewer/vzEntityviewer.html">
+    <entry file="file://$PROJECT_DIR$/public/data/model.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.375">
-          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="14" selection-start-line="16" selection-start-column="14" selection-end-line="16" selection-end-column="14" />
           <folding />
         </state>
       </provider>
@@ -1075,29 +1046,93 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/main.client.controller.js">
+    <entry file="file://$PROJECT_DIR$/sass/main.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="31" />
+        <state vertical-scroll-proportion="-5.470588">
+          <caret line="167" column="9" selection-start-line="167" selection-start-column="1" selection-end-line="167" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/entityviewer/vzEntityviewer.js">
+    <entry file="file://$PROJECT_DIR$/public/partials/sidebar.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.088863894">
-          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+        <state vertical-scroll-proportion="-1.875">
+          <caret line="3" column="65" selection-start-line="3" selection-start-column="65" selection-end-line="3" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/partials/entityACH.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.875">
+          <caret line="3" column="17" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
+          <folding>
+            <element signature="n#style#0;n#md-content#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/entityviewer/vzEntityviewer.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.25">
+          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/partials/entity_view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.1764706">
+          <caret line="4" column="73" selection-start-line="4" selection-start-column="73" selection-end-line="4" selection-end-column="73" />
+          <folding>
+            <element signature="n#style#0;n#md-content#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentlist.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="45" selection-start-line="17" selection-start-column="45" selection-end-line="17" selection-end-column="45" />
           <folding>
             <element signature="e#0#43#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/partials/sidebar.html">
+    <entry file="file://$PROJECT_DIR$/public/documentviewer/vzDocumentviewer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15606937">
-          <caret line="9" column="45" selection-start-line="9" selection-start-column="45" selection-end-line="9" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="116" column="46" selection-start-line="116" selection-start-column="46" selection-end-line="116" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#43#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/to_trusted.client.filter.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6126126">
+          <caret line="85" column="28" selection-start-line="85" selection-start-column="28" selection-end-line="87" selection-end-column="31" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/main.client.controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="141" column="6" selection-start-line="141" selection-start-column="6" selection-end-line="141" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/entityviewer/vzEntityviewer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8310811">
+          <caret line="130" column="18" selection-start-line="130" selection-start-column="18" selection-end-line="130" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#43#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
