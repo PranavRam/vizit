@@ -14,7 +14,7 @@ function config($stateProvider, $urlRouterProvider) {
       views: {
           '': {
             templateUrl: "/public/layouts/main.html",
-            controller: 'MainCtrl'
+            controller: 'core'
           }
       }
     })

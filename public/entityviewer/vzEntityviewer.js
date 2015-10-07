@@ -10,12 +10,6 @@
 
     /* @ngInject */
     function vzEntityviewer ($rootScope, $timeout, $compile, dataservice, model) {
-        // Opens and closes the sidebar menu.
-        // Usage:
-        //  <div data-cc-sidebar">
-        //  <div data-cc-sidebar whenDoneAnimating="vm.sidebarReady()">
-        // Creates:
-        //  <div data-cc-sidebar class="sidebar">
         var directive = {
             link: {
                 pre:link
@@ -58,6 +52,7 @@
                             $scope.selectedEntityConnections = connections;
                         })
                 };
+
                 $scope.getConnectionStrength = function (entity) {
                     if (!entity) return 'white';
                     if (entity._id === $scope.selectedEntity._id) return '#ff9600';
@@ -69,7 +64,7 @@
                     });
                     if (!found) return 'white';
                     return found;
-                }
+                };
 
                 function setupScale() {
                     extent = d3.extent($scope.entities, function (d) {
@@ -89,8 +84,8 @@
                     setupScale();
                     filterResults();
                 });
-                setupScale();
-                filterResults();
+                //setupScale();
+                //filterResults();
             }
         };
         return directive;
@@ -100,13 +95,16 @@
             function getSiblingHeight() {
                 var children = element.parent().children();
                 var height = 0;
-                for (var i = 0; i < children.length; i++) {
+                var siblings = element.children();
+                var i;
+
+                for (i = 0; i < children.length; i++) {
                     if(element[0] !== children[i]){
                         height += angular.element(children[i]).outerHeight();
                     }
                 }
-                var siblings = element.children();
-                for (var i = 0; i < siblings.length; i++) {
+
+                for (i = 0; i < siblings.length; i++) {
                     if(element.find('.entity-list-container')[0] !== siblings[i]){
                         height += angular.element(siblings[i]).outerHeight();
                     }
@@ -120,7 +118,7 @@
                 var virtualContainer = angular.element(element.find('.vertical-container')[0]);
                 var parentHeight = element.parent().height();
                 var siblingHeight = getSiblingHeight();
-                console.log(parentHeight, siblingHeight);
+                //console.log(parentHeight, siblingHeight);
                 virtualContainer.css('height', (parentHeight - siblingHeight) + 'px');
             }
             setHeight();
