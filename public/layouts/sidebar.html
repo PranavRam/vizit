@@ -1,40 +1,44 @@
 <md-tabs flex>
-      <md-tab label="Entities">
+    <md-tab label="Entities">
         <md-content>
-          <vz-entityviewer entities="entities" use-selector="true">
-          </vz-entityviewer>
-          <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-            <md-button class="md-icon-button md-primary" aria-label="search">
-              <ng-md-icon icon="search"></ng-md-icon>
-            </md-button>
-            <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
-              <ng-md-icon icon="sort"></ng-md-icon>
-            </md-button>
-            <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
-              <ng-md-icon icon="filter_list"></ng-md-icon>
-            </md-button>
-            <md-button class="md-icon-button" aria-label="sort_connection">
-              <ng-md-icon icon="swap_calls"></ng-md-icon>
-            </md-button>
-          </section>
+            <vz-entityviewer entities="entities" use-selector="true">
+            </vz-entityviewer>
+            <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+                <md-button class="md-icon-button md-primary" aria-label="search">
+                    <ng-md-icon icon="search"></ng-md-icon>
+                </md-button>
+                <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
+                    <ng-md-icon icon="sort"></ng-md-icon>
+                </md-button>
+                <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
+                    <ng-md-icon icon="filter_list"></ng-md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="sort_connection">
+                    <ng-md-icon icon="swap_calls"></ng-md-icon>
+                </md-button>
+            </section>
         </md-content>
-      </md-tab>
-      <md-tab label="Evidences">
+    </md-tab>
+    <md-tab label="Evidences">
         <md-content class="md-padding" layout="column">
-          <md-content class="evidences" flex>
-            <md-content ng-repeat="evidence in evidences" class="evidence" ng-click="ach.selectedEvidence = evidence" ng-class="{selected: evidence === ach.selectedEvidence}">
-              <vz-editable-list-item item="evidence" on-save="ach.updateACH()"></vz-editable-list-item>
+            <md-content class="evidences" flex>
+                <md-content ng-repeat="evidence in evidences" class="evidence"
+                            ng-click="ach.selectedEvidence = evidence"
+                            ng-class="{selected: evidence === ach.selectedEvidence}">
+                    <vz-editable-list-item item="evidence" on-save="ach.updateACH()"></vz-editable-list-item>
+                </md-content>
             </md-content>
-          </md-content>
         </md-content>
-      </md-tab>
-      <md-tab label="Hypothesis">
+    </md-tab>
+    <md-tab label="Hypothesis">
         <md-content class="md-padding" layout="column">
-          <md-content class="hypotheses" flex>
-            <md-content ng-repeat="hypothesis in hypotheses" class="hypothesis" ng-click="ach.selectedHypothesis = hypothesis" ng-class="{selected: hypothesis === ach.selectedHypothesis}">
-              <vz-editable-list-item item="hypothesis" on-save="ach.updateACH()"></vz-editable-list-item>
+            <md-content class="hypotheses" flex>
+                <md-content ng-repeat="hypothesis in hypotheses" class="hypothesis"
+                            ng-click="ach.selectedHypothesis = hypothesis"
+                            ng-class="{selected: hypothesis === ach.selectedHypothesis}">
+                    <vz-editable-list-item item="hypothesis" on-save="ach.updateACH()"></vz-editable-list-item>
+                </md-content>
             </md-content>
-          </md-content>
         </md-content>
-      </md-tab>
-    </md-tabs>
+    </md-tab>
+</md-tabs>

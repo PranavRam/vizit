@@ -2,7 +2,8 @@
 	d3.vizit = d3.vizit || {};
 	function Hypothesis() {
 		var opts = {
-			width: 250
+			width: 250,
+			tabType: 'positive'
 		}
 
 		var draggable = false;
@@ -47,6 +48,11 @@
 				var title = parent.selectAll('.title');
 				var count = parent.selectAll('.count');
 				var showHide = parent.selectAll('.show-hide');
+				var tabs = body.selectAll('.tabs');
+				var positiveTab = tabs.selectAll('.positive');
+				var negativeTab = tabs.selectAll('.negative');
+				//var content = body.selectAll('.content');
+				//var evidences = content.selectAll('.evidences');
 
 				if(fo.empty()){
 					fo = parent
@@ -68,6 +74,36 @@
 					title = header.append("xhtml:p").attr("class", "title");
 					count = header.append("xhtml:div").attr("class", "count");
 					showHide = header.append("xhtml:div").attr("class", "show-hide");
+
+					tabs = body.append('div')
+						.attr('layout', 'row')
+						.attr('class', 'tabs');
+
+					positiveTab = tabs.append('div')
+						.attr('flex', '')
+						.attr('class', ' tab positive')
+						.classed('selected', true)
+						.text('Positive')
+						.on('click', function(d) {
+							negativeTab.classed('selected', false);
+							positiveTab.classed('selected', true);
+							opts.tabType = 'positive';
+							changeTab(opts.tabType);
+						});
+
+					negativeTab = tabs.append('div')
+						.attr('flex', '')
+						.attr('class', 'tab negative')
+						.text('Negative')
+						.on('click', function(d) {
+							negativeTab.classed('selected', true);
+							positiveTab.classed('selected', false);
+							opts.tabType = 'negative';
+							changeTab(opts.tabType);
+						});
+
+					//content = body.append('div')
+					//	.attr('class', 'content');
 				}
 				container.style({
 					"color": "white"
@@ -101,7 +137,7 @@
 				.text(data.weight)
 				.attr({
 					// flex: "5"
-				})
+				});
 
 				showHide.style({
 					"text-align": "center",
@@ -118,14 +154,31 @@
 					"overflow-y": "auto"
 				})
 
+				//console.log(evidences);
 				var node = $(container.node());
 				fo.attr({
 					width: opts.width,
 					height: 200
 				});
-
+				changeTab(opts.tabType);
 				fo.call(drag);
 				body.call(zoomDisabled);
+
+				function changeTab(type) {
+					var positiveData = [1, 2, 3, 4];
+					var negativeData = [3,4,5,6];
+					var content = body.selectAll('.content');
+
+					if(type === 'positive') {
+						content = content.data(positiveData);
+					}
+					else {
+						content = content.data(negativeData);
+					}
+					content.enter().append('p').attr('class', 'content');
+					content.text(function(d) { return d; });
+					content.exit().remove();
+				}
 			})
 		}
 		return component;

@@ -198,6 +198,21 @@ ng-md-icon svg {
 .hypotheses .hypothesis.selected {
   border-right: solid 2px #f44336; }
 
+svg .hypothesis .tabs {
+  cursor: pointer;
+  height: 40px;
+  background-color: #E0E0E0; }
+  svg .hypothesis .tabs > div {
+    text-align: center;
+    line-height: 40px;
+    color: black; }
+    svg .hypothesis .tabs > div.selected {
+      background-color: lightgray;
+      border-bottom: solid 1px red;
+      color: #2962ff; }
+svg .hypothesis .content {
+  color: black; }
+
 .nv-sparklineplus text {
   display: none; }
 

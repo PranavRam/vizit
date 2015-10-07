@@ -332,6 +332,30 @@ ng-md-icon svg {
     border-right: solid 2px $color_red_orange_approx;
   }
 }
+
+svg .hypothesis {
+  .tabs {
+    cursor: pointer;
+    height: 40px;
+    background-color: #E0E0E0;
+    > div {
+      text-align: center;
+      line-height: 40px;
+      //margin: auto;
+      color: black;
+      &.selected {
+        background-color: darken(#E0E0E0, 5%);
+        border-bottom: solid 1px red;
+        color: $color_royal_blue;
+      }
+    }
+    .positive {
+    }
+  }
+  .content {
+    color: black;
+  }
+}
 .nv-sparklineplus text {
   display: none;
 }
