@@ -4,7 +4,7 @@
 (function() {
     'use strict';
 
-    angular.module('app.entityviewer', [
+    angular.module('app.upload', [
         /*
          * Angular modules
          */
@@ -16,6 +16,5 @@
         /*
          * 3rd Party modules
          */
-        'ngFileUpload'
     ]);
 })();

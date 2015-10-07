@@ -13,7 +13,7 @@ function config($stateProvider, $urlRouterProvider) {
       abstract: true,
       views: {
           '': {
-            templateUrl: "/public/partials/main.html",
+            templateUrl: "/public/layouts/main.html",
             controller: 'MainCtrl'
           }
       }
@@ -22,13 +22,13 @@ function config($stateProvider, $urlRouterProvider) {
       url: "/",
       views: {
           'topView@vizit': {
-              templateUrl: '/public/partials/entityACH.html'
+              templateUrl: '/public/layouts/entityACH.html'
           },
           'entityList@vizit.entity_ach': {
-              templateUrl: '/public/partials/sidebar.html'
+              templateUrl: '/public/layouts/sidebar.html'
           },
           'achCanvas@vizit.entity_ach': {
-              templateUrl: '/public/partials/ach_canvas.html'
+              templateUrl: '/public/layouts/ach_canvas.html'
           }
       }
     })
@@ -36,7 +36,7 @@ function config($stateProvider, $urlRouterProvider) {
       url: "/entity-view",
       views: {
           'topView@vizit': {
-              templateUrl: '/public/partials/entity_view.html'
+              templateUrl: '/public/layouts/entity_view.html'
           }
       }
     })
@@ -44,7 +44,7 @@ function config($stateProvider, $urlRouterProvider) {
       url: "/ach_summary",
       views: {
           'topView@vizit': {
-              templateUrl: '/public/partials/ach_summary.html',
+              templateUrl: '/public/layouts/ach_summary.html',
               controller: function($scope, $timeout){ $scope.viewLoaded = false; $timeout(function() { $scope.viewLoaded = true; console.log('timeline')}); }
           }
       }
@@ -53,20 +53,19 @@ function config($stateProvider, $urlRouterProvider) {
       url: "/provenance",
       views: {
           'topView@vizit': {
-              templateUrl: '/public/partials/provenance.html'
+              templateUrl: '/public/layouts/provenance.html'
           },
           'entityList@vizit.provenance': {
-              templateUrl: '/public/partials/sidebar.html'
+              templateUrl: '/public/layouts/sidebar.html'
           },
           'achProvenance@vizit.provenance': {
-              templateUrl: '/public/partials/ach_provenance.html',
+              templateUrl: '/public/layouts/ach_provenance.html',
               controller: function($scope, $timeout){ $scope.viewLoaded = false; $timeout(function() { $scope.viewLoaded = true; console.log('timeline')}); }
           }
       }
     })
     .state('upload', {
       url: "/upload",
-      templateUrl: "/public/partials/upload.html",
-      controller: 'UploadCtrl'
+      templateUrl: "/public/layouts/upload.html",
     })
 }

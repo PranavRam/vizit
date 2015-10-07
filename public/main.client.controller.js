@@ -4,13 +4,13 @@ angular.module('vizit')
 angular.module('vizit').controller('AchSummaryCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.gridOptions = {};
     var fields = [];
-    var k = 8;
+    var k = 9;
     for(var i = 0; i< k; i++) {
         fields.push('hypothesis ' + i);
     }
     $scope.gridOptions.columnDefs = fields.map(function(field) {
         return {
-         field: field, cellTemplate: '/public/partials/sparkline-cell.html', width: 150
+         field: field, cellTemplate: '/public/achmatrix/sparkline-cell.html', width: 150
         };
     });
 

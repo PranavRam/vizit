@@ -18,14 +18,14 @@
         return service;
 
         function get(force) {
-            if(force || !data.length){
+            //if(force || !data.length){
                 return dataservice.getEntities()
                     .then(function (response) {
                         data = response;
                         return data;
                     });
-            }
-            return data;
+            //}
+            //return data;
         }
 
         function add() {

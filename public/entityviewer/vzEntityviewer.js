@@ -29,7 +29,7 @@
             },
             replace: true,
             controller: function($scope) {
-                $scope.useSelector = $scope.useSelector === 'true' ? true : false;
+                $scope.useSelector = $scope.useSelector === 'true';
                 $scope.selectedEntity = {};
                 $scope.selectedEntityConnections = [];
                 $scope.entityTypes = model.entityTypes;
@@ -37,7 +37,7 @@
 
                 var entityCountWidth = 40;
                 var entityCountScale = d3.scale.linear();
-                var colorScale = d3.scale.linear()
+                var colorScale = d3.scale.linear();
                 var extent = null;
 
                 $scope.getOccurenceWidth = function (count) {
@@ -123,7 +123,7 @@
                 console.log(parentHeight, siblingHeight);
                 virtualContainer.css('height', (parentHeight - siblingHeight) + 'px');
             }
-            //setHeight();
+            setHeight();
             $timeout(function() {
                 setHeight();
             });

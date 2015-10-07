@@ -4,7 +4,7 @@
 (function() {
     'use strict';
 
-    angular.module('app.entityviewer', [
+    angular.module('app.achmatrix', [
         /*
          * Angular modules
          */
@@ -16,6 +16,6 @@
         /*
          * 3rd Party modules
          */
-        'ngFileUpload'
+        'ui.grid'
     ]);
 })();
