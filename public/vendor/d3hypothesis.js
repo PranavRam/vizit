@@ -2,8 +2,7 @@
 	d3.vizit = d3.vizit || {};
 	function Hypothesis() {
 		var opts = {
-			width: 250,
-			tabType: 'positive'
+			width: 250
 		}
 
 		var draggable = false;
@@ -51,6 +50,7 @@
 				var tabs = body.selectAll('.tabs');
 				var positiveTab = tabs.selectAll('.positive');
 				var negativeTab = tabs.selectAll('.negative');
+				data.tabType = 'positive';
 				//var content = body.selectAll('.content');
 				//var evidences = content.selectAll('.evidences');
 
@@ -87,8 +87,8 @@
 						.on('click', function(d) {
 							negativeTab.classed('selected', false);
 							positiveTab.classed('selected', true);
-							opts.tabType = 'positive';
-							changeTab(opts.tabType);
+							data.tabType = 'positive'
+							changeTab(data.tabType);
 						});
 
 					negativeTab = tabs.append('div')
@@ -98,8 +98,8 @@
 						.on('click', function(d) {
 							negativeTab.classed('selected', true);
 							positiveTab.classed('selected', false);
-							opts.tabType = 'negative';
-							changeTab(opts.tabType);
+							data.tabType = 'negative'
+							changeTab(data.tabType);
 						});
 
 					//content = body.append('div')
@@ -160,13 +160,13 @@
 					width: opts.width,
 					height: 200
 				});
-				changeTab(opts.tabType);
+				changeTab(data.tabType);
 				fo.call(drag);
 				body.call(zoomDisabled);
 
 				function changeTab(type) {
-					var positiveData = [1, 2, 3, 4];
-					var negativeData = [3,4];
+					var positiveData = data.positive || [];
+					var negativeData = data.negative || [];
 					var content = body.selectAll('.content');
 
 					if(type === 'positive') {
@@ -176,7 +176,7 @@
 						content = content.data(negativeData);
 					}
 					content.enter().append('p').attr('class', 'content');
-					content.text(function(d) { return d; });
+					content.text(function(d) { return d.name; });
 					content.exit().remove();
 				}
 			})

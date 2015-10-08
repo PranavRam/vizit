@@ -162,12 +162,17 @@
                         var found = false;
                         scope.hypotheses.every(function(hypothesis) {
                             if(intersectRect(d, hypothesis, 250, 200)) {
-                                console.log('intersect', hypothesis);
                                 found = true;
+                                hypothesis[hypothesis.tabType] = hypothesis[hypothesis.tabType] || [];
+                                if(hypothesis[hypothesis.tabType].indexOf(d) === -1) {
+                                    hypothesis[hypothesis.tabType].push(d);
+                                }
+                                render();
+                                console.log('intersect', hypothesis);
                                 return false;
                             }
                             return true;
-                        })
+                        });
                         return found;
                     }
                 };
