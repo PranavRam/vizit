@@ -160,6 +160,9 @@ LOCATION {
   }
 }
 .entity-list {
+  &.constant-width {
+    width: 275px;
+  }
   overflow-x: hidden;
   .entity-selection {
     padding-bottom: 16px;

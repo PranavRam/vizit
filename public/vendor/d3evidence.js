@@ -2,23 +2,39 @@
 	d3.vizit = d3.vizit || {};
 	function Evidence() {
 		var opts = {
-			width: 250
+			width: 250,
+			onDragEnd: function(d) {
+				console.log(d);
+			}
 		}
 
 		var draggable = false;
+		var previousLoc = {};
 		var drag = d3.behavior.drag()
 		    .origin(function(d) { return d; })
-		    .on("dragstart", function() { 
+		    .on("dragstart", function(d) {
 		    	d3.event.sourceEvent.stopPropagation();
 		    	var targetNode = d3.event.sourceEvent.target;
 					if(d3.select(targetNode).classed("header") || 
 						$(targetNode).parents('.header').length) {
 						draggable = true;
+						previousLoc.x = d.x;
+						previousLoc.y = d.y;
 					};
 		    })
 		    .on("drag", dragmove)
 		    .on("dragend", function(d) {
+				var self = d3.select(this);
 		    	draggable = false;
+				var snapBack = opts.onDragEnd(d);
+				if(snapBack) {
+					d.x = previousLoc.x;
+					d.y = previousLoc.y;
+					self.attr({
+						x: d.x,
+						y: d.y
+					});
+				}
 		    })
 		var zoomDisabled = d3.behavior.zoom()
 		    .on("zoom", function() {
@@ -138,6 +154,21 @@
 				body.call(zoomDisabled);
 			})
 		}
+
+		function accessor(key) {
+			return function (value) {
+				if (!arguments.length) return opts[key];
+				opts[key] = value;
+				return component;
+			}
+		}
+
+		for (var n in opts) {
+			if (opts.hasOwnProperty(n)) {
+				component[n] = accessor(n);
+			}
+		}
+
 		return component;
 	}
 	d3.vizit.evidence = Evidence;

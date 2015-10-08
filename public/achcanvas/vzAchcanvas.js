@@ -11,7 +11,7 @@
             link: function (scope, el, attrs) {
                 var compile = function () {
                     var hypothesis = d3.vizit.hypothesis();
-                    var evidence = d3.vizit.evidence();
+                    var evidence = d3.vizit.evidence().onDragEnd(onEvidenceDragEnd);
                     var minimap = d3.minimap();
                     var minimapScale = 0.05;
                     var borderScale = d3.scale.linear()
@@ -149,6 +149,27 @@
                             minimap.render();
                         //}
                     });
+
+                    function intersectRect(r1, r2, width, height) {
+                        return !(r2.x > (r1.x + width) ||
+                        (r2.x + width) < r1.x ||
+                        r2.y > (r1.y + height) ||
+                        (r2.y + height) < r1.y);
+                    }
+
+                    function onEvidenceDragEnd(d) {
+                        console.log('dragged', d);
+                        var found = false;
+                        scope.hypotheses.every(function(hypothesis) {
+                            if(intersectRect(d, hypothesis, 250, 200)) {
+                                console.log('intersect', hypothesis);
+                                found = true;
+                                return false;
+                            }
+                            return true;
+                        })
+                        return found;
+                    }
                 };
 
                 $timeout(compile);

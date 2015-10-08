@@ -58,6 +58,8 @@
 
 .entity-list {
   overflow-x: hidden; }
+  .entity-list.constant-width {
+    width: 275px; }
   .entity-list .entity-selection {
     padding-bottom: 16px; }
 

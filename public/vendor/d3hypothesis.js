@@ -166,7 +166,7 @@
 
 				function changeTab(type) {
 					var positiveData = [1, 2, 3, 4];
-					var negativeData = [3,4,5,6];
+					var negativeData = [3,4];
 					var content = body.selectAll('.content');
 
 					if(type === 'positive') {
@@ -181,6 +181,21 @@
 				}
 			})
 		}
+
+		function accessor(key) {
+			return function (value) {
+				if (!arguments.length) return opts[key];
+				opts[key] = value;
+				return component;
+			}
+		}
+
+		for (var n in opts) {
+			if (opts.hasOwnProperty(n)) {
+				component[n] = accessor(n);
+			}
+		}
+
 		return component;
 	}
 	d3.vizit.hypothesis = Hypothesis;
