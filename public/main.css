@@ -200,6 +200,8 @@ ng-md-icon svg {
 .hypotheses .hypothesis.selected {
   border-right: solid 2px #f44336; }
 
+svg .hypothesis .body {
+  font-size: small; }
 svg .hypothesis .tabs {
   cursor: pointer;
   height: 40px;
@@ -214,6 +216,11 @@ svg .hypothesis .tabs {
       color: #2962ff; }
 svg .hypothesis .content {
   color: black; }
+
+svg .evidence .content .title {
+  background-color: #E0E0E0;
+  height: 24px;
+  line-height: 24px; }
 
 .nv-sparklineplus text {
   display: none; }

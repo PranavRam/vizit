@@ -125,7 +125,7 @@
 							.attr({
 								flex: ""
 							});
-
+				console.log(data);
 				count.style({
 					"text-align": "center",
 					"background-color": "#4CAF50",

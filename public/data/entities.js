@@ -7,12 +7,13 @@
 
     function entities(dataservice) {
         var data = [];
-
+        var connections = []
         var service = {
             data: data,
             get: get,
             add: add,
-            remove: remove
+            remove: remove,
+            connections: connections
         };
 
         return service;

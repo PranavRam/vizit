@@ -29,7 +29,7 @@
             function getHypotheses() {
                 return $q(function(resolve, reject) {
                     setTimeout(function() {
-                        resolve([{x: 100, y: 100, weight: 5, name: "Hypothesis -1"}])
+                        resolve([{x: 100, y: 100, weight: 0, name: "Hypothesis 0", positive: [], negative: []}])
                     }, 1000);
                 });
 

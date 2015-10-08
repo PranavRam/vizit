@@ -6,10 +6,56 @@
 
     angular
         .module('app.entityviewer')
-        .directive('vzEntityviewer', vzEntityviewer);
+        .directive('vzEntityviewer', vzEntityviewer)
+        .directive('vzEntityitem', vzEntityitem);
+
+    function vzEntityitem ($rootScope, $timeout, entities, dataservice, model) {
+        var directive = {
+            link: link,
+            restrict: 'EA',
+            templateUrl: 'public/entityviewer/vzEntityitem.html',
+            scope: {
+                entity: '=',
+                colorScale: '=',
+                barWidth: '&'
+            },
+            controller: function ($scope) {
+                //$scope.styleSheet = {};
+                //$scope.styleSheet['background-color'] = 'red';
+                $scope.getConnections = function () {
+                    console.log('connections');
+                    //$scope.selectedEntity = entity;
+                    dataservice.getConnections($scope.entity._id)
+                        .then(function (data) {
+                            var connections = data;
+                            var extent = d3.extent(connections, function (d) {
+                                return d.count;
+                            });
+                            // console.log(extent);
+                            $scope.colorScale
+                                .domain(extent)
+                                .range(model.entitySpectrum);
+                            //angular.copy(connections, $scope.selectedEntityConnections);
+                            entities.connections = connections;
+                            $rootScope.$broadcast('entity:selected', $scope.entity);
+                            //console.log($scope.selectedEntityConnections);
+                        })
+                };
+            }
+        }
+        return directive;
+        function link(scope, element, attrs) {
+            //element.css('background-color', 'white');
+            //element.on('click', function() {
+            //    //scope.styleSheet['background-color'] = '#ff9600';
+            //    //element.css('background-color', '#ff9600');
+            //    scope.getConnections();
+            //});
+        }
+    }
 
     /* @ngInject */
-    function vzEntityviewer ($rootScope, $timeout, $compile, dataservice, model) {
+    function vzEntityviewer ($rootScope, $timeout, entities, dataservice, model) {
         var directive = {
             link: {
                 pre:link
@@ -24,46 +70,16 @@
             replace: true,
             controller: function($scope) {
                 $scope.useSelector = $scope.useSelector === 'true';
-                $scope.selectedEntity = {};
-                $scope.selectedEntityConnections = [];
                 $scope.entityTypes = model.entityTypes;
                 $scope.entityType = $scope.entityType || model.entityTypes[0];
+                $scope.colorScale = d3.scale.linear();
 
                 var entityCountWidth = 40;
                 var entityCountScale = d3.scale.linear();
-                var colorScale = d3.scale.linear();
                 var extent = null;
 
                 $scope.getOccurenceWidth = function (count) {
                     return Math.round(entityCountScale(count)) + 'px';
-                };
-                $scope.getConnections = function (entity) {
-                    $scope.selectedEntity = entity;
-                    dataservice.getConnections(entity._id)
-                        .then(function (data) {
-                            var connections = data;
-                            var extent = d3.extent(connections, function (d) {
-                                return d.count;
-                            });
-                            // console.log(extent);
-                            colorScale
-                                .domain(extent)
-                                .range(model.entitySpectrum);
-                            $scope.selectedEntityConnections = connections;
-                        })
-                };
-
-                $scope.getConnectionStrength = function (entity) {
-                    if (!entity) return 'white';
-                    if (entity._id === $scope.selectedEntity._id) return '#ff9600';
-                    var found = false;
-                    $scope.selectedEntityConnections.forEach(function (connection) {
-                        if (connection._id === entity._id) {
-                            found = colorScale(entity.count);
-                        }
-                    });
-                    if (!found) return 'white';
-                    return found;
                 };
 
                 function setupScale() {
@@ -84,8 +100,43 @@
                     setupScale();
                     filterResults();
                 });
-                //setupScale();
-                //filterResults();
+
+                $scope.getConnectionStrength = function(entity) {
+                    //console.log('No Item', $scope.entity.type);
+                    //if (entity._id === scope.selectedEntity._id) return '#ff9600';
+                    var found = false;
+                    entities.connections.forEach(function (connection) {
+                        if (connection._id === entity._id) {
+                            found = $scope.colorScale(entity.count);
+                        }
+                    });
+                    return found ? found :  'white';
+                    //return found;
+                };
+
+                $scope.$on('entity:selected', function(e, entity) {
+                    //if(entity !== scope.entity) {
+                        //console.log('----Before-----');
+                        console.log($scope.filteredEntities);
+                        $scope.filteredEntities.forEach(function(value) {
+                            if(value !== entity) {
+                                value.connectionColor = $scope.getConnectionStrength(value);
+                            }
+                            else {
+                                value.connectionColor = '#ff9600';
+                            }
+                        });
+                        //var color = $scope.getConnectionStrength();
+                        //scope.styleSheet['background-color'] = color;
+                        //element.css('background-color', color);
+                        //console.log(element[0]);
+                        //console.log('----After-----');
+                    //}
+                })
+                //$scope.$watchCollection('selectedEntityConnections', function(newVal) {
+                //    filterResults();
+                //    console.log('changed');
+                //})
             }
         };
         return directive;
@@ -121,10 +172,11 @@
                 //console.log(parentHeight, siblingHeight);
                 virtualContainer.css('height', (parentHeight - siblingHeight) + 'px');
             }
-            setHeight();
+            //setHeight();
             $timeout(function() {
-                setHeight();
+                //setHeight();
             });
+
             $rootScope.$on('showDocumentViewer:changed', function(event, mass) {
                 $timeout(function() {
                     setHeight();

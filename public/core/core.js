@@ -7,7 +7,6 @@ function core($scope, $state, model,
     $scope.entities = [];
     $scope.selectedDocument = {};
     $scope.selectedEntity = {};
-    $scope.selectedEntityConnections = [];
     $scope.entityType = model.entityTypes[0];
     $scope.entityTypes = model.entityTypes;
     $scope.entityViewer = {
@@ -17,7 +16,7 @@ function core($scope, $state, model,
     $scope.showDocumentText = true;
     $scope.evidences = [];
     $scope.hypotheses = [];
-
+    window.scp = entities.connections;
     var entityCountScale = d3.scale.linear();
     var entityCountWidth = 40;
 

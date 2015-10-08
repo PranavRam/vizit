@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="entity-relevance">
+</div>
+<div class="entity" layout="row">
+    <div class="entity-count">
+        <div class="bar" ng-style="{ 'width' : barWidth({count: entity.tfidf }) }"></div>
+    </div>
+    <span flex class="entity-text">{{entity.text}}</span>
+</div>

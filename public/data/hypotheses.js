@@ -29,7 +29,7 @@
         }
 
         function add() {
-            data.push({x: 100, y: 100, weight: 5, name: "Hypothesis " + data.length});
+            data.push({x: 100, y: 100, weight: 0, name: "Hypothesis " + data.length, positive: [], negative: []});
         }
 
         function remove() {

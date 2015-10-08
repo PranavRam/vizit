@@ -167,8 +167,16 @@
                                 if(hypothesis[hypothesis.tabType].indexOf(d) === -1) {
                                     hypothesis[hypothesis.tabType].push(d);
                                 }
+                                var weight = 0;
+                                hypothesis['positive'].forEach(function(evidence) {
+                                    weight += evidence.weight;
+                                });
+                                hypothesis['negative'].forEach(function(evidence) {
+                                    weight -= evidence.weight;
+                                });
+                                hypothesis.weight = weight;
                                 render();
-                                console.log('intersect', hypothesis);
+                                //console.log('intersect', hypothesis);
                                 return false;
                             }
                             return true;
