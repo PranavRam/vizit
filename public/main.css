@@ -230,4 +230,7 @@ md-input-container.editable-controls {
   md-input-container.editable-controls [ng-message] {
     position: static; }
 
+ng-md-icon.selected {
+  fill: blue; }
+
 /*# sourceMappingURL=main.css.map */

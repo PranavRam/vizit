@@ -5,14 +5,24 @@
         <ng-md-icon icon="search"></ng-md-icon>
     </md-button>
     <div layout="row" layout-align="center center" ng-show="!searchToggle">
-        <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
-            <ng-md-icon icon="sort"></ng-md-icon>
+        <md-button class="md-icon-button md-primary"
+                   ng-click="toolbar.orderBy = 'text'"
+                   aria-label="sort_alphabetically">
+            <ng-md-icon icon="sort"
+                        ng-class="{'selected': toolbar.orderBy === 'text'}"></ng-md-icon>
         </md-button>
-        <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
-            <ng-md-icon icon="filter_list"></ng-md-icon>
+        <md-button class="md-icon-button md-accent"
+                   ng-click="toolbar.orderBy = 'tfidf'"
+                   aria-label="sort_frequency">
+            <ng-md-icon icon="filter_list"
+                        ng-class="{'selected': toolbar.orderBy === 'tfidf'}"
+                    ></ng-md-icon>
         </md-button>
-        <md-button class="md-icon-button" aria-label="sort_connection">
-            <ng-md-icon icon="swap_calls"></ng-md-icon>
+        <md-button class="md-icon-button"
+                   ng-click="toolbar.reverse = !toolbar.reverse"
+                   aria-label="sort_connection">
+            <ng-md-icon icon="swap_calls"
+                    ng-class="{'selected': toolbar.reverse}"></ng-md-icon>
         </md-button>
     </div>
     <div layout="row" layout-align="center center" ng-show="searchToggle">
@@ -22,7 +32,7 @@
             <!--<md-icon>-->
                 <!--<ng-md-icon icon="create"></ng-md-icon>-->
             <!--</md-icon>-->
-            <input ng-model="search.input" type="text">
+            <input ng-model="toolbar.search" type="text">
         </md-input-container>
     </div>
 </section>

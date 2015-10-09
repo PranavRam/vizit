@@ -20,7 +20,7 @@
             templateUrl: 'public/entityviewer/vzEntityToolbar.html',
             //require: '^vzEntityviewer46',
             scope: {
-                search: '=',
+                toolbar: '=',
                 //barWidth: '&'
             },
             controller: function ($scope) {
@@ -132,10 +132,11 @@
                 $scope.useSelector = $scope.useSelector === 'true';
                 $scope.showToolbar = $scope.showToolbar === 'true';
                 $scope.entityTypes = model.entityTypes;
-                $scope.search = {
-                    input: ''
+                $scope.toolbar = {
+                    search: '',
+                    orderBy: '',
+                    reverse: false
                 };
-                console.log('parent', $scope.searchInput);
                 //console.log($scope.showToolbar);
                 $scope.entityType = $scope.entityType || model.entityTypes[0];
 

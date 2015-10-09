@@ -11,7 +11,9 @@
             <md-card-content>
                 <md-virtual-repeat-container class="vertical-container">
                     <div vz-entityitem
-                                    md-virtual-repeat="entity in entities | filter:{type: entityType} | filter: search.input"
+                                    md-virtual-repeat="entity in entities
+                                    | filter:{type: entityType} | filter: toolbar.search
+                                    | orderBy: toolbar.orderBy: toolbar.reverse"
                                     class="entity-container"
                                     entity="entity"
                                     color-scale="colorScale"
@@ -23,7 +25,7 @@
     </md-content>
     <div vz-entity-toolbar
             ng-if="showToolbar"
-            search="search"
+            toolbar="toolbar"
             style="height: 48px; overflow: hidden;"></div>
     <!--<section layout="row" layout-sm="column"-->
              <!--ng-show="showToolbar" layout-align="center center" layout-wrap>-->
