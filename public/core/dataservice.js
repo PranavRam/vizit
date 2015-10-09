@@ -58,7 +58,7 @@
 
             function getConnections(id) {
                 return $http.get('/api/connections/'+id).
-                    then(getConnectionsComplete)
+                    then(getConnectionsComplete);
 
                 function getConnectionsComplete(data, status, headers, config) {
                     return data.data;

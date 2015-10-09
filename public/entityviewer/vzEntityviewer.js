@@ -1,7 +1,7 @@
 /**
  * Created by pranavram on 10/5/15.
  */
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -9,56 +9,91 @@
         .directive('vzEntityviewer', vzEntityviewer)
         .directive('vzEntityitem', vzEntityitem);
 
-    function vzEntityitem ($rootScope, $timeout, entities, dataservice, model) {
+    function vzEntityitem($rootScope, $timeout, entities, dataservice, model) {
         var directive = {
             link: link,
             restrict: 'EA',
             templateUrl: 'public/entityviewer/vzEntityitem.html',
+            //require: '^vzEntityviewer',
             scope: {
                 entity: '=',
-                colorScale: '=',
                 barWidth: '&'
             },
             controller: function ($scope) {
                 //$scope.styleSheet = {};
                 //$scope.styleSheet['background-color'] = 'red';
+                $scope.colorScale = d3.scale.ordinal();
                 $scope.getConnections = function () {
-                    console.log('connections');
+                    //console.log('connections');
                     //$scope.selectedEntity = entity;
-                    dataservice.getConnections($scope.entity._id)
+                    return dataservice.getConnections($scope.entity._id)
                         .then(function (data) {
+                            //console.log('in get connections');
                             var connections = data;
-                            var extent = d3.extent(connections, function (d) {
-                                return d.count;
-                            });
-                            // console.log(extent);
-                            $scope.colorScale
-                                .domain(extent)
-                                .range(model.entitySpectrum);
+                            //window.d3scale = $scope.colorScale;
                             //angular.copy(connections, $scope.selectedEntityConnections);
                             entities.connections = connections;
-                            $rootScope.$broadcast('entity:selected', $scope.entity);
+                            return connections;
                             //console.log($scope.selectedEntityConnections);
                         })
                 };
+                $scope.getConnectionStrength = function () {
+                    //console.log('No Item', $scope.entity.type);
+                    //if (entity._id === scope.selectedEntity._id) return '#ff9600';
+                    var found = false;
+                    entities.connections.forEach(function (connection) {
+                        if (connection._id === $scope.entity._id) {
+                            found = $scope.colorScale($scope.entity.count);
+                            //console.log($scope.entity.count,found);
+                        }
+                    });
+                    return found ? found : 'white';
+                    //return found;
+                }
             }
+
         }
         return directive;
         function link(scope, element, attrs) {
-            //element.css('background-color', 'white');
-            //element.on('click', function() {
-            //    //scope.styleSheet['background-color'] = '#ff9600';
-            //    //element.css('background-color', '#ff9600');
-            //    scope.getConnections();
-            //});
+            element.css('background-color', scope.getConnectionStrength());
+            element.on('click', function () {
+                //scope.styleSheet['background-color'] = '#ff9600';
+                element.css('background-color', '#ff9600');
+                scope.getConnections()
+                    .then(function (data) {
+                        //$timeout(function () {
+                            $rootScope.$broadcast('entity:selected', scope.entity);
+                        //},500);
+                    });
+            });
+
+            scope.$on('entity:selected', function (e, entity) {
+                //console.log('broadcast');
+                if (entity !== scope.entity) {
+                    var extent = d3.extent(entities.connections, function (d) {
+                        return d.count;
+                    });
+                    //console.log(model.entitySpectrum);
+                    scope.colorScale
+                        .domain(extent)
+                        .range(model.entitySpectrum);
+                    //console.log('----Before-----');
+                    //console.log(element[0]);
+                    var color = scope.getConnectionStrength();
+                    //scope.styleSheet['background-color'] = color;
+                    element.css('background-color', color);
+                    //console.log(element[0]);
+                    //console.log('----After-----');
+                }
+            })
         }
     }
 
     /* @ngInject */
-    function vzEntityviewer ($rootScope, $timeout, entities, dataservice, model) {
+    function vzEntityviewer($rootScope, $timeout, entities, dataservice, model) {
         var directive = {
             link: {
-                pre:link
+                pre: link
             },
             restrict: 'EA',
             templateUrl: 'public/entityviewer/vzEntityviewer.html',
@@ -68,11 +103,10 @@
                 useSelector: '@'
             },
             replace: true,
-            controller: function($scope) {
+            controller: function ($scope) {
                 $scope.useSelector = $scope.useSelector === 'true';
                 $scope.entityTypes = model.entityTypes;
                 $scope.entityType = $scope.entityType || model.entityTypes[0];
-                $scope.colorScale = d3.scale.linear();
 
                 var entityCountWidth = 40;
                 var entityCountScale = d3.scale.linear();
@@ -91,52 +125,11 @@
                         .domain(extent)
                         .range([1, entityCountWidth]);
                 }
-                function filterResults() {
-                    $scope.filteredEntities = $scope.entities.filter(function(entity) {
-                        return entity.type === $scope.entityType.toUpperCase();
-                    });
-                }
-                $scope.$watchGroup(['entityType', 'entities'], function(newVals) {
+
+                $scope.$watchGroup(['entityType', 'entities'], function (newVals) {
                     setupScale();
-                    filterResults();
+                    //filterResults();
                 });
-
-                $scope.getConnectionStrength = function(entity) {
-                    //console.log('No Item', $scope.entity.type);
-                    //if (entity._id === scope.selectedEntity._id) return '#ff9600';
-                    var found = false;
-                    entities.connections.forEach(function (connection) {
-                        if (connection._id === entity._id) {
-                            found = $scope.colorScale(entity.count);
-                        }
-                    });
-                    return found ? found :  'white';
-                    //return found;
-                };
-
-                $scope.$on('entity:selected', function(e, entity) {
-                    //if(entity !== scope.entity) {
-                        //console.log('----Before-----');
-                        console.log($scope.filteredEntities);
-                        $scope.filteredEntities.forEach(function(value) {
-                            if(value !== entity) {
-                                value.connectionColor = $scope.getConnectionStrength(value);
-                            }
-                            else {
-                                value.connectionColor = '#ff9600';
-                            }
-                        });
-                        //var color = $scope.getConnectionStrength();
-                        //scope.styleSheet['background-color'] = color;
-                        //element.css('background-color', color);
-                        //console.log(element[0]);
-                        //console.log('----After-----');
-                    //}
-                })
-                //$scope.$watchCollection('selectedEntityConnections', function(newVal) {
-                //    filterResults();
-                //    console.log('changed');
-                //})
             }
         };
         return directive;
@@ -150,13 +143,13 @@
                 var i;
 
                 for (i = 0; i < children.length; i++) {
-                    if(element[0] !== children[i]){
+                    if (element[0] !== children[i]) {
                         height += angular.element(children[i]).outerHeight();
                     }
                 }
 
                 for (i = 0; i < siblings.length; i++) {
-                    if(element.find('.entity-list-container')[0] !== siblings[i]){
+                    if (element.find('.entity-list-container')[0] !== siblings[i]) {
                         height += angular.element(siblings[i]).outerHeight();
                     }
                 }
@@ -172,13 +165,14 @@
                 //console.log(parentHeight, siblingHeight);
                 virtualContainer.css('height', (parentHeight - siblingHeight) + 'px');
             }
-            //setHeight();
-            $timeout(function() {
-                //setHeight();
+
+            setHeight();
+            $timeout(function () {
+                setHeight();
             });
 
-            $rootScope.$on('showDocumentViewer:changed', function(event, mass) {
-                $timeout(function() {
+            $rootScope.$on('showDocumentViewer:changed', function (event, mass) {
+                $timeout(function () {
                     setHeight();
                 })
             });

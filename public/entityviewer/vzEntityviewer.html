@@ -1,7 +1,7 @@
 <div>
     <md-input-container class="entity-selection" ng-show="useSelector">
          <!--<label>{{entityType}}</label>-->
-        <md-select ng-model="entityType">
+        <md-select ng-model="entityType" aria-label="entity-selection">
             <md-option ng-repeat="entityType in entityTypes" value="{{entityType}}">{{entityType}}</md-option>
         </md-select>
     </md-input-container>
@@ -9,16 +9,15 @@
     <md-content class="entity-list-container" flex>
         <md-card>
             <md-card-content>
-                <!--<md-virtual-repeat-container class="vertical-container">-->
-                    <div vz-entityitem ng-click="getConnections()"
-                                    ng-repeat="entity in filteredEntities"
+                <md-virtual-repeat-container class="vertical-container">
+                    <div vz-entityitem
+                                    md-virtual-repeat="entity in entities | filter:{type: entityType}"
                                     class="entity-container"
                                     entity="entity"
                                     color-scale="colorScale"
-                                    bar-width="getOccurenceWidth(count)"
-                                    ng-style="{'background-color' : entity.connectionColor || 'white'}">
+                                    bar-width="getOccurenceWidth(count)">
                     </div>
-                <!--</md-virtual-repeat-container>-->
+                </md-virtual-repeat-container>
             </md-card-content>
         </md-card>
     </md-content>
