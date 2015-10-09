@@ -85,8 +85,8 @@
   .entity-container .entity-text {
     font-size: small; }
 
-.document-text {
-  margin-top: 0; }
+.document-text, .document-entities {
+  height: 0px; }
 
 .evidence-container {
   height: 25px; }

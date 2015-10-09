@@ -48,10 +48,10 @@
         function link(scope, element, attrs) {
             scope.$watch('showDocumentViewer', function(newVal) {
                 if(newVal) {
-                    element.addClass('flex-25');
+                    element.addClass('flex-30');
                 }
                 else {
-                    element.removeClass('flex-25');
+                    element.removeClass('flex-30');
                 }
                 scope.$emit('showDocumentViewer:changed')
             });

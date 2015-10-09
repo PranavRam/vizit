@@ -195,8 +195,9 @@ LOCATION {
     font-size: small;
   }
 }
-.document-text {
-  margin-top: 0;
+.document-text, .document-entities {
+  //margin-top: 0;
+  height: 0px;
 }
 #vertical-container {
 }

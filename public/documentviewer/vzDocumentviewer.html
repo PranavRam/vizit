@@ -1,10 +1,10 @@
-<div>
-    <!--<vz-toolbar></vz-toolbar>-->
-    <div flex layout="row" ng-show="showDocumentViewer" style="height: 100%;">
+<div layout="column">
+    <vz-toolbar></vz-toolbar>
+    <div flex layout="row" ng-show="showDocumentViewer">
         <!--<md-content flex layouts="row">-->
             <!-- <div layouts-padding flex="20" layouts="column"> -->
-            <vz-documentlist class="document-list"></vz-documentlist>
-            <vz-documentdetail class="document-viewer"></vz-documentdetail>
+            <vz-documentlist flex="20" class="document-list"></vz-documentlist>
+            <vz-documentdetail flex class="document-viewer"></vz-documentdetail>
             <!-- </div> -->
         <!--</md-content>-->
     </div>
