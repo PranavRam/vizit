@@ -1,19 +1,21 @@
-<div style="height: 100%;">
+<md-content layout="column" flex layout-padding>
     <md-content flex>
-        <div class="document-text" ng-show="showDocumentText"
-           ng-bind-html="selectedDocument.parsedText | sentences | to_trusted"
-                    compile-template></div>
-        <div ng-hide="showDocumentText" class="document-entities">
+        <md-content class="document-text" ng-show="showDocumentText">
+            <div
+                 ng-bind-html="selectedDocument.parsedText | sentences | to_trusted"
+                 compile-template></div>
+        </md-content>
+        <md-content ng-hide="showDocumentText" class="document-entities">
             <!--<md-content>-->
-            <md-content class="document-entity-type"
+            <div class="document-entity-type"
                         ng-repeat="(entityType, entityArray) in selectedDocument.entities">
                 <span class="{{entityType}}">{{entityType}}</span>
                 <span ng-repeat="entity in entityArray">{{entity.text}}</span>
-            </md-content>
+            </div>
             <!--</md-content>-->
-        </div>
+        </md-content>
     </md-content>
-    <div layout="row" layout-align="space-between center">
+    <md-content layout="row" layout-align="space-between center">
         <h4>{{selectedDocument.name}}</h4>
         <md-input-container class="md-icon-float">
             <!-- Use floating label instead of placeholder -->
@@ -23,5 +25,5 @@
             </md-icon>
             <input ng-model="ach.searchInput" type="text">
         </md-input-container>
-    </div>
-</div>
+    </md-content>
+</md-content>
