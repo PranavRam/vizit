@@ -1,0 +1,28 @@
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+    <md-button class="md-icon-button md-primary"
+               aria-label="search"
+               ng-click="searchToggle = !searchToggle">
+        <ng-md-icon icon="search"></ng-md-icon>
+    </md-button>
+    <div layout="row" layout-align="center center" ng-show="!searchToggle">
+        <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
+            <ng-md-icon icon="sort"></ng-md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
+            <ng-md-icon icon="filter_list"></ng-md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="sort_connection">
+            <ng-md-icon icon="swap_calls"></ng-md-icon>
+        </md-button>
+    </div>
+    <div layout="row" layout-align="center center" ng-show="searchToggle">
+        <md-input-container class="md-icon-float">
+            <!-- Use floating label instead of placeholder -->
+            <!--<label>Search</label>-->
+            <!--<md-icon>-->
+                <!--<ng-md-icon icon="create"></ng-md-icon>-->
+            <!--</md-icon>-->
+            <input ng-model="search.input" type="text">
+        </md-input-container>
+    </div>
+</section>

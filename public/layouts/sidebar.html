@@ -1,22 +1,10 @@
 <md-tabs flex>
     <md-tab label="Entities">
         <md-content>
-            <vz-entityviewer entities="entities" use-selector="true">
+            <vz-entityviewer entities="entities"
+                             use-selector="true"
+                             show-toolbar="true">
             </vz-entityviewer>
-            <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-                <md-button class="md-icon-button md-primary" aria-label="search">
-                    <ng-md-icon icon="search"></ng-md-icon>
-                </md-button>
-                <md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">
-                    <ng-md-icon icon="sort"></ng-md-icon>
-                </md-button>
-                <md-button class="md-icon-button md-accent" aria-label="sort_frequency">
-                    <ng-md-icon icon="filter_list"></ng-md-icon>
-                </md-button>
-                <md-button class="md-icon-button" aria-label="sort_connection">
-                    <ng-md-icon icon="swap_calls"></ng-md-icon>
-                </md-button>
-            </section>
         </md-content>
     </md-tab>
     <md-tab label="Evidences">

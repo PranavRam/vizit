@@ -7,7 +7,32 @@
     angular
         .module('app.entityviewer')
         .directive('vzEntityviewer', vzEntityviewer)
-        .directive('vzEntityitem', vzEntityitem);
+        .directive('vzEntityitem', vzEntityitem)
+        .directive('vzEntityToolbar', vzEntityToolbar);
+
+    function vzEntityToolbar($rootScope, $timeout, entities, dataservice, model) {
+        var directive = {
+            link: {
+                pre: link
+            },
+            restrict: 'EA',
+            replace: true,
+            templateUrl: 'public/entityviewer/vzEntityToolbar.html',
+            //require: '^vzEntityviewer46',
+            scope: {
+                search: '=',
+                //barWidth: '&'
+            },
+            controller: function ($scope) {
+                $scope.searchToggle = false;
+            }
+
+        }
+        return directive;
+        function link(scope, element, attrs) {
+
+        }
+    }
 
     function vzEntityitem($rootScope, $timeout, entities, dataservice, model) {
         var directive = {
@@ -92,20 +117,26 @@
     /* @ngInject */
     function vzEntityviewer($rootScope, $timeout, entities, dataservice, model) {
         var directive = {
-            link: {
-                pre: link
-            },
+            link: link,
             restrict: 'EA',
             templateUrl: 'public/entityviewer/vzEntityviewer.html',
             scope: {
                 entities: '=',
                 entityType: '@',
-                useSelector: '@'
+                useSelector: '@',
+                showToolbar: '@'
             },
             replace: true,
             controller: function ($scope) {
+                //console.log($scope.showToolbar);
                 $scope.useSelector = $scope.useSelector === 'true';
+                $scope.showToolbar = $scope.showToolbar === 'true';
                 $scope.entityTypes = model.entityTypes;
+                $scope.search = {
+                    input: ''
+                };
+                console.log('parent', $scope.searchInput);
+                //console.log($scope.showToolbar);
                 $scope.entityType = $scope.entityType || model.entityTypes[0];
 
                 var entityCountWidth = 40;

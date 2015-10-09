@@ -11,7 +11,7 @@
             <md-card-content>
                 <md-virtual-repeat-container class="vertical-container">
                     <div vz-entityitem
-                                    md-virtual-repeat="entity in entities | filter:{type: entityType}"
+                                    md-virtual-repeat="entity in entities | filter:{type: entityType} | filter: search.input"
                                     class="entity-container"
                                     entity="entity"
                                     color-scale="colorScale"
@@ -21,4 +21,23 @@
             </md-card-content>
         </md-card>
     </md-content>
+    <div vz-entity-toolbar
+            ng-if="showToolbar"
+            search="search"
+            style="height: 48px; overflow: hidden;"></div>
+    <!--<section layout="row" layout-sm="column"-->
+             <!--ng-show="showToolbar" layout-align="center center" layout-wrap>-->
+        <!--<md-button class="md-icon-button md-primary" aria-label="search">-->
+            <!--<ng-md-icon icon="search"></ng-md-icon>-->
+        <!--</md-button>-->
+        <!--<md-button class="md-icon-button md-primary" aria-label="sort_alphabetically">-->
+            <!--<ng-md-icon icon="sort"></ng-md-icon>-->
+        <!--</md-button>-->
+        <!--<md-button class="md-icon-button md-accent" aria-label="sort_frequency">-->
+            <!--<ng-md-icon icon="filter_list"></ng-md-icon>-->
+        <!--</md-button>-->
+        <!--<md-button class="md-icon-button" aria-label="sort_connection">-->
+            <!--<ng-md-icon icon="swap_calls"></ng-md-icon>-->
+        <!--</md-button>-->
+    <!--</section>-->
 </div>
