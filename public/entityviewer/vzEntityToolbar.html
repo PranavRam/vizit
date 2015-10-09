@@ -5,13 +5,13 @@
         <ng-md-icon icon="search"></ng-md-icon>
     </md-button>
     <div layout="row" layout-align="center center" ng-show="!searchToggle">
-        <md-button class="md-icon-button md-primary"
+        <md-button class="md-icon-button"
                    ng-click="toolbar.orderBy = 'text'"
                    aria-label="sort_alphabetically">
             <ng-md-icon icon="sort"
                         ng-class="{'selected': toolbar.orderBy === 'text'}"></ng-md-icon>
         </md-button>
-        <md-button class="md-icon-button md-accent"
+        <md-button class="md-icon-button"
                    ng-click="toolbar.orderBy = 'tfidf'"
                    aria-label="sort_frequency">
             <ng-md-icon icon="filter_list"

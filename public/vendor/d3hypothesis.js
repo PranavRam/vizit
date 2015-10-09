@@ -8,7 +8,8 @@
 		var draggable = false;
 		var drag = d3.behavior.drag()
 		    .origin(function(d) { return d; })
-		    .on("dragstart", function() { 
+		    .on("dragstart", function() {
+				console.log('drag');
 		    	d3.event.sourceEvent.stopPropagation();
 		    	var targetNode = d3.event.sourceEvent.target;
 					if(d3.select(targetNode).classed("header") || 
@@ -50,7 +51,7 @@
 				var tabs = body.selectAll('.tabs');
 				var positiveTab = tabs.selectAll('.positive');
 				var negativeTab = tabs.selectAll('.negative');
-				data.tabType = 'positive';
+				data.tabType = data.tabType ||  'positive';
 				//var content = body.selectAll('.content');
 				//var evidences = content.selectAll('.evidences');
 
@@ -76,11 +77,12 @@
 					showHide = header.append("xhtml:div").attr("class", "show-hide");
 
 					tabs = body.append('div')
-						.attr('layout', 'row')
-						.attr('class', 'tabs');
+						.classed('tabs', true)
+						.classed('md-layout-row', true);
+						//.attr('layout', 'row')
+						//.attr('class', 'tabs');
 
 					positiveTab = tabs.append('div')
-						.attr('flex', '')
 						.attr('class', ' tab positive')
 						.classed('selected', true)
 						.text('Positive')
@@ -89,10 +91,11 @@
 							positiveTab.classed('selected', true);
 							data.tabType = 'positive'
 							changeTab(data.tabType);
-						});
+						})
+						.classed('flex', true);
+
 
 					negativeTab = tabs.append('div')
-						.attr('flex', '')
 						.attr('class', 'tab negative')
 						.text('Negative')
 						.on('click', function(d) {
@@ -100,7 +103,8 @@
 							positiveTab.classed('selected', false);
 							data.tabType = 'negative'
 							changeTab(data.tabType);
-						});
+						})
+						.classed('flex', true);
 
 					//content = body.append('div')
 					//	.attr('class', 'content');
@@ -115,10 +119,12 @@
 						"background-color": "#263238",
 						padding: "8px"
 					})
-					.attr({
-						layout: "row",
-						"layout-align": "space-around center"
-					})
+					//.attr({
+					//	layout: "row",
+					//	"layout-align": "space-around center"
+					//})
+					.classed('md-layout-row', true)
+					.classed('layout-align-space-around-center', true);
 
 
 				title.text(data.name)

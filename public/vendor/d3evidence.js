@@ -101,10 +101,12 @@
                         "background-color": "#283593",
                         padding: "8px"
                     })
-                    .attr({
-                        layout: "row",
-                        "layout-align": "space-around center"
-                    })
+                    //.attr({
+                    //    layout: "row",
+                    //    "layout-align": "space-around center"
+                    //})
+                    .classed('md-layout-row', true)
+                    .classed('layout-align-space-around-center', true);
 
 
                 title.text(data.name)
