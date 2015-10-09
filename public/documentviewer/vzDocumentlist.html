@@ -1,5 +1,5 @@
-<div>
-    <md-content flex="">
+<div flex="20" layout="column">
+    <md-content flex>
         <md-card>
             <md-card-content>
                 <div class="document-item" ng-click="selectDocument(document)"
@@ -12,8 +12,8 @@
             </md-card-content>
         </md-card>
     </md-content>
-    <div class="document-list-search">
-        <md-input-container class="md-icon-float" >
+    <div class="document-list-search" flex>
+        <md-input-container class="md-icon-float" layout-padding>
             <!-- Use floating label instead of placeholder -->
             <label>Documents</label>
             <md-icon><ng-md-icon icon="search"></ng-md-icon></md-icon>

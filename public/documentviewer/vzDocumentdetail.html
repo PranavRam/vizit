@@ -1,14 +1,16 @@
-<md-content>
+<div style="height: 100%;">
     <md-content flex>
-        <p ng-show="showDocumentText" class="document-text"
-           ng-bind-html="selectedDocument.parsedText | sentences | to_trusted" compile-template></p>
-
+        <div class="document-text" ng-show="showDocumentText"
+           ng-bind-html="selectedDocument.parsedText | sentences | to_trusted"
+                    compile-template></div>
         <div ng-hide="showDocumentText" class="document-entities">
-            <div class="document-entity-type"
-                 ng-repeat="(entityType, entityArray) in selectedDocument.entities">
+            <!--<md-content>-->
+            <md-content class="document-entity-type"
+                        ng-repeat="(entityType, entityArray) in selectedDocument.entities">
                 <span class="{{entityType}}">{{entityType}}</span>
                 <span ng-repeat="entity in entityArray">{{entity.text}}</span>
-            </div>
+            </md-content>
+            <!--</md-content>-->
         </div>
     </md-content>
     <div layout="row" layout-align="space-between center">
@@ -22,4 +24,4 @@
             <input ng-model="ach.searchInput" type="text">
         </md-input-container>
     </div>
-</md-content>
+</div>
