@@ -25,8 +25,9 @@
                 $scope.gridOptions = {};
 
                 hypotheses.get().then(activate);
-                function activate(hypotheses) {
-                    console.log(hypotheses);
+                function activate(hyp) {
+                    console.log(hypotheses.data);
+                    hypotheses = hypotheses.data;
                     var fields = hypotheses.map(function (hyp) {
                         return hyp.name
                     });

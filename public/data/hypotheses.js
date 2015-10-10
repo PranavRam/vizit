@@ -21,8 +21,7 @@
             //if(force || !data.length){
                 return dataservice.getHypotheses()
                     .then(function (response) {
-                        data = response;
-                        console.log(data);
+                        angular.copy(response, data);
                         return data;
                     });
             //}
