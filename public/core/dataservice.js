@@ -16,7 +16,10 @@
 
                 createHypothesis: createHypothesis,
 
-                updateHypothesis: updateHypothesis
+                updateHypothesis: updateHypothesis,
+
+                getHypothesisEvents: getHypothesisEvents,
+                getHypothesesEvents: getHypothesesEvents
             };
 
             return service;
@@ -32,7 +35,7 @@
 
             function getHypotheses() {
                 return $http.get('/api/hypotheses').
-                            then(getHypothesesComplete);
+                    then(getHypothesesComplete);
 
                 function getHypothesesComplete(data, status, headers, config) {
                     return data.data;
@@ -56,7 +59,7 @@
 
             function updateHypothesis(data, evidence, oldWeight) {
                 return $http({
-                    url: 'api/hypotheses/'+data._id,
+                    url: 'api/hypotheses/' + data._id,
                     method: 'PUT',
                     data: {
                         hypothesis: data,
@@ -68,6 +71,24 @@
                     .then(updateHypothesisComplete);
 
                 function updateHypothesisComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function getHypothesisEvents(id) {
+                return $http.get('/api/hypotheses/' + id + '/events')
+                    .then(getHypothesisEventsComplete);
+
+                function getHypothesisEventsComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function getHypothesesEvents() {
+                return $http.get('/api/events')
+                    .then(getHypothesesEventsComplete);
+
+                function getHypothesesEventsComplete(data, status, headers, config) {
                     return data.data;
                 }
             }
@@ -91,7 +112,7 @@
             }
 
             function getConnections(id) {
-                return $http.get('/api/connections/'+id).
+                return $http.get('/api/connections/' + id).
                     then(getConnectionsComplete);
 
                 function getConnectionsComplete(data, status, headers, config) {

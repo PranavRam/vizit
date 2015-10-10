@@ -1,7 +1,7 @@
 /**
  * Created by pranavram on 10/5/15.
  */
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -9,7 +9,7 @@
         .directive('vzAchmatrix', vzAchmatrix);
 
     /* @ngInject */
-    function vzAchmatrix () {
+    function vzAchmatrix(dataservice) {
         // Opens and closes the sidebar menu.
         // Usage:
         //  <div data-cc-sidebar">
@@ -21,25 +21,33 @@
             restrict: 'EA',
             templateUrl: 'public/achmatrix/vzAchmatrix.html',
             //replace: true,
-            controller: function($scope, $http) {
+            controller: function ($scope, $http, hypotheses) {
                 $scope.gridOptions = {};
-                var fields = [];
-                var k = 9;
-                for(var i = 0; i< k; i++) {
-                    fields.push('hypothesis ' + i);
-                }
-                $scope.gridOptions.columnDefs = fields.map(function(field) {
-                    return {
-                        field: field, cellTemplate: '/public/achmatrix/sparkline-cell.html', width: 150
-                    };
-                });
+
+                hypotheses.get().then(activate);
+                function activate(hypotheses) {
+                    console.log(hypotheses);
+                    var fields = hypotheses.map(function (hyp) {
+                        return hyp.name
+                    });
+
+                    $scope.gridOptions.columnDefs = fields.map(function (field) {
+                        return {
+                            field: field, cellTemplate: '/public/achmatrix/sparkline-cell.html', width: 150
+                        };
+                    });
 
 
-                $http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/100.json')
-                    .success(function (data) {
-                        data.forEach(function (d) {
-                            for(var i = 0; i< k; i++) {
-                                d[fields[i]] = {
+                    //$http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/100.json')
+                    dataservice.getHypothesesEvents()
+                        .then(function (data) {
+                            //console.log(data, hypotheses);
+                            var achMatrix = data.map(function (d, i) {
+                                var event = {};
+                                var graph = d.events.map(function (e, i) {
+                                    return {x: i, y: e.weight};
+                                });
+                                event[hypotheses[i].name] = {
                                     options: {
                                         chart: {
                                             type: 'sparklinePlus',
@@ -50,17 +58,20 @@
                                             }
                                         }
                                     },
-                                    data: []
+                                    data: graph
                                 };
+                                return event;
                                 // Generate random X values
-                                for (var j = 0; j < 10; j++) {
-                                    d[fields[i]].data.push({x: i, y: Math.floor(Math.random() * (150 - 1 + 1) + 1)});
-                                }
-                            }
+                                //for (var j = 0; j < 10; j++) {
+                                //    d[fields[i]].data.push({x: i, y: Math.floor(Math.random() * (150 - 1 + 1) + 1)});
+                                //}
+                                //}
+                            });
+                            console.log(achMatrix);
+                            $scope.gridOptions.data = achMatrix;
+                            //console.log($scope.gridOptions.data);
                         });
-                        $scope.gridOptions.data = data;
-                        //console.log($scope.gridOptions.data);
-                    });
+                }
             }
         };
         return directive;

@@ -22,6 +22,7 @@
                 return dataservice.getHypotheses()
                     .then(function (response) {
                         data = response;
+                        console.log(data);
                         return data;
                     });
             //}

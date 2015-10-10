@@ -720,6 +720,24 @@ server.register([
                 }
             });
         }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/api/events',
+        handler: function(request, reply) {
+            var query = new Parse.Query(HypothesisParse);
+            query.find({
+                success: function(results) {
+                    //console.log('retrieved object', object);
+                    reply(results);
+                },
+                error: function(error) {
+                    //alert("Error: " + error.code + " " + error.message);
+                    reply({});
+                }
+            });
+        }
     })
     server.route({
         method: 'PUT',
