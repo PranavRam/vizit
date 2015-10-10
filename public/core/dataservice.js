@@ -12,7 +12,11 @@
                 getEvidences: getEvidences,
                 getEntities: getEntities,
                 getConnections: getConnections,
-                getEntitiesForEvidence: getEntitiesForEvidence
+                getEntitiesForEvidence: getEntitiesForEvidence,
+
+                createHypothesis: createHypothesis,
+
+                updateHypothesis: updateHypothesis
             };
 
             return service;
@@ -27,13 +31,43 @@
             }
 
             function getHypotheses() {
-                return $q(function(resolve, reject) {
-                    setTimeout(function() {
-                        resolve([{x: 100, y: 100, weight: 0, name: "Hypothesis 0", positive: [], negative: []}])
-                    }, 1000);
-                });
+                return $http.get('/api/hypotheses').
+                            then(getHypothesesComplete);
 
                 function getHypothesesComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function createHypothesis(data) {
+                return $http({
+                    url: 'api/hypotheses',
+                    method: 'POST',
+                    data: {
+                        hypothesis: data
+                    }
+                })
+                    .then(createHypothesisComplete);
+
+                function createHypothesisComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function updateHypothesis(data, evidence, oldWeight) {
+                return $http({
+                    url: 'api/hypotheses/'+data._id,
+                    method: 'PUT',
+                    data: {
+                        hypothesis: data,
+                        ev: evidence,
+                        weight: oldWeight
+
+                    }
+                })
+                    .then(updateHypothesisComplete);
+
+                function updateHypothesisComplete(data, status, headers, config) {
                     return data.data;
                 }
             }

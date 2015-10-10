@@ -14,9 +14,35 @@ var natural = require('natural'),
     TfIdf = natural.TfIdf;
 
 var http = require('request');
-
+var Parse = require('parse/node').Parse;
 var alchemy = new AlchemyAPI('e611893e79748690d9a387240bab8b64f14b9a2b');
-
+Parse.initialize("Tuu2ar77cy4IyW2rzVFNtkuEOxlAkn0VgsWSk8GJ", "5MIPDwq0WWzYvtFYtWfEdYsDDfZhc6udVdweZdDB");
+//var Hypothesis = Parse.Object.extend("Hypothesis");
+//var hypothesis = new Hypothesis();
+//
+//hypothesis.set("_neo4j_", 1337);
+//hypothesis.set("name", "Hypothesis 0");
+//hypothesis.set("weight", 0);
+//
+//hypothesis.save(null, {
+//    success: function(hypothesis) {
+//        // Execute any logic that should take place after the object is saved.
+//        console.log('New object created with objectId: ' + hypothesis.id);
+//    },
+//    error: function(hypothesis, error) {
+//        // Execute any logic that should take place if the save fails.
+//        // error is a Parse.Error with an error code and message.
+//        console.log('Failed to create new object, with error code: ' + error.message);
+//    }
+//});
+//var query = new Parse.Query(Parse.User);
+//query.find({
+//    success: function(users) {
+//        for (var i = 0; i < users.length; ++i) {
+//            console.log(users[i].get('username'));
+//        }
+//    }
+//});
 var db = new neo4j.GraphDatabase("http://vizit:0bp1mago6MgssAE46bH3@vizit.sb05.stations.graphenedb.com:24789");
 // db.createConstraint({
 //     label: 'Document',
@@ -377,6 +403,40 @@ function getDocuments(reply) {
   });
 }
 
+function getHypotheses(reply) {
+    var query = [
+        "MATCH (p:Hypothesis)-[r1:HYPEV {type: 'positive'}]->(ep)",
+        "MATCH (n:Hypothesis)-[r2:HYPEV {type: 'negative'}]->(en)",
+        "RETURN n, collect(en) as neg_ev , collect(ep) as pos_ev"
+    ].join('\n');
+
+    db.cypher({
+        query: query
+    }, function (err, results) {
+        if (err) return reply(err);
+        console.log(results);
+        var hypotheses = results.map(function(result) {
+            var hypothesis = result['n'].properties;
+            hypothesis._id = result['n']._id;
+            var positive = result['pos_ev'] || [];
+            var negative = result['neg_ev'] || [];
+            hypothesis.positive = positive.map(function(evidence) {
+                var obj = evidence.properties;
+                obj._id = evidence._id;
+                return obj;
+            });
+            hypothesis.negative = negative.map(function(evidence) {
+                var obj = evidence.properties;
+                obj._id = evidence._id;
+                return obj;
+            });
+            console.log(hypothesis);
+            return hypothesis;
+        });
+        reply(hypotheses);
+    });
+}
+
 function getEvidences(reply) {
   var query = [
     'MATCH (n:Evidence)-[r:EVIDENCESNIPPET]->(e)',
@@ -391,11 +451,11 @@ function getEvidences(reply) {
           var evidence = result['n'];
           var id = evidence._id;
           evidence = evidence.properties;
-          evidence.id = id;
+          evidence._id = id;
           evidence.content = result['snippets'].map(function(snippet) {
             var id = snippet._id;
             snippet = snippet.properties;
-            snippet.id = id;
+            snippet._id = id;
             return snippet;
             // text = S(text).replaceAll(entity.text, '<'+entity.type+' data-entity-id="' + id + '">'+entity.text+'</'+entity.type+'>').s;
           });
@@ -471,6 +531,15 @@ server.register([
         handler: function (request, reply) {
         	// console.log(request);
          	getEntities(reply);
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path:'/api/hypotheses',
+        handler: function (request, reply) {
+            // console.log(request);
+            getHypotheses(reply);
         }
     });
 
@@ -623,6 +692,111 @@ server.register([
               var entity = results['n'];
               reply(entity);
           });
+        }
+    });
+
+    server.route({
+        method: 'PUT',
+        path: '/api/hypotheses/{id}',
+        handler: function(request, reply) {
+            var id = +encodeURIComponent(request.params.id);
+            console.log(request.payload);
+            var hypothesis = request.payload.hypothesis;
+            var oldWeight = +request.payload.weight;
+            var ev = request.payload.ev;
+            var ev_id = ev._id;
+            //var ids = ev.map(function(evidence) {
+            //    return evidence._id;
+            //});
+            console.log('ev ids', ev_id, id);
+            //reply('success');
+            var query = [
+                "MATCH (a:Hypothesis),(b:Evidence)",
+                "WHERE id(a) = {hypothesis_id} AND id(b) = {ev_id}",
+                "MERGE (a)-[r:HYPEV {type: {type}}]->(b)",
+                // "ON CREATE SET b.weight = b.weight + 1",
+                // "ON MATCH SET b.weight = b.weight + 1",
+                // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                "RETURN r"
+            ].join('\n');
+
+            var params = {
+                ev_id: ev_id,
+                type: hypothesis.tabType,
+                hypothesis_id: id
+            };
+
+            db.cypher({
+                query: query,
+                params: params,
+            }, function (err, results) {
+                if (err) return reply(err);
+                console.log('relationship hypothesis evidence', results);
+                reply(hypothesis);
+
+            });
+        }
+    });
+    server.route({
+        method: 'POST',
+        path:'/api/hypotheses',
+        handler: function (request, reply) {
+            // console.log(request);
+            var hypothesis = request.payload.hypothesis;
+            //var positiveEv = request.payload.positiveEv;
+            //var negativeEv = request.payload.negativeEv;
+            //var positiveIds = positiveEv.map(function(evidence) {
+            //    return evidence._id;
+            //});
+            //var negativeIds = negativeEv.map(function(evidence) {
+            //    return evidence._id;
+            //});
+            var query = [
+                "MERGE (n:Hypothesis {name: {hypothesis_name}})",
+                'ON CREATE SET n = {props}',
+                'RETURN n'
+            ].join('\n');
+
+            var params = {
+                props: hypothesis,
+                hypothesis_name: hypothesis.name
+            };
+
+            db.cypher({
+                query: query,
+                params: params
+            }, function (err, results) {
+                if (err) return reply(err);
+                console.log('add hypothesis', results[0]);
+                var hypothesis = results[0]['n'].properties;
+                hypothesis._id = results[0]['n']._id;
+                reply(hypothesis);
+                //var query = [
+                //    "MATCH (a:Hypothesis),(b:Evidence)",
+                //    "WHERE id(a) = {hypothesis_id} AND id(b) in {positiveIds}",
+                //    "MERGE (a)-[r:HYPPOSEV]->(b)",
+                //    // "ON CREATE SET b.weight = b.weight + 1",
+                //    // "ON MATCH SET b.weight = b.weight + 1",
+                //    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                //    "RETURN r"
+                //].join('\n');
+                //
+                //var params = {
+                //    positiveIds: positiveIds,
+                //    negativeIds: negativeIds,
+                //    hypothesis_id: hypothesis._id,
+                //};
+                //
+                //db.cypher({
+                //    query: query,
+                //    params: params,
+                //}, function (err, results) {
+                //    if (err) return reply(err);
+                //    console.log('relationship evidence snippet', results);
+                //    reply(evidence);
+                //
+                //});
+            });
         }
     });
 

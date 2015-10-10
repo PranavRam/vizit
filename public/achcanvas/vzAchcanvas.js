@@ -3,7 +3,7 @@
     angular.module('app.achcanvas')
         .directive('vzAchcanvas', vzAchcanvas);
 
-    function vzAchcanvas($rootScope, $timeout) {
+    function vzAchcanvas($rootScope, $timeout, dataservice) {
         return {
             restrict: 'EA',
             transclude: true,
@@ -162,22 +162,26 @@
                         var found = false;
                         scope.hypotheses.every(function(hypothesis) {
                             if(intersectRect(d, hypothesis, 250, 200)) {
+                                console.log(hypothesis);
                                 found = true;
-                                hypothesis[hypothesis.tabType] = hypothesis[hypothesis.tabType] || [];
-                                if(hypothesis[hypothesis.tabType].indexOf(d) === -1) {
+                                // hypothesis[hypothesis.tabType] = hypothesis[hypothesis.tabType] || [];
+
+                                if(_.findIndex(hypothesis[hypothesis.tabType], '_id', d._id)) {
                                     hypothesis[hypothesis.tabType].push(d);
+                                    var weight = 0;
+                                    var previousWeight = hypothesis.weight;
+                                    hypothesis['positive'].forEach(function(evidence) {
+                                        weight += evidence.weight;
+                                    });
+                                    hypothesis['negative'].forEach(function(evidence) {
+                                        weight -= evidence.weight;
+                                    });
+                                    hypothesis.weight = weight;
+                                    render();
+                                    //console.log('intersect', hypothesis);
+                                    dataservice.updateHypothesis(hypothesis, d ,previousWeight);
+                                    return false;
                                 }
-                                var weight = 0;
-                                hypothesis['positive'].forEach(function(evidence) {
-                                    weight += evidence.weight;
-                                });
-                                hypothesis['negative'].forEach(function(evidence) {
-                                    weight -= evidence.weight;
-                                });
-                                hypothesis.weight = weight;
-                                render();
-                                //console.log('intersect', hypothesis);
-                                return false;
                             }
                             return true;
                         });

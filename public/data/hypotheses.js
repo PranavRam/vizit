@@ -29,7 +29,15 @@
         }
 
         function add() {
-            data.push({x: 100, y: 100, weight: 0, name: "Hypothesis " + data.length, positive: [], negative: []});
+            var hypothesis = {
+                x: 100, y: 100, weight: 0,
+                name: "Hypothesis " + data.length};
+            dataservice.createHypothesis(hypothesis)
+                .then(function(result) {
+                    result.positive = []
+                    result.negative = [];
+                    data.push(result);
+                });
         }
 
         function remove() {
