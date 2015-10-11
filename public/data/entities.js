@@ -22,7 +22,8 @@
             //if(force || !data.length){
                 return dataservice.getEntities()
                     .then(function (response) {
-                        data = response;
+                        angular.copy(response, data);
+                        console.log(data);
                         return data;
                     });
             //}

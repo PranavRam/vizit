@@ -21,7 +21,7 @@
             //if(force || !data.length){
                 return dataservice.getDocuments()
                     .then(function (response) {
-                        data = response;
+                        angular.copy(response, data);
                         return data;
                     });
             //}

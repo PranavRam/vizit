@@ -23,12 +23,9 @@
             //replace: true,
             controller: function ($scope, $http, hypotheses) {
                 $scope.gridOptions = {};
-
-                hypotheses.get().then(activate);
-                function activate(hyp) {
-                    console.log(hypotheses.data);
-                    hypotheses = hypotheses.data;
-                    var fields = hypotheses.map(function (hyp) {
+                activate();
+                function activate() {
+                    var fields = hypotheses.data.map(function (hyp) {
                         return hyp.name
                     });
 
@@ -43,12 +40,12 @@
                     dataservice.getHypothesesEvents()
                         .then(function (data) {
                             //console.log(data, hypotheses);
-                            var achMatrix = data.map(function (d, i) {
+                            $scope.gridOptions.data= data.map(function (d, i) {
                                 var event = {};
                                 var graph = d.events.map(function (e, i) {
                                     return {x: i, y: e.weight};
                                 });
-                                event[hypotheses[i].name] = {
+                                event[hypotheses.data[i].name] = {
                                     options: {
                                         chart: {
                                             type: 'sparklinePlus',
@@ -68,8 +65,7 @@
                                 //}
                                 //}
                             });
-                            console.log(achMatrix);
-                            $scope.gridOptions.data = achMatrix;
+                            //console.log(achMatrix);
                             //console.log($scope.gridOptions.data);
                         });
                 }

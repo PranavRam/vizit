@@ -2,7 +2,7 @@ angular.module('app.core')
     .controller('core', core);
 
 function core($scope, $state, model,
-                  hypotheses, evidences, entities, documents) {
+              hypotheses, evidences, entities, documents) {
     $scope.documents = [];
     $scope.entities = [];
     $scope.selectedDocument = {};
@@ -16,7 +16,7 @@ function core($scope, $state, model,
     $scope.showDocumentText = true;
     $scope.evidences = [];
     $scope.hypotheses = [];
-    window.scp = entities.connections;
+    //window.scp = entities.connections;
     var entityCountScale = d3.scale.linear();
     var entityCountWidth = 40;
 
@@ -37,34 +37,28 @@ function core($scope, $state, model,
     activate();
 
     function activate() {
-        documents.get()
-            .then(function (data) {
-                $scope.documents = data.map(function (data) {
-                    data.viewCount = 0;
-                    return data;
-                });
-                // console.log($scope.documents);
-                $scope.selectedDocument = $scope.documents[0];
-                return $scope.documents;
-            });
 
-        entities.get()
-            .then(function (data) {
-                var entities = data;
-                var extent = d3.extent(entities, function (d) {
-                    return d.tfidf;
-                });
-                // console.log(extent);
-                entityCountScale
-                    .domain(extent)
-                    .range([1, entityCountWidth]);
+        $scope.documents = documents.data.map(function (data) {
+            data.viewCount = 0;
+            return data;
+        });
 
-                $scope.entities = entities;
-            });
+        $scope.selectedDocument = $scope.documents[0];
+        //entities.data
+        //var entities = entities.data;
+        var extent = d3.extent(entities.data, function (d) {
+            return d.tfidf;
+        });
 
-        evidences.get().then(function(data) { $scope.evidences = data; });
+        entityCountScale
+            .domain(extent)
+            .range([1, entityCountWidth]);
 
-        hypotheses.get().then(function(data) { $scope.hypotheses = data; });
+        $scope.entities = entities.data;
+
+        $scope.evidences = evidences.data;
+
+        $scope.hypotheses = hypotheses.data;
     }
 
 
