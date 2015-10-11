@@ -309,6 +309,9 @@ ng-md-icon svg {
 .evidences .evidence {
   .item-title {
     min-height: 24px;
+    ng-md-icon {
+      margin-right: 8px;
+    }
   }
   .item-weight {
     height: 10px;

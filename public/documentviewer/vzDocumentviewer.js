@@ -22,6 +22,7 @@
             templateUrl: 'public/documentviewer/vzDocumentviewer.html',
             scope: {
                 documents: '=',
+                ach: '='
                 //onSave: '&'
             },
             replace: true,

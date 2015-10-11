@@ -35,7 +35,7 @@
                 if (snapBack) {
                     d.x = previousLoc.x;
                     d.y = previousLoc.y;
-                    self.attr({
+                    self.transition().attr({
                         x: d.x,
                         y: d.y
                     });

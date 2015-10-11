@@ -4,6 +4,8 @@
         <span flex editable-text="item.name" e-form="textBtnForm" onaftersave="updateItem()">
             {{ item.name || 'empty' }}
         </span>
+        <ng-md-icon icon="local_see" ng-click="showLocation(item)"
+                    ng-hide="textBtnForm.$visible || !hover"></ng-md-icon>
         <ng-md-icon icon="edit" ng-click="textBtnForm.$show()"
                     ng-hide="textBtnForm.$visible || !hover"></ng-md-icon>
     </div>

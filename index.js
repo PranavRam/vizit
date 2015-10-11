@@ -751,7 +751,7 @@ server.register([
             //console.log('evidence', ev);
             //return reply(hypothesis);
             if(!ev) {
-                console.log('here');
+                //console.log('here');
                 var query = [
                     "MATCH (n:Hypothesis)",
                     "WHERE id(n) = {hypothesis_id}",
@@ -764,7 +764,7 @@ server.register([
 
                 var params = {
                     hypothesis_id: id,
-                    hypothesis: _.omit(hypothesis, ['positive', 'negative', 'tabType', '_id'])
+                    hypothesis: _.pick(hypothesis, ['name', 'weight', 'x', 'y'])
                 };
 
                 db.cypher({
@@ -772,7 +772,7 @@ server.register([
                     params: params
                 }, function (err, results) {
                     if (err) return reply(err);
-                    var hypothesis = results;
+                    var hypothesis = results[0]['n'];
                     console.log(hypothesis);
                     reply(hypothesis);
 
@@ -890,7 +890,97 @@ server.register([
             });
         }
     });
+    server.route({
+        method: 'PUT',
+        path: '/api/evidences/{id}',
+        handler: function (request, reply) {
+            var id = +encodeURIComponent(request.params.id);
+            //console.log(request.payload);
+            var evidence = request.payload.evidence;
+            var snippet = request.payload.snippet;
+            //console.log('evidence', ev);
+            //return reply(hypothesis);
+            if(!snippet) {
+                var query = [
+                    "MATCH (n:Evidence)",
+                    "WHERE id(n) = {evidence_id}",
+                    "SET n = {evidence}",
+                    // "ON CREATE SET b.weight = b.weight + 1",
+                    // "ON MATCH SET b.weight = b.weight + 1",
+                    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                    "RETURN n"
+                ].join('\n');
 
+                var params = {
+                    evidence_id: id,
+                    evidence: _.pick(evidence, ['name', 'weight', 'x', 'y'])
+                };
+
+                db.cypher({
+                    query: query,
+                    params: params
+                }, function (err, results) {
+                    if (err) return reply(err);
+                    var evidence = results[0]['n'];
+                    console.log(evidence);
+                    reply(evidence);
+
+                });
+                return;
+            }
+            var ev_id = ev._id;
+            //var ids = ev.map(function(evidence) {
+            //    return evidence._id;
+            //});
+            //console.log('ev ids', ev_id, id);
+            //reply('success');
+            var query = [
+                "MATCH (a:Hypothesis),(b:Evidence)",
+                "WHERE id(a) = {hypothesis_id} AND id(b) = {ev_id}",
+                "MERGE (a)-[r:HYPEV {type: {type}}]->(b)",
+                "ON CREATE SET a.weight = {weight}",
+                // "ON CREATE SET b.weight = b.weight + 1",
+                // "ON MATCH SET b.weight = b.weight + 1",
+                // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                "RETURN r"
+            ].join('\n');
+
+            var params = {
+                ev_id: ev_id,
+                type: hypothesis.tabType,
+                hypothesis_id: id,
+                weight: hypothesis.weight
+            };
+
+            db.cypher({
+                query: query,
+                params: params,
+            }, function (err, results) {
+                if (err) return reply(err);
+                //console.log('relationship hypothesis evidence', results);
+                var query = new Parse.Query(HypothesisParse);
+                query.equalTo("neo4j", id);
+                query.first({
+                    success: function(object) {
+                        //console.log('retrieved object', object);
+                        object.add('events', {
+                            name: ev.name,
+                            event: 'add evidence',
+                            obj: ev,
+                            //weight: hypothesis.weight,
+                            time: new Date()
+                        });
+                        object.save();
+                        reply(hypothesis);
+                    },
+                    error: function(error) {
+                        //alert("Error: " + error.code + " " + error.message);
+                        reply(hypothesis);
+                    }
+                });
+            });
+        }
+    });
     server.route({
         method: 'POST',
         path: '/api/evidences',

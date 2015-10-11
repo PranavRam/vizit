@@ -17,6 +17,7 @@
                 createHypothesis: createHypothesis,
 
                 updateHypothesis: updateHypothesis,
+                updateEvidence: updateEvidence,
 
                 getHypothesisEvents: getHypothesisEvents,
                 getHypothesesEvents: getHypothesesEvents
@@ -87,6 +88,22 @@
                     .then(getHypothesesEventsComplete);
 
                 function getHypothesesEventsComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function updateEvidence(data, snippet) {
+                return $http({
+                    url: 'api/evidences/' + data._id,
+                    method: 'PUT',
+                    data: {
+                        evidence: data,
+                        snippet: snippet
+                    }
+                })
+                    .then(updateEvidenceComplete);
+
+                function updateEvidenceComplete(data, status, headers, config) {
                     return data.data;
                 }
             }

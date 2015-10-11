@@ -22,7 +22,8 @@
             templateUrl: 'public/widgets/vzEditableListItem.html',
             scope: {
                 item: '=',
-                onSave: '&'
+                onSave: '&',
+                showLocation: '&'
             },
             replace: true,
             controller: function ($scope) {
@@ -32,7 +33,7 @@
                 };
                 $scope.updateItem = function() {
                     $scope.onSave();
-                }
+                };
             }
         };
         return directive;

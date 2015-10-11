@@ -74,4 +74,10 @@ function core($scope, $state, model, dataservice,
         }
 
     }
+
+    $scope.showLocation = function(item){
+        if(item){
+            $scope.ach.moveTo(item);
+        }
+    }
 }

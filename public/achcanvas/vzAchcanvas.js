@@ -73,7 +73,7 @@
                     render();
 
                     function zoomHandler(newScale) {
-                        newScale ? scale = newScale : scale = d3.event.scale;
+                        scale = newScale ? newScale : d3.event.scale;
                         translation = d3.event ? d3.event.translate : [0, 0];
                         container.attr("transform", "translate(" + translation + ")scale(" + scale + ")");
 
@@ -105,6 +105,21 @@
                         render();
                         minimap.render();
 
+                    };
+                    scope.ach.moveTo = function(item) {
+                        scale = 1;
+                        translation = [-item.x + 100, -item.y + 100];
+                        container
+                            .transition()
+                            .attr("transform", "translate(" + translation + ")scale(" + scale + ")")
+                            .each("end", function() {
+                                minimap.scale(scale);
+                                minimap.render();
+                            });
+                        container.selectAll(".body")
+                            .style({
+                                "border-width": Math.round(borderScale(scale)) + "px"
+                            });
                     };
 
                     function resize() {
@@ -188,6 +203,9 @@
                             }
                             return true;
                         });
+                        if(!found) {
+                            dataservice.updateEvidence(d);
+                        }
                         return found;
                     }
                 };

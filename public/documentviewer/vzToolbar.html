@@ -27,11 +27,18 @@
                     </md-tooltip>
                     <ng-md-icon icon="add" style="fill: white;"></ng-md-icon>
                 </md-button>
-                <md-button class="md-icon-button md-primary" aria-label="note_add" ng-click="addEvidence(true)">
+                <md-button class="md-icon-button md-primary" aria-label="note_add" ng-click="">
                     <md-tooltip md-direction="top">
-                        Add as Evidence into Hypothesis
+                        Add whole Document as an Evidence
                     </md-tooltip>
                     <ng-md-icon icon="note_add" style="fill: white;"></ng-md-icon>
+                </md-button>
+                <md-button class="md-icon-button md-primary" aria-label="system_update_tv" ng-click=""
+                        ng-show="ach.selectedEvidence">
+                    <md-tooltip md-direction="top">
+                        Add in Selected Evidence
+                    </md-tooltip>
+                    <ng-md-icon icon="system_update_tv" style="fill: white;"></ng-md-icon>
                 </md-button>
                 <md-button class="md-icon-button md-primary" aria-label="my_library_add" ng-click="addHypothesis()">
                     <md-tooltip md-direction="top">
