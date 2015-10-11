@@ -1029,7 +1029,7 @@ server.register([
                     params: params,
                 }, function (err, results) {
                     if (err) return reply(err);
-                    console.log('relationship evidence snippet', results);
+                    //console.log('relationship evidence snippet', results);
                     reply(evidence);
 
                 });
@@ -1073,7 +1073,7 @@ server.register([
                 params: params,
             }, function (err, results) {
                 if (err) return reply(err);
-                console.log('snippet', results);
+                //console.log('snippet', results);
                 var snippet = results[0]['n'];
                 var query = [
                     "MATCH (a:Snippet),(b:Entity)",

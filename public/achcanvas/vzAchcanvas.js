@@ -20,6 +20,8 @@
                     var minimapWidth = 250, minimapHeight = 150;
                     var achCanvas = $(el[0]);
                     var svg = d3.select(el.find('svg')[0]);
+                    var t;
+                    var pattern;
                     var translation = [0, 0];
                     var scale = 1;
                     var minimapLoc = [
@@ -38,6 +40,28 @@
                         height: achCanvas.height()
                     });
 
+                    function addPattern() {
+                        t = textures.circles()
+                            .lighter();
+
+                        svg.call(t);
+
+                        //svg.append("circle")
+                        //    .style("fill", t.url());
+                        //rect = svg.append("rect")
+                        //    .attr("x", 0)
+                        //    .attr("width", achCanvas.width())
+                        //    .attr("height", achCanvas.height())
+                        //    .style("fill", 'white');
+
+                        pattern = svg.append("rect")
+                            .attr("x", 0)
+                            .attr("width", achCanvas.width())
+                            .attr("height", achCanvas.height())
+                            .style("fill", t.url());
+                            //.attr('fill', 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiPjwvcmVjdD4KPC9zdmc+")');
+                    }
+                    addPattern();
                     container = svg.append("g")
                         .attr({
                             "class": "ach-canvas-container",
@@ -130,6 +154,12 @@
                                     width: achCanvas.width(),
                                     height: achCanvas.height()
                                 });
+
+                            pattern
+                                .attr("width", achCanvas.width())
+                                .attr("height", achCanvas.height())
+                                .style("fill", t.url());
+
                             container
                                 // .transition()
                                 .attr({
