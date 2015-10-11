@@ -10,11 +10,13 @@
     <md-tab label="Evidences">
         <md-content class="md-padding" layout="column">
             <md-content class="evidences" flex>
-                <md-content ng-repeat="evidence in evidences" class="evidence"
+                <!--<md-content>-->
+                    <vz-editable-list-item
+                            ng-repeat="evidence in evidences" class="evidence"
                             ng-click="ach.selectedEvidence = evidence"
-                            ng-class="{selected: evidence === ach.selectedEvidence}">
-                    <vz-editable-list-item item="evidence" on-save="ach.updateACH()"></vz-editable-list-item>
-                </md-content>
+                            ng-class="{selected: evidence === ach.selectedEvidence}"
+                            item="evidence" on-save="ach.updateACH()"></vz-editable-list-item>
+                <!--</md-content>-->
             </md-content>
         </md-content>
     </md-tab>

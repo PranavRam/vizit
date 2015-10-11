@@ -1,7 +1,7 @@
 /**
  * Created by pranavram on 10/4/15.
  */
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -9,7 +9,7 @@
         .directive('vzEditableListItem', vzEditableListItem);
 
     /* @ngInject */
-    function vzEditableListItem () {
+    function vzEditableListItem() {
         // Opens and closes the sidebar menu.
         // Usage:
         //  <div data-cc-sidebar">
@@ -21,12 +21,12 @@
             restrict: 'EA',
             templateUrl: 'public/widgets/vzEditableListItem.html',
             scope: {
-              item: '=',
-              onSave: '&'
+                item: '=',
+                onSave: '&'
             },
             replace: true,
-            controller: function($scope) {
-                $scope.item.hover = false;
+            controller: function ($scope) {
+                $scope.hover = false;
                 $scope.getWeightWidth = function (weight) {
                     return Math.round(weight * 5) + 'px';
                 };

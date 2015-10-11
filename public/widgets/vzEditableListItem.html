@@ -1,11 +1,11 @@
-<div ng-mouseenter="item.hover = true"
-     ng-mouseleave="item.hover = false">
+<div ng-mouseenter="hover = true"
+     ng-mouseleave="hover = false">
     <div class="item-title" layout="row" layout-align="space-between center">
-        <span editable-text="item.name" e-form="textBtnForm" onaftersave="onSave()">
+        <span flex editable-text="item.name" e-form="textBtnForm" onaftersave="onSave()">
             {{ item.name || 'empty' }}
         </span>
         <ng-md-icon icon="edit" ng-click="textBtnForm.$show()"
-                    ng-hide="textBtnForm.$visible || !item.hover"></ng-md-icon>
+                    ng-hide="textBtnForm.$visible || !hover"></ng-md-icon>
     </div>
     <div class="item-weight">
         <div class="bar" ng-style="{ 'width' : getWeightWidth(item.weight) }"></div>
