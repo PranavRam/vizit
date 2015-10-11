@@ -1,7 +1,7 @@
 angular.module('app.core')
     .controller('core', core);
 
-function core($scope, $state, model,
+function core($scope, $state, model, dataservice,
               hypotheses, evidences, entities, documents) {
     $scope.documents = [];
     $scope.entities = [];
@@ -66,4 +66,12 @@ function core($scope, $state, model,
         $state.go(stateLoc);
         $scope.currentState = stateLoc;
     };
+
+    $scope.updateItem = function(type, item) {
+        if(type === 'hypotheses'){
+            dataservice.updateHypothesis(item)
+                .then($scope.ach.updateACH);
+        }
+
+    }
 }

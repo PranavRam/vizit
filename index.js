@@ -419,7 +419,7 @@ function getHypotheses(reply) {
         query: query
     }, function (err, results) {
         if (err) return reply(err);
-        console.log(results);
+        //console.log(results);
         var hypotheses = results.map(function (result) {
             var hypothesis = result['n'].properties;
             hypothesis._id = result['n']._id;
@@ -435,7 +435,7 @@ function getHypotheses(reply) {
                 obj._id = evidence._id;
                 return obj;
             });
-            console.log(hypothesis);
+            //console.log(hypothesis);
             return hypothesis;
         });
         reply(hypotheses);
@@ -744,10 +744,41 @@ server.register([
         path: '/api/hypotheses/{id}',
         handler: function (request, reply) {
             var id = +encodeURIComponent(request.params.id);
-            console.log(request.payload);
+            //console.log(request.payload);
             var hypothesis = request.payload.hypothesis;
             var oldWeight = +request.payload.weight;
             var ev = request.payload.ev;
+            //console.log('evidence', ev);
+            //return reply(hypothesis);
+            if(!ev) {
+                console.log('here');
+                var query = [
+                    "MATCH (n:Hypothesis)",
+                    "WHERE id(n) = {hypothesis_id}",
+                    "SET n = {hypothesis}",
+                    // "ON CREATE SET b.weight = b.weight + 1",
+                    // "ON MATCH SET b.weight = b.weight + 1",
+                    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                    "RETURN n"
+                ].join('\n');
+
+                var params = {
+                    hypothesis_id: id,
+                    hypothesis: _.omit(hypothesis, ['positive', 'negative', 'tabType', '_id'])
+                };
+
+                db.cypher({
+                    query: query,
+                    params: params
+                }, function (err, results) {
+                    if (err) return reply(err);
+                    var hypothesis = results;
+                    console.log(hypothesis);
+                    reply(hypothesis);
+
+                });
+                return;
+            }
             var ev_id = ev._id;
             //var ids = ev.map(function(evidence) {
             //    return evidence._id;

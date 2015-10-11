@@ -57,15 +57,13 @@
                 }
             }
 
-            function updateHypothesis(data, evidence, oldWeight) {
+            function updateHypothesis(data, evidence) {
                 return $http({
                     url: 'api/hypotheses/' + data._id,
                     method: 'PUT',
                     data: {
                         hypothesis: data,
-                        ev: evidence,
-                        weight: oldWeight
-
+                        ev: evidence
                     }
                 })
                     .then(updateHypothesisComplete);

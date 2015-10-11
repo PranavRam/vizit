@@ -2,7 +2,10 @@
 	d3.vizit = d3.vizit || {};
 	function Hypothesis() {
 		var opts = {
-			width: 250
+			width: 250,
+			onDragEnd: function(d) {
+				console.log(d);
+			}
 		}
 
 		var draggable = false;
@@ -20,6 +23,7 @@
 		    .on("drag", dragmove)
 		    .on("dragend", function(d) {
 		    	draggable = false;
+				opts.onDragEnd(d);
 		    })
 		var zoomDisabled = d3.behavior.zoom()
 		    .on("zoom", function() {

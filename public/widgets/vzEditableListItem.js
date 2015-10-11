@@ -30,6 +30,9 @@
                 $scope.getWeightWidth = function (weight) {
                     return Math.round(weight * 5) + 'px';
                 };
+                $scope.updateItem = function() {
+                    $scope.onSave();
+                }
             }
         };
         return directive;

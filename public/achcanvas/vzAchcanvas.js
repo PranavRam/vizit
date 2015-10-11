@@ -10,7 +10,7 @@
             templateUrl: 'public/achcanvas/vzAchcanvas.html',
             link: function (scope, el, attrs) {
                 var compile = function () {
-                    var hypothesis = d3.vizit.hypothesis();
+                    var hypothesis = d3.vizit.hypothesis().onDragEnd(onHypothesisDragEnd);
                     var evidence = d3.vizit.evidence().onDragEnd(onEvidenceDragEnd);
                     var minimap = d3.minimap();
                     var minimapScale = 0.05;
@@ -157,19 +157,22 @@
                         (r2.y + height) < r1.y);
                     }
 
+                    function onHypothesisDragEnd(d) {
+                        dataservice.updateHypothesis(d);
+                    }
+
                     function onEvidenceDragEnd(d) {
                         console.log('dragged', d);
                         var found = false;
                         scope.hypotheses.every(function(hypothesis) {
                             if(intersectRect(d, hypothesis, 250, 200)) {
-                                console.log(hypothesis);
+                                //console.log(hypothesis);
                                 found = true;
                                 // hypothesis[hypothesis.tabType] = hypothesis[hypothesis.tabType] || [];
 
                                 if(_.findIndex(hypothesis[hypothesis.tabType], '_id', d._id)) {
                                     hypothesis[hypothesis.tabType].push(d);
                                     var weight = 0;
-                                    var previousWeight = hypothesis.weight;
                                     hypothesis['positive'].forEach(function(evidence) {
                                         weight += evidence.weight;
                                     });
@@ -179,7 +182,7 @@
                                     hypothesis.weight = weight;
                                     render();
                                     //console.log('intersect', hypothesis);
-                                    dataservice.updateHypothesis(hypothesis, d ,previousWeight);
+                                    dataservice.updateHypothesis(hypothesis, d);
                                     return false;
                                 }
                             }

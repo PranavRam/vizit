@@ -1,7 +1,7 @@
 <div ng-mouseenter="hover = true"
      ng-mouseleave="hover = false">
     <div class="item-title" layout="row" layout-align="space-between center">
-        <span flex editable-text="item.name" e-form="textBtnForm" onaftersave="onSave()">
+        <span flex editable-text="item.name" e-form="textBtnForm" onaftersave="updateItem()">
             {{ item.name || 'empty' }}
         </span>
         <ng-md-icon icon="edit" ng-click="textBtnForm.$show()"

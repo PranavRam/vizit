@@ -15,7 +15,7 @@
                             ng-repeat="evidence in evidences" class="evidence"
                             ng-click="ach.selectedEvidence = evidence"
                             ng-class="{selected: evidence === ach.selectedEvidence}"
-                            item="evidence" on-save="ach.updateACH()"></vz-editable-list-item>
+                            item="evidence" on-save="updateItem('evidences', evidence)"></vz-editable-list-item>
                 <!--</md-content>-->
             </md-content>
         </md-content>
@@ -23,11 +23,13 @@
     <md-tab label="Hypothesis">
         <md-content class="md-padding" layout="column">
             <md-content class="hypotheses" flex>
-                <md-content ng-repeat="hypothesis in hypotheses" class="hypothesis"
+                <!--<md-content>-->
+                    <vz-editable-list-item
+                            ng-repeat="hypothesis in hypotheses" class="hypothesis"
                             ng-click="ach.selectedHypothesis = hypothesis"
-                            ng-class="{selected: hypothesis === ach.selectedHypothesis}">
-                    <vz-editable-list-item item="hypothesis" on-save="ach.updateACH()"></vz-editable-list-item>
-                </md-content>
+                            ng-class="{selected: hypothesis === ach.selectedHypothesis}"
+                            item="hypothesis" on-save="updateItem('hypotheses', hypothesis)"></vz-editable-list-item>
+                <!--</md-content>-->
             </md-content>
         </md-content>
     </md-tab>
