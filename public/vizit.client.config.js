@@ -70,13 +70,14 @@ function config($stateProvider, $urlRouterProvider) {
                 },
                 'achProvenance@vizit.provenance': {
                     templateUrl: '/public/layouts/ach_provenance.html',
-                    controller: function ($scope, $timeout) {
-                        $scope.viewLoaded = false;
-                        $timeout(function () {
-                            $scope.viewLoaded = true;
-                            console.log('timeline')
-                        });
-                    }
+                    controller: 'provenance'
+                    //controller: function ($scope, $timeout) {
+                    //    $scope.viewLoaded = false;
+                    //    $timeout(function () {
+                    //        $scope.viewLoaded = true;
+                    //        console.log('timeline')
+                    //    });
+                    //}
                 }
             }
         })

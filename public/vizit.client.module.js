@@ -1,5 +1,5 @@
 angular.module('vizit', ['app.core', 'app.widgets', 'app.documentviewer',
-    'app.entityviewer', 'app.achmatrix', 'app.achcanvas', 'app.upload', 'ngMaterial', 'ui.router',
+    'app.entityviewer', 'app.achmatrix', 'app.achcanvas', 'app.provenance', 'app.upload', 'ngMaterial', 'ui.router',
     'ngMdIcons', 'xeditable', 'gridshore.c3js.chart', 'nvd3']);
 angular.module('vizit').run(function (editableOptions, editableThemes) {
     editableThemes['angular-material'] = {
