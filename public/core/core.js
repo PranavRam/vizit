@@ -68,10 +68,14 @@ function core($scope, $state, model, dataservice,
     };
 
     $scope.updateItem = function(type, item) {
+        var promise;
         if(type === 'hypotheses'){
-            dataservice.updateHypothesis(item)
-                .then($scope.ach.updateACH);
+            promise = dataservice.updateHypothesis(item);
         }
+        else {
+            promise = dataservice.updateEvidence(item);
+        }
+        promise.then($scope.ach.updateACH);
 
     }
 

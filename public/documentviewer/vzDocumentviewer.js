@@ -9,7 +9,7 @@
         .directive('vzDocumentviewer', vzDocumentViewer);
 
     /* @ngInject */
-    function vzDocumentViewer ($q, $http, dataservice, textparser, hypotheses) {
+    function vzDocumentViewer ($q, $http, dataservice, textparser, hypotheses, model, evidences) {
         // Opens and closes the sidebar menu.
         // Usage:
         //  <div data-cc-sidebar">
@@ -30,6 +30,7 @@
                 $scope.showDocumentViewer = true;
                 $scope.showDocumentText = true;
                 $scope.selectedDocument = $scope.documents[0];
+                $scope.entityTypes = model.entityTypes;
                 $scope.selectDocument = function (doc) {
                     if ($scope.selectedDocument._id !== doc._id) {
                         doc.viewCount = doc.viewCount + 1;
@@ -56,6 +57,74 @@
                 }
                 scope.$emit('showDocumentViewer:changed')
             });
+
+            scope.addToSelectedEvidence = function() {
+                var promises = [];
+                var sentences = angular.element('.document-viewer .document-text .select-text');
+                var evidence = scope.ach.selectedEvidence;
+                var evidenceEntities = {};
+                var content = evidence.content;
+                scope.entityTypes.forEach(function (entityType) {
+                    evidenceEntities[entityType] = [];
+                });
+                sentences.each(function () {
+                    var snippet = {
+                        name: scope.selectedDocument.name,
+                        text: this.innerHTML
+                    };
+                    content.push(snippet);
+                    var entities = textparser.getEntitiesInSentence(this.innerHTML);
+                    _.merge(evidenceEntities, entities, function (a, b) {
+                        // console.log(a, b);
+                        if (_.isArray(b)) {
+                            return a.concat(b);
+                        }
+                    });
+                    var promise = $http({
+                        url: 'api/snippets',
+                        method: 'POST',
+                        data: {
+                            snippet: snippet,
+                            entities: entities
+                        }
+                    });
+
+                    promises.push(promise);
+                    // weight += getWeightsOfEntities(entities);
+                });
+                $q.all(promises)
+                    .then(function (snippets) {
+                        snippets = snippets.map(function (snippet) {
+                            return snippet.data;
+                        });
+                        dataservice.getEntitiesForEvidence(evidenceEntities)
+                            .then(function (entities) {
+                                entities = entities.map(function (entity) {
+                                    return entity.data[0]
+                                });
+                                var weight = 0;
+                                angular.forEach(entities, function (entity) {
+                                    weight += entity.properties.weight;
+                                });
+                                evidence.weight += weight;
+                                var promise = $http({
+                                    url: 'api/evidences/' + evidence._id,
+                                    method: 'PUT',
+                                    data: {
+                                        evidence: evidence,
+                                        snippets: snippets
+                                    }
+                                });
+
+                                promise.then(function () {
+                                    scope.ach.updateACH();
+                                });
+                                // evidence.entities = evidenceEntities;
+                            });
+                        // });
+                    });
+            }
+
             scope.addEvidence = function (wholeDocument) {
                 var promises = [];
                 var sentences = angular.element('.document-viewer .document-text .select-text');
@@ -85,7 +154,7 @@
                             }
                         });
                         var promise = $http({
-                            url: 'api/snippet',
+                            url: 'api/snippets',
                             method: 'POST',
                             data: {
                                 snippet: snippet,
@@ -149,7 +218,7 @@
 
                                 promise.then(function () {
                                     evidence.content = content;
-                                    scope.evidences.push(evidence);
+                                    evidences.data.push(evidence);
                                     scope.ach.updateACH();
                                 });
                                 // evidence.entities = evidenceEntities;

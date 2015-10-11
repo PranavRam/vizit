@@ -897,10 +897,10 @@ server.register([
             var id = +encodeURIComponent(request.params.id);
             //console.log(request.payload);
             var evidence = request.payload.evidence;
-            var snippet = request.payload.snippet;
+            var snippets = request.payload.snippets;
             //console.log('evidence', ev);
             //return reply(hypothesis);
-            if(!snippet) {
+            if(!snippets) {
                 var query = [
                     "MATCH (n:Evidence)",
                     "WHERE id(n) = {evidence_id}",
@@ -922,23 +922,24 @@ server.register([
                 }, function (err, results) {
                     if (err) return reply(err);
                     var evidence = results[0]['n'];
-                    console.log(evidence);
+                    //console.log(evidence);
                     reply(evidence);
 
                 });
                 return;
             }
-            var ev_id = ev._id;
+            var snippet_ids = snippets.map(function (snippet) {
+                return snippet._id;
+            })
             //var ids = ev.map(function(evidence) {
             //    return evidence._id;
             //});
             //console.log('ev ids', ev_id, id);
             //reply('success');
             var query = [
-                "MATCH (a:Hypothesis),(b:Evidence)",
-                "WHERE id(a) = {hypothesis_id} AND id(b) = {ev_id}",
-                "MERGE (a)-[r:HYPEV {type: {type}}]->(b)",
-                "ON CREATE SET a.weight = {weight}",
+                "MATCH (a:Evidence),(b:Snippet)",
+                "WHERE id(a) = {evidence_id} AND id(b) in {snippet_ids}",
+                "MERGE (a)-[r:EVIDENCESNIPPET]->(b)",
                 // "ON CREATE SET b.weight = b.weight + 1",
                 // "ON MATCH SET b.weight = b.weight + 1",
                 // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
@@ -946,10 +947,8 @@ server.register([
             ].join('\n');
 
             var params = {
-                ev_id: ev_id,
-                type: hypothesis.tabType,
-                hypothesis_id: id,
-                weight: hypothesis.weight
+                snippet_ids: snippet_ids,
+                evidence_id: id,
             };
 
             db.cypher({
@@ -957,8 +956,10 @@ server.register([
                 params: params,
             }, function (err, results) {
                 if (err) return reply(err);
+                var snippet = results[0]['r'];
+                reply(snippet);
                 //console.log('relationship hypothesis evidence', results);
-                var query = new Parse.Query(HypothesisParse);
+                /*var query = new Parse.Query(HypothesisParse);
                 query.equalTo("neo4j", id);
                 query.first({
                     success: function(object) {
@@ -977,7 +978,7 @@ server.register([
                         //alert("Error: " + error.code + " " + error.message);
                         reply(hypothesis);
                     }
-                });
+                });*/
             });
         }
     });
@@ -1038,7 +1039,7 @@ server.register([
 
     server.route({
         method: 'POST',
-        path: '/api/snippet',
+        path: '/api/snippets',
         handler: function (request, reply) {
             // console.log(request);
             var snippet = request.payload.snippet;
