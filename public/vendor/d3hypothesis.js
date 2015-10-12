@@ -183,6 +183,7 @@
 						content = content.data(positiveData);
 					}
 					else {
+						console.log(negativeData);
 						content = content.data(negativeData);
 					}
 					content.enter().append('p').attr('class', 'content');

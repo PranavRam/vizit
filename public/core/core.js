@@ -2,7 +2,7 @@ angular.module('app.core')
     .controller('core', core);
 
 function core($scope, $state, model, dataservice,
-              hypotheses, evidences, entities, documents) {
+              hypotheses, evidences, entities, documents, $q) {
     $scope.documents = [];
     $scope.entities = [];
     $scope.selectedDocument = {};
@@ -83,5 +83,11 @@ function core($scope, $state, model, dataservice,
         if(item){
             $scope.ach.moveTo(item);
         }
+    }
+    $scope.ach.getData = function() {
+        var promises = [documents.get(), entities.get(),
+            evidences.get(), hypotheses.get()];
+
+        return $q.all(promises);
     }
 }

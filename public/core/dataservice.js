@@ -20,7 +20,9 @@
                 updateEvidence: updateEvidence,
 
                 getHypothesisEvents: getHypothesisEvents,
-                getHypothesesEvents: getHypothesesEvents
+                getHypothesesEvents: getHypothesesEvents,
+
+                updateModels: updateModels
             };
 
             return service;
@@ -150,6 +152,15 @@
                     }
                 }
                 return $q.all(promises);
+            }
+
+            function updateModels() {
+                return $http.get('/updatemodels').
+                    then(updateModelsComplete);
+
+                function updateModelsComplete(data, status, headers, config) {
+                    return data.data;
+                }
             }
         })
 })();

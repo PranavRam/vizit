@@ -26,7 +26,10 @@ function config($stateProvider, $urlRouterProvider) {
             url: "/",
             views: {
                 'topView@vizit': {
-                    templateUrl: '/public/layouts/entityACH.html'
+                    templateUrl: '/public/layouts/entityACH.html',
+                    controller: function($scope, $timeout) {
+                        $timeout(function(){ $scope.viewLoaded = true; });
+                    }
                 },
                 'entityList@vizit.entity_ach': {
                     templateUrl: '/public/layouts/sidebar.html'
@@ -40,7 +43,10 @@ function config($stateProvider, $urlRouterProvider) {
             url: "/entity-view",
             views: {
                 'topView@vizit': {
-                    templateUrl: '/public/layouts/entity_view.html'
+                    templateUrl: '/public/layouts/entity_view.html',
+                    controller: function($scope, $timeout) {
+                        $timeout(function(){ $scope.viewLoaded = true; });
+                    }
                 }
             }
         })

@@ -1,6 +1,6 @@
 <md-content layout="column" class="entity-top-view" style="height: 100%;">
   <md-content class="entity-list entity-viewer" layout-padding layout="row" flex>
-  	<md-content class="entity-list-item" ng-click="entityViewer.selectedEntityType = entityType" 
+  	<md-content ng-if="viewLoaded" class="entity-list-item" ng-click="entityViewer.selectedEntityType = entityType"
     ng-class="{'selected' : entityType === entityViewer.selectedEntityType}"
                 ng-repeat="entityType in entityTypes" flex>
 		<vz-entityviewer entities="entities"

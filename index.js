@@ -411,8 +411,9 @@ function getHypotheses(reply) {
     var query = [
         "MATCH (n:Hypothesis)",
         "OPTIONAL MATCH n-[r1:HYPEV {type: 'positive'}]->(ep)",
+        "WITH collect(ep) as pos_ev",
         "OPTIONAL MATCH n-[r2:HYPEV {type: 'negative'}]->(en)",
-        "RETURN n, collect(en) as neg_ev , collect(ep) as pos_ev"
+        "RETURN n, collect(en) as neg_ev , pos_ev"
     ].join('\n');
 
     db.cypher({
@@ -435,7 +436,7 @@ function getHypotheses(reply) {
                 obj._id = evidence._id;
                 return obj;
             });
-            //console.log(hypothesis);
+            console.log(hypothesis);
             return hypothesis;
         });
         reply(hypotheses);
@@ -496,6 +497,31 @@ function getEntities(reply) {
     });
 }
 
+function updateItems(reply) {
+    var query = [
+        "MATCH (e:Evidence)-[r2]->(s:Snippet)-[r3]->(en:Entity)",
+        "WITH e, sum(en.weight) as value",
+        "SET e.weight = value",
+        "WITH e",
+        "MATCH (h:Hypothesis)-[r]->(e)",
+        "WHERE r.type = 'positive'",
+        "WITH sum(e.weight) as pos, h, collect(e) as ep",
+        "MATCH (h)-[r]->(e)",
+        "WHERE r.type = 'negative'",
+        "WITH sum(e.weight) as neg, h, pos, collect(e) as en, ep",
+        "SET h.weight = pos - neg",
+        "RETURN h"
+    ].join('\n')
+
+    db.cypher({
+        query: query,
+    }, function (err, results) {
+        if (err) return reply(err);
+        console.log(results);
+        reply(results);
+    });
+}
+
 server.register([
     require('vision'),
     Inert
@@ -518,6 +544,15 @@ server.register([
         handler: function (request, reply) {
             // console.log(request);
             reply.view('index', {title: 'Vizit'});
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/updatemodels',
+        handler: function (request, reply) {
+            // console.log(request);
+            updateItems(reply);
         }
     });
 
@@ -924,6 +959,7 @@ server.register([
                     var evidence = results[0]['n'];
                     //console.log(evidence);
                     reply(evidence);
+                    //updateItems(reply);
 
                 });
                 return;
@@ -1097,7 +1133,6 @@ server.register([
                     if (err) return reply(err);
                     // console.log('relationship snippet', results);
                     reply(snippet);
-
                 });
             });
         }

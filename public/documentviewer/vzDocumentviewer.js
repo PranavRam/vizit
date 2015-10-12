@@ -116,9 +116,9 @@
                                     }
                                 });
 
-                                promise.then(function () {
-                                    scope.ach.updateACH();
-                                });
+                                promise.then(dataservice.updateModels)
+                                    .then(scope.ach.getData)
+                                    .then(scope.ach.updateACH);
                                 // evidence.entities = evidenceEntities;
                             });
                         // });

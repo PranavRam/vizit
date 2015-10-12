@@ -327,6 +327,9 @@ ng-md-icon svg {
 .hypotheses .hypothesis {
   .item-title {
     min-height: 24px;
+    ng-md-icon {
+      margin-right: 8px;
+    }
   }
   .item-weight {
     height: 10px;
