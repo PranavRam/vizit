@@ -131,7 +131,7 @@
                 var evidence = {
                     x: 100,
                     y: 100,
-                    name: 'Evidence ' + scope.evidences.length
+                    name: 'Evidence ' + evidences.data.length
                 };
                 var content = [];
                 var evidenceEntities = {};
@@ -216,11 +216,14 @@
                                     }
                                 });
 
-                                promise.then(function () {
-                                    evidence.content = content;
-                                    evidences.data.push(evidence);
-                                    scope.ach.updateACH();
-                                });
+                                //promise.then(function () {
+                                //    evidence.content = content;
+                                //    evidences.data.push(evidence);
+                                //    scope.ach.updateACH();
+                                promise.then(dataservice.updateModels)
+                                    .then(scope.ach.getData)
+                                    .then(scope.ach.updateACH);
+                                //});
                                 // evidence.entities = evidenceEntities;
                             });
                         // });

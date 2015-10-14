@@ -29,7 +29,8 @@
             controller: function ($scope) {
                 $scope.hover = false;
                 $scope.getWeightWidth = function (weight) {
-                    return Math.round(weight * 5) + 'px';
+                    if(weight < 0) weight = -weight;
+                    return Math.round(weight) + 'px';
                 };
                 $scope.updateItem = function() {
                     $scope.onSave();

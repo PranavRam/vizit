@@ -411,7 +411,7 @@ function getHypotheses(reply) {
     var query = [
         "MATCH (n:Hypothesis)",
         "OPTIONAL MATCH n-[r1:HYPEV {type: 'positive'}]->(ep)",
-        "WITH collect(ep) as pos_ev",
+        "WITH collect(ep) as pos_ev, n",
         "OPTIONAL MATCH n-[r2:HYPEV {type: 'negative'}]->(en)",
         "RETURN n, collect(en) as neg_ev , pos_ev"
     ].join('\n');
@@ -420,7 +420,7 @@ function getHypotheses(reply) {
         query: query
     }, function (err, results) {
         if (err) return reply(err);
-        //console.log(results);
+        console.log(results);
         var hypotheses = results.map(function (result) {
             var hypothesis = result['n'].properties;
             hypothesis._id = result['n']._id;
