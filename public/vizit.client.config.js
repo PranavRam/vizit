@@ -72,7 +72,10 @@ function config($stateProvider, $urlRouterProvider) {
                     templateUrl: '/public/layouts/provenance.html'
                 },
                 'entityList@vizit.provenance': {
-                    templateUrl: '/public/layouts/sidebar.html'
+                    templateUrl: '/public/layouts/sidebar.html',
+                    controller: function($scope, $timeout) {
+                        $timeout(function(){ $scope.viewLoaded = true; });
+                    }
                 },
                 'achProvenance@vizit.provenance': {
                     templateUrl: '/public/layouts/ach_provenance.html',

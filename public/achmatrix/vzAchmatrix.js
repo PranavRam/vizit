@@ -40,12 +40,13 @@
                     dataservice.getHypothesesEvents()
                         .then(function (data) {
                             //console.log(data, hypotheses);
-                            $scope.gridOptions.data= data.map(function (d, i) {
-                                var event = {};
+                            var gridData = {};
+                            data.forEach(function (d, i) {
+                                //var event = {};
                                 var graph = d.events.map(function (e, i) {
-                                    return {x: i, y: e.weight};
+                                    return {x: i, y: e.weight || Math.floor(Math.random() * 10) + 1};
                                 });
-                                event[hypotheses.data[i].name] = {
+                                gridData[hypotheses.data[i].name] = {
                                     options: {
                                         chart: {
                                             type: 'sparklinePlus',
@@ -58,7 +59,8 @@
                                     },
                                     data: graph
                                 };
-                                return event;
+                                //return event;
+
                                 // Generate random X values
                                 //for (var j = 0; j < 10; j++) {
                                 //    d[fields[i]].data.push({x: i, y: Math.floor(Math.random() * (150 - 1 + 1) + 1)});
@@ -66,6 +68,7 @@
                                 //}
                             });
                             //console.log(achMatrix);
+                            $scope.gridOptions.data = [gridData];
                             //console.log($scope.gridOptions.data);
                         });
                 }

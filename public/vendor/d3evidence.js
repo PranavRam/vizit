@@ -105,6 +105,7 @@
                     //    layout: "row",
                     //    "layout-align": "space-around center"
                     //})
+                    .classed('layout-row', true)
                     .classed('md-layout-row', true)
                     .classed('layout-align-space-around-center', true);
 
@@ -118,8 +119,8 @@
                     "text-align": "center",
                     "background-color": "#4CAF50",
                     // "color": "white",
-                    width: 25 + "px",
-                    height: 25 + "px",
+                    //width: 25 + "px",
+                    //height: 25 + "px",
                     padding: "8px"
                 })
                     .text(data.weight)

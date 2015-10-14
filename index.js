@@ -436,7 +436,7 @@ function getHypotheses(reply) {
                 obj._id = evidence._id;
                 return obj;
             });
-            console.log(hypothesis);
+            //console.log(hypothesis);
             return hypothesis;
         });
         reply(hypotheses);
