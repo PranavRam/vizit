@@ -13,6 +13,7 @@
                 getEntities: getEntities,
                 getConnections: getConnections,
                 getEntitiesForEvidence: getEntitiesForEvidence,
+                getNotifications: getNotifications,
 
                 createHypothesis: createHypothesis,
 
@@ -133,6 +134,15 @@
                     then(getConnectionsComplete);
 
                 function getConnectionsComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function getNotifications() {
+                return $http.get('/api/notifications').
+                    then(getNotificationsComplete);
+
+                function getNotificationsComplete(data, status, headers, config) {
                     return data.data;
                 }
             }

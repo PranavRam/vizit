@@ -3,6 +3,12 @@
 {% block title %}[[title]]{% endblock %}
 
 {% block content %}
-	<md-content class="main" layout-fill layout="column" ui-view>
-  </md-content>
+  <div layout="row" layout-fill ng-controller="layout">
+      <md-content class="main" layout-fill layout="column" ui-view>
+      </md-content>
+      <md-sidenav class="md-sidenav-right md-whiteframe-z2"
+                  md-component-id="right">
+          <vz-notification-list></vz-notification-list>
+      </md-sidenav>
+  </div>
 {% endblock %}

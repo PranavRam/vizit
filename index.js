@@ -5,7 +5,6 @@ var AdmZip = require('adm-zip');
 var fs = require('fs');
 var multiparty = require('multiparty');
 var neo4j = require("neo4j");
-var AlchemyAPI = require('alchemy-api');
 var swig = require('swig');
 var S = require('string');
 var _ = require('lodash');
@@ -15,7 +14,6 @@ var natural = require('natural'),
 
 var http = require('request');
 var Parse = require('parse/node').Parse;
-var alchemy = new AlchemyAPI('e611893e79748690d9a387240bab8b64f14b9a2b');
 Parse.initialize("Tuu2ar77cy4IyW2rzVFNtkuEOxlAkn0VgsWSk8GJ", "5MIPDwq0WWzYvtFYtWfEdYsDDfZhc6udVdweZdDB");
 var HypothesisParse = Parse.Object.extend("Hypothesis");
 // Declare the types.
@@ -564,6 +562,54 @@ server.register([
             getDocuments(reply);
         }
     });
+
+    server.route({
+        method: 'GET',
+        path: '/api/notifications',
+        handler: function(request, reply) {
+            var imagePath = 'img/list/60.jpeg';
+
+            var todos = [
+                {
+                    face : imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face : imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face : imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face : imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face : imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+            ];
+
+            reply(todos);
+        }
+    })
 
     server.route({
         method: 'GET',

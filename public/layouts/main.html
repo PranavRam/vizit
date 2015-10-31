@@ -1,50 +1,57 @@
 <md-toolbar class="top-bar">
-  <div class="md-toolbar-tools" layout="row" layout-align="start center">
-    <h2>
-      <span>Vizit</span>
-    </h2>
-    <span flex></span>
-    	<!-- <md-progress-circular class="md-warn" md-diameter="24" md-mode="indeterminate"></md-progress-circular> -->
-    <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
+    <div class="md-toolbar-tools" layout="row" layout-align="start center">
+        <h2>
+            <span>Vizit</span>
+        </h2>
+        <span flex></span>
+        <!-- <md-progress-circular class="md-warn" md-diameter="24" md-mode="indeterminate"></md-progress-circular> -->
+        <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
   	<span>
 	  	<md-button class="md-icon-button" ng-click="go('vizit.entity_ach')" aria-label="ach-canvas">
-	  		<md-tooltip>
-	       ACH Canvas
-	      </md-tooltip>
-	      <ng-md-icon icon="picture_in_picture" ng-style="{fill: currentState === 'vizit.entity_ach' ? 'white' : '#7E7E7E'}"></ng-md-icon>
-	    </md-button>
+            <md-tooltip>
+                ACH Canvas
+            </md-tooltip>
+            <ng-md-icon icon="picture_in_picture"
+                        ng-style="{fill: currentState === 'vizit.entity_ach' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+        </md-button>
 	  	<md-button class="md-icon-button md-primary" ng-click="go('vizit.entity_view')" aria-label="entity-view">
-				<md-tooltip>
-		     Entity View
-		    </md-tooltip>
-	      <ng-md-icon icon="view_column" ng-style="{fill: currentState === 'vizit.entity_view' ? 'white' : '#7E7E7E'}"></ng-md-icon>
-	    </md-button>
+            <md-tooltip>
+                Entity View
+            </md-tooltip>
+            <ng-md-icon icon="view_column"
+                        ng-style="{fill: currentState === 'vizit.entity_view' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+        </md-button>
 	  	<md-button class="md-icon-button md-primary" aria-label="ach-summary" ng-click="go('vizit.ach_summary')">
-				<md-tooltip>
-		     ACH Summary
-		    </md-tooltip>
-	      <ng-md-icon icon="view_list" ng-style="{fill: currentState === 'vizit.ach_summary' ? 'white' : '#7E7E7E'}"></ng-md-icon>
-	    </md-button>
+            <md-tooltip>
+                ACH Summary
+            </md-tooltip>
+            <ng-md-icon icon="view_list"
+                        ng-style="{fill: currentState === 'vizit.ach_summary' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+        </md-button>
     	<md-button class="md-icon-button md-primary" aria-label="ach-chart" ng-click="go('vizit.provenance')">
-  			<md-tooltip>
-  	     ACH Provenance
-  	    </md-tooltip>
-        <ng-md-icon icon="trending_up" ng-style="{fill: currentState === 'vizit.provenance' ? 'white' : '#7E7E7E'}"></ng-md-icon>
-      </md-button>
+            <md-tooltip>
+                ACH Provenance
+            </md-tooltip>
+            <ng-md-icon icon="trending_up"
+                        ng-style="{fill: currentState === 'vizit.provenance' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+        </md-button>
   	</span>
-    <!-- <ng-md-icon icon="picture_in_picture" style="fill: black;"></ng-md-icon> 
-    <ng-md-icon icon="view_column" style="fill: white;"></ng-md-icon> 
-    <ng-md-icon icon="view_list" style="fill: white;"></ng-md-icon> -->
-    <span flex="5"></span>
-  	<md-button class="md-icon-button md-primary" aria-label="sort">
-      <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon>
-    </md-button>
-    <!-- </md-button> -->
-  </div>
+        <!-- <ng-md-icon icon="picture_in_picture" style="fill: black;"></ng-md-icon>
+        <ng-md-icon icon="view_column" style="fill: white;"></ng-md-icon>
+        <ng-md-icon icon="view_list" style="fill: white;"></ng-md-icon> -->
+        <span flex="5"></span>
+        <md-button class="md-icon-button md-primary" ng-click="$parent.toggleNotification()" aria-label="notifications">
+            <ng-md-icon icon="notifications" style="fill: white;"></ng-md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-primary" aria-label="sort">
+            <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon>
+        </md-button>
+        <!-- </md-button> -->
+    </div>
 </md-toolbar>
 <md-content flex ui-view="topView" class="top-view">
-	
+
 </md-content>
 <!--<vz-toolbar></vz-toolbar>-->
 <vz-documentviewer ng-hide="ach.fullscreen" ach="ach"
-				   flex="30" documents="documents"></vz-documentviewer>
+                   flex="30" documents="documents"></vz-documentviewer>
