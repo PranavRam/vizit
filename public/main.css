@@ -237,4 +237,11 @@ md-input-container.editable-controls {
 ng-md-icon.selected {
   fill: blue; }
 
+.ui-grid-cell.green {
+  background-color: green !important;
+  color: white; }
+.ui-grid-cell.red {
+  background-color: red !important;
+  color: white; }
+
 /*# sourceMappingURL=main.css.map */

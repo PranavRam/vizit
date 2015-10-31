@@ -21,56 +21,53 @@
             restrict: 'EA',
             templateUrl: 'public/achmatrix/vzAchmatrix.html',
             //replace: true,
-            controller: function ($scope, $http, hypotheses) {
+            controller: function ($scope, $http, hypotheses, evidences) {
                 $scope.gridOptions = {};
                 activate();
                 function activate() {
                     var fields = hypotheses.data.map(function (hyp) {
                         return hyp.name
                     });
-
+                    fields = ['Evidences'].concat(fields);
                     $scope.gridOptions.columnDefs = fields.map(function (field) {
                         return {
-                            field: field, cellTemplate: '/public/achmatrix/sparkline-cell.html', width: 150
+                            field: field,
+                            cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                                if(colRenderIndex === 0) {
+                                    return 'white';
+                                }
+                                if (grid.getCellValue(row,col) < 0) {
+                                    return 'red';
+                                }
+                                if(grid.getCellValue(row,col) > 0) {
+                                    return 'green';
+                                }
+                                return 'white'
+                            }, width: 150
                         };
                     });
 
 
                     //$http.get('https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/data/100.json')
-                    dataservice.getHypothesesEvents()
-                        .then(function (data) {
-                            //console.log(data, hypotheses);
+                    var data = [];
+                    evidences.data.forEach(function(ev){
                             var gridData = {};
-                            data.forEach(function (d, i) {
-                                //var event = {};
-                                var graph = d.events.map(function (e, i) {
-                                    return {x: i, y: e.weight || Math.floor(Math.random() * 10) + 1};
-                                });
-                                gridData[hypotheses.data[i].name] = {
-                                    options: {
-                                        chart: {
-                                            type: 'sparklinePlus',
-                                            height: 20,
-                                            width: 100,
-                                            x: function (xd, i) {
-                                                return i;
-                                            }
-                                        }
-                                    },
-                                    data: graph
-                                };
-                                //return event;
-
-                                // Generate random X values
-                                //for (var j = 0; j < 10; j++) {
-                                //    d[fields[i]].data.push({x: i, y: Math.floor(Math.random() * (150 - 1 + 1) + 1)});
-                                //}
-                                //}
+                            hypotheses.data.forEach(function(hp) {
+                                var pIndex = _.findIndex(hp.positive, {_id: ev._id});
+                                var nIndex = _.findIndex(hp.negative, {_id: ev._id});
+                                if(pIndex > -1){
+                                    gridData[hp.name] = ev.weight;
+                                }
+                                else if(nIndex > -1) {
+                                    gridData[hp.name] = -ev.weight;
+                                }
                             });
+                            gridData['Evidences'] = ev.name;
                             //console.log(achMatrix);
-                            $scope.gridOptions.data = [gridData];
-                            //console.log($scope.gridOptions.data);
+                            data.push(gridData);
                         });
+                    $scope.gridOptions.data = data;
+                    console.log($scope.gridOptions.data);
                 }
             }
         };
