@@ -244,4 +244,7 @@ ng-md-icon.selected {
   background-color: red !important;
   color: white; }
 
+body {
+  overflow: hidden; }
+
 /*# sourceMappingURL=main.css.map */
