@@ -18,4 +18,16 @@
 
             return service;
         })
+        .factory('allData', function ($q, hypotheses, evidences, entities, documents) {
+
+            var service = {
+                get: function () {
+                    var promises = [documents.get(), entities.get(),
+                        evidences.get(), hypotheses.get()];
+                    return $q.all(promises);
+                }
+
+            }
+            return service;
+        })
 })();

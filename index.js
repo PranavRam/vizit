@@ -495,6 +495,55 @@ function getEntities(reply) {
     });
 }
 
+function addEvent(reply, event, obj) {
+    var query = [
+        "MATCH (e:Evidence)-[r2]->(s:Snippet)-[r3]->(en:Entity)",
+        "WITH e, sum(en.weight) as value",
+        "SET e.weight = value",
+        "WITH e",
+        "OPTIONAL MATCH (h:Hypothesis)-[r]->(e)",
+        "WHERE r.type = 'positive'",
+        "WITH sum(e.weight) as pos, h, collect(e) as ep",
+        "OPTIONAL MATCH (h:Hypothesis)-[r]->(e)",
+        "WHERE r.type = 'negative'",
+        "WITH sum(e.weight) as neg, h, pos, collect(e) as en, ep",
+        "SET h.weight = pos - neg",
+        "RETURN h"
+    ].join('\n')
+
+    db.cypher({
+        query: query,
+    }, function (err, results) {
+        if (err) return reply(err);
+        results.forEach(function (result) {
+            if(!result['h']) return;
+            console.log('add event', result['h']);
+            var hypothesis = result['h'].properties;
+            var id = +result['h']._id;
+
+            var query = new Parse.Query(HypothesisParse);
+            query.equalTo("neo4j", id);
+            query.first({
+                success: function(object) {
+                    //object.weight = hypothesis.weight;
+                    object.add('events', {
+                        name: event.name,
+                        event: event.type,
+                        obj: obj,
+                        weight: hypothesis.weight,
+                        time: new Date()
+                    });
+                    object.save();
+                },
+                error: function(error) {
+                    //alert("Error: " + error.code + " " + error.message);
+                }
+            });
+        });
+        reply(results);
+    });
+}
+
 function updateItems(reply) {
     var query = [
         "MATCH (e:Evidence)-[r2]->(s:Snippet)-[r3]->(en:Entity)",
@@ -754,6 +803,41 @@ server.register([
     });
 
     server.route({
+        method: 'GET',
+        path: '/api/reset',
+        handler: function (request, reply) {
+            // console.log(request);
+            // console.log(request.payload);
+            // reply(request.payload);
+            var query = [
+                'MATCH (n)',
+                'WHERE NOT n:Document AND NOT n:Entity',
+                'OPTIONAL MATCH (n)-[r]-()',
+                'DELETE n,r',
+                'WITH n MATCH (e:Entity)',
+                'SET e.weight = 0',
+                'RETURN e'
+            ].join('\n')
+
+            db.cypher({
+                query: query,
+            }, function (err, results) {
+                if (err) return reply(err);
+                var query = new Parse.Query(HypothesisParse);
+                query.find().then(function(results) {
+                    return Parse.Object.destroyAll(results);
+                }).then(function() {
+                    // Done
+                }, function(error) {
+                    // Error
+                });
+                // console.log(results);
+                reply("success");
+            });
+        }
+    });
+
+    server.route({
         method: 'POST',
         path: '/api/entities/{id}',
         handler: function (request, reply) {
@@ -890,26 +974,32 @@ server.register([
             }, function (err, results) {
                 if (err) return reply(err);
                 //console.log('relationship hypothesis evidence', results);
-                var query = new Parse.Query(HypothesisParse);
-                query.equalTo("neo4j", id);
-                query.first({
-                    success: function(object) {
-                        //console.log('retrieved object', object);
-                        object.add('events', {
-                            name: ev.name,
-                            event: 'add evidence',
-                            obj: ev,
-                            //weight: hypothesis.weight,
-                            time: new Date()
-                        });
-                        object.save();
-                        reply(hypothesis);
-                    },
-                    error: function(error) {
-                        //alert("Error: " + error.code + " " + error.message);
-                        reply(hypothesis);
-                    }
-                });
+                var event = {
+                    name: ev.name,
+                    type: 'add evidence'
+                };
+
+                addEvent(reply, event, ev);
+                //var query = new Parse.Query(HypothesisParse);
+                //query.equalTo("neo4j", id);
+                //query.first({
+                //    success: function(object) {
+                //        //console.log('retrieved object', object);
+                //        object.add('events', {
+                //            name: ev.name,
+                //            event: 'add evidence',
+                //            obj: ev,
+                //            //weight: hypothesis.weight,
+                //            time: new Date()
+                //        });
+                //        object.save();
+                //        reply(hypothesis);
+                //    },
+                //    error: function(error) {
+                //        //alert("Error: " + error.code + " " + error.message);
+                //        reply(hypothesis);
+                //    }
+                //});
             });
         }
     });
@@ -1039,7 +1129,13 @@ server.register([
             }, function (err, results) {
                 if (err) return reply(err);
                 var snippet = results[0]['r'];
-                reply(snippet);
+                var event = {
+                    name: evidence.name,
+                    type: 'update evidence'
+                };
+
+                addEvent(reply, event, evidence);
+                //reply(snippet);
                 //console.log('relationship hypothesis evidence', results);
                 /*var query = new Parse.Query(HypothesisParse);
                 query.equalTo("neo4j", id);

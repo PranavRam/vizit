@@ -83,12 +83,12 @@
                     // 	      });
 
                     function render() {
-                        evidences = evidences.data(scope.evidences);
+                        evidences = evidences.data(scope.evidences, function(d) { return d._id; });
                         evidences.enter().append('g');
                         evidences.exit().remove();
                         evidences.call(evidence);
 
-                        hypotheses = hypotheses.data(scope.hypotheses);
+                        hypotheses = hypotheses.data(scope.hypotheses, function(d) { return d._id; });
                         hypotheses.enter().append('g');
                         hypotheses.exit().remove();
                         hypotheses.call(hypothesis);
