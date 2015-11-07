@@ -3,7 +3,7 @@
     angular.module('app.achcanvas')
         .directive('vzAchcanvas', vzAchcanvas);
 
-    function vzAchcanvas($rootScope, $timeout, dataservice) {
+    function vzAchcanvas($rootScope, $timeout, dataservice, allData) {
         return {
             restrict: 'EA',
             transclude: true,
@@ -227,7 +227,9 @@
                                     hypothesis.weight = weight;
                                     render();
                                     //console.log('intersect', hypothesis);
-                                    dataservice.updateHypothesis(hypothesis, d);
+                                    dataservice.updateHypothesis(hypothesis, d)
+                                        .then(allData.get)
+                                        .then(scope.ach.updateACH);
                                     return false;
                                 }
                             }

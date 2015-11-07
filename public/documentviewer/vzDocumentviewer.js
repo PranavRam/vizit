@@ -9,7 +9,7 @@
         .directive('vzDocumentviewer', vzDocumentViewer);
 
     /* @ngInject */
-    function vzDocumentViewer ($q, $http, dataservice, textparser, hypotheses, model, evidences) {
+    function vzDocumentViewer ($q, $http, dataservice, textparser, hypotheses, model, evidences, allData) {
         // Opens and closes the sidebar menu.
         // Usage:
         //  <div data-cc-sidebar">
@@ -140,6 +140,7 @@
                 });
 
                 if (!wholeDocument) {
+                    if (sentences.length <= 0) return;
                     sentences.each(function () {
                         var snippet = {
                             name: scope.selectedDocument.name,
@@ -180,16 +181,16 @@
                             return a.concat(b);
                         }
                     });
-                    // var promise = $http({
-                    //     url   : 'api/snippet/',
-                    //     method: 'POST',
-                    //     data  : {
-                    //       snippet: content,
-                    //       entities: entities
-                    //     }
-                    // });
+                     var promise = $http({
+                         url   : 'api/snippets/',
+                         method: 'POST',
+                         data  : {
+                           snippet: content,
+                           entities: entities
+                         }
+                     });
 
-                    // promises.push(promise);
+                     promises.push(promise);
                     // weight += getWeightsOfEntities(entities);
                 }
                 $q.all(promises)
@@ -221,7 +222,7 @@
                                 //    evidences.data.push(evidence);
                                 //    scope.ach.updateACH();
                                 promise.then(dataservice.updateModels)
-                                    .then(scope.ach.getData)
+                                    .then(allData.get)
                                     .then(scope.ach.updateACH);
                                 //});
                                 // evidence.entities = evidenceEntities;

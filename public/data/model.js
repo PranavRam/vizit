@@ -18,11 +18,11 @@
 
             return service;
         })
-        .factory('allData', function ($q, hypotheses, evidences, entities, documents) {
+        .factory('allData', function ($q, hypotheses, evidences, entities) {
 
             var service = {
                 get: function () {
-                    var promises = [documents.get(), entities.get(),
+                    var promises = [entities.get(),
                         evidences.get(), hypotheses.get()];
                     return $q.all(promises);
                 }
