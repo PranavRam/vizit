@@ -24,7 +24,8 @@
     "ng-file-upload": "~6.2.1",
     "nvd3": "~1.8.1",
     "svg-morpheus": "~0.1.8",
-    "textures": "*"
+    "textures": "*",
+    "angular-socket-io": "~0.7.0"
   },
   "resolutions": {
     "angular": "1.4.4",

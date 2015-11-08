@@ -12,9 +12,10 @@
         /*
          * Our reusable cross app code modules
          */
-        'app.data'
+        'app.data',
         /*
          * 3rd Party modules
          */
+        'btford.socket-io'
     ]);
 })();

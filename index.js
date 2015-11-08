@@ -1,7 +1,5 @@
 var Hapi = require('hapi');
 var Inert = require('inert');
-var _ = require('lodash');
-// Declare the types.
 var routes = require('./server/routes/');
 
 // Create a server with a host and port

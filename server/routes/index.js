@@ -3,59 +3,67 @@ var swig = require('swig');
 swig.setDefaults({varControls: ['[[', ']]']});
 
 exports.register = function (server, options, next) {
+    server.register([
+        require('hapi-io')
+    ], function() {
+        var io = server.plugins['hapi-io'].io;
+        io.on('connection', function(socket){
+            console.log('connected');
+        });
+        var routers;
+        routers = [
+            './hypothesis',
+            './evidence',
+            './entity',
+            './misc',
+            './notification',
+            './snippet',
+            './upload',
+            './event',
+            './document'
+        ];
 
-    var routers;
-    routers = [
-        './hypothesis',
-        './evidence',
-        './entity',
-        './misc',
-        './notification',
-        './snippet',
-        './upload',
-        './event',
-        './document'
-    ];
 
+        var routes = [];
+        var tmpRoute;
 
-    var routes = [];
-    var tmpRoute;
+        routers.forEach(function (route) {
 
-    routers.forEach(function (route) {
+            tmpRoute = require(route);
 
-        tmpRoute = require(route);
+            routes = routes.concat(tmpRoute);
+        });
+        server.route(routes);
 
-        routes = routes.concat(tmpRoute);
-    });
-    server.route(routes);
-
-    server.views({
-        engines: {
-            html: swig
-        },
-        path: Path.join(__dirname, '../views')
-    });
-    // Add the route
-    server.route({
-        method: 'GET',
-        path: '/',
-        handler: function (request, reply) {
-            // console.log(request);
-            reply.view('index', {title: 'Vizit'});
-        }
-    });
-
-    server.route({
-        method: 'GET',
-        path: '/public/{param*}',
-        handler: {
-            directory: {
-                path: 'public'
+        server.views({
+            engines: {
+                html: swig
+            },
+            path: Path.join(__dirname, '../views')
+        });
+        // Add the route
+        server.route({
+            method: 'GET',
+            path: '/',
+            handler: function (request, reply) {
+                // console.log(request);
+                reply.view('index', {title: 'Vizit'});
             }
-        }
-    });
+        });
 
-    next();
+        server.route({
+            method: 'GET',
+            path: '/public/{param*}',
+            handler: {
+                directory: {
+                    path: 'public'
+                }
+            }
+        });
+
+        next();
+    })
+
 };
 
 exports.register.attributes = {
