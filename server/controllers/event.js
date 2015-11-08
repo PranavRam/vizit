@@ -20,52 +20,55 @@ module.exports = {
         });
     },
 
-    create: function (reply, event, obj) {
-        var query = [
-            "MATCH (e:Evidence)-[r2]->(s:Snippet)-[r3]->(en:Entity)",
-            "WITH e, sum(en.weight) as value",
-            "SET e.weight = value",
-            "WITH e",
-            "OPTIONAL MATCH (h:Hypothesis)-[r]->(e)",
-            "WHERE r.type = 'positive'",
-            "WITH sum(e.weight) as pos, h, collect(e) as ep",
-            "OPTIONAL MATCH (h:Hypothesis)-[r]->(e)",
-            "WHERE r.type = 'negative'",
-            "WITH sum(e.weight) as neg, h, pos, collect(e) as en, ep",
-            "SET h.weight = pos - neg",
-            "RETURN h"
-        ].join('\n')
+    create: function (event, obj) {
+        return Q.Promise(function(resolve, reject, notify) {
+            var query = [
+                "MATCH (e:Evidence)-[r2]->(s:Snippet)-[r3]->(en:Entity)",
+                "WITH e, sum(en.weight) as value",
+                "SET e.weight = value",
+                "WITH e",
+                "OPTIONAL MATCH (h:Hypothesis)-[r]->(e)",
+                "WHERE r.type = 'positive'",
+                "WITH sum(e.weight) as pos, h, collect(e) as ep",
+                "OPTIONAL MATCH (h:Hypothesis)-[r]->(e)",
+                "WHERE r.type = 'negative'",
+                "WITH sum(e.weight) as neg, h, pos, collect(e) as en, ep",
+                "SET h.weight = pos - neg",
+                "RETURN h"
+            ].join('\n');
 
-        db.cypher({
-            query: query,
-        }, function (err, results) {
-            if (err) return reply(err);
-            results.forEach(function (result) {
-                if(!result['h']) return;
-                console.log('add event', result['h']);
-                var hypothesis = result['h'].properties;
-                var id = +result['h']._id;
+            db.cypher({
+                query: query,
+            }, function (err, results) {
+                if (err) return reply(err);
+                results.forEach(function (result) {
+                    if (!result['h']) return;
+                    console.log('add event', result['h']);
+                    var hypothesis = result['h'].properties;
+                    var id = +result['h']._id;
 
-                var query = new Parse.Query(config.parse.hypothesis);
-                query.equalTo("neo4j", id);
-                query.first({
-                    success: function(object) {
-                        //object.weight = hypothesis.weight;
-                        object.add('events', {
-                            name: event.name,
-                            event: event.type,
-                            obj: obj,
-                            weight: hypothesis.weight,
-                            time: new Date()
-                        });
-                        object.save();
-                    },
-                    error: function(error) {
-                        //alert("Error: " + error.code + " " + error.message);
-                    }
+                    var query = new Parse.Query(config.parse.hypothesis);
+                    query.equalTo("neo4j", id);
+                    query.first({
+                        success: function (object) {
+                            //object.weight = hypothesis.weight;
+                            object.add('events', {
+                                name: event.name,
+                                event: event.type,
+                                obj: obj,
+                                weight: hypothesis.weight,
+                                time: new Date()
+                            });
+                            object.save();
+                        },
+                        error: function (error) {
+                            reject(error);
+                            //alert("Error: " + error.code + " " + error.message);
+                        }
+                    });
                 });
+                resolve(results);
             });
-            reply(results);
         });
     }
 };

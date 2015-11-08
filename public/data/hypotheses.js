@@ -5,10 +5,7 @@
     angular.module('app.data')
         .factory('hypotheses', hypotheses);
 
-    function hypotheses(dataservice, socket) {
-        socket.on('hypothesis', function () {
-            console.log('hypothesis: changed', arguments);
-        });
+    function hypotheses(dataservice) {
         var data = [];
 
         var service = {

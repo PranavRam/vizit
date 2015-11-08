@@ -18,7 +18,7 @@ function vzNotificationList() {
 
             $scope.todos = [];
             notifications.get().then(function(response) {
-                $scope.todos = response;
+                $scope.notifications = response;
             });
         }
     }

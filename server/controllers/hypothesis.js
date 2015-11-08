@@ -3,11 +3,51 @@ var db = config.db;
 var Parse = require('parse/node').Parse;
 var EventController = require('./event');
 
+function flattenGraphNodes(data) {
+    var flattened = data.properties;
+    flattened._id = data._id;
+    return flattened;
+}
+
+function flattenHypotheses(results) {
+    return results.map(function (result) {
+        var hypothesis = flattenGraphNodes(result['n']);
+        var positive = result['pos_ev'] || [];
+        var negative = result['neg_ev'] || [];
+        hypothesis.positive = positive.map(function (evidence) {
+            return flattenGraphNodes(evidence);
+        });
+        hypothesis.negative = negative.map(function (evidence) {
+            return flattenGraphNodes(evidence)
+        });
+        //console.log(hypothesis);
+        return hypothesis;
+    });
+}
+
+function createNoSQL(hypothesis) {
+    var hypothesis_parse = new config.parse.hypothesis();
+
+    hypothesis_parse.set("neo4j", hypothesis._id);
+    hypothesis_parse.set("name", hypothesis.name);
+    hypothesis_parse.set("weight", 0);
+    hypothesis_parse.set("events", []);
+
+    hypothesis_parse.save(null, {
+        success: function (response) {
+            // Execute any logic that should take place after the object is saved.
+            //console.log('New object created with objectId: ' + hypothesis_parse.id);
+        },
+        error: function (response, error) {
+            // Execute any logic that should take place if the save fails.
+            // error is a Parse.Error with an error code and message.
+            console.log('Failed to create new object, with error code: ' + error.message);
+        }
+    });
+}
 
 module.exports = {
     index: function (request, reply) {
-        var io = request.server.plugins['hapi-io'].io;
-        io.emit('hypothesis');
         //console.log('io', io);
         var query = [
             "MATCH (n:Hypothesis)",
@@ -21,25 +61,8 @@ module.exports = {
             query: query
         }, function (err, results) {
             if (err) return reply(err);
-            console.log(results);
-            var hypotheses = results.map(function (result) {
-                var hypothesis = result['n'].properties;
-                hypothesis._id = result['n']._id;
-                var positive = result['pos_ev'] || [];
-                var negative = result['neg_ev'] || [];
-                hypothesis.positive = positive.map(function (evidence) {
-                    var obj = evidence.properties;
-                    obj._id = evidence._id;
-                    return obj;
-                });
-                hypothesis.negative = negative.map(function (evidence) {
-                    var obj = evidence.properties;
-                    obj._id = evidence._id;
-                    return obj;
-                });
-                //console.log(hypothesis);
-                return hypothesis;
-            });
+            //console.log(results);
+            var hypotheses = flattenHypotheses(results);
             reply(hypotheses);
         });
     },
@@ -47,14 +70,6 @@ module.exports = {
     create: function (request, reply) {
         // console.log(request);
         var hypothesis = request.payload.hypothesis;
-        //var positiveEv = request.payload.positiveEv;
-        //var negativeEv = request.payload.negativeEv;
-        //var positiveIds = positiveEv.map(function(evidence) {
-        //    return evidence._id;
-        //});
-        //var negativeIds = negativeEv.map(function(evidence) {
-        //    return evidence._id;
-        //});
         var query = [
             "MERGE (n:Hypothesis {name: {hypothesis_name}})",
             'ON CREATE SET n = {props}',
@@ -72,107 +87,98 @@ module.exports = {
         }, function (err, results) {
             if (err) return reply(err);
             console.log('add hypothesis', results[0]);
-            var hypothesis = results[0]['n'].properties;
-            hypothesis._id = results[0]['n']._id;
-            var hypothesis_parse = new config.parse.hypothesis();
-
-            hypothesis_parse.set("neo4j", hypothesis._id);
-            hypothesis_parse.set("name", hypothesis.name);
-            hypothesis_parse.set("weight", 0);
-            hypothesis_parse.set("events", []);
-
-            hypothesis_parse.save(null, {
-                success: function (hypothesis_parse) {
-                    // Execute any logic that should take place after the object is saved.
-                    reply(hypothesis);
-                    //console.log('New object created with objectId: ' + hypothesis_parse.id);
-                },
-                error: function (hypothesis_parse, error) {
-                    // Execute any logic that should take place if the save fails.
-                    // error is a Parse.Error with an error code and message.
-                    reply(hypothesis);
-                    console.log('Failed to create new object, with error code: ' + error.message);
-                }
-            });
-
-
+            var hypothesis = flattenGraphNodes(results[0]['n']);
+            createNoSQL(hypothesis);
+            reply(hypothesis);
         });
     },
 
     update: function (request, reply) {
         var id = +encodeURIComponent(request.params.id);
-        //console.log(request.payload);
         var hypothesis = request.payload.hypothesis;
-        var oldWeight = +request.payload.weight;
-        var ev = request.payload.ev;
-        //console.log('evidence', ev);
-        //return reply(hypothesis);
+        var evidence = request.payload.ev;
+
+        function updateAttributes(hypothesis) {
+            return Q.Promise(function(resolve, reject, notify) {
+                var query = [
+                    "MATCH (n:Hypothesis)",
+                    "WHERE id(n) = {hypothesis_id}",
+                    "SET n = {hypothesis}",
+                    // "ON CREATE SET b.weight = b.weight + 1",
+                    // "ON MATCH SET b.weight = b.weight + 1",
+                    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                    "RETURN n"
+                ].join('\n');
+
+                var params = {
+                    hypothesis_id: id,
+                    hypothesis: _.pick(hypothesis, ['name', 'weight', 'x', 'y'])
+                };
+
+                db.cypher({
+                    query: query,
+                    params: params
+                }, function (err, results) {
+                    if (err) return reply(err);
+                    var hypothesis = results[0]['n'];
+                    //console.log(hypothesis);
+                    resolve(hypothesis);
+                });
+            });
+        }
+
+        function updateEvidence(hypothesis, evidence) {
+            return Q.Promise(function(resolve, reject, notify) {
+                var query = [
+                    "MATCH (a:Hypothesis),(b:Evidence)",
+                    "WHERE id(a) = {hypothesis_id} AND id(b) = {ev_id}",
+                    "MERGE (a)-[r:HYPEV {type: {type}}]->(b)",
+                    "ON CREATE SET a.weight = {weight}",
+                    // "ON CREATE SET b.weight = b.weight + 1",
+                    // "ON MATCH SET b.weight = b.weight + 1",
+                    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                    "RETURN r"
+                ].join('\n');
+
+                var params = {
+                    ev_id: evidence._id,
+                    type: hypothesis.tabType,
+                    hypothesis_id: hypothesis._id,
+                    weight: hypothesis.weight
+                };
+
+                db.cypher({
+                    query: query,
+                    params: params
+                }, function (err, results) {
+                    if (err) return reply(err);
+                    //console.log('relationship hypothesis evidence', results);
+                    var event = {
+                        name: evidence.name,
+                        type: 'add evidence'
+                    };
+
+                    EventController.create(event, evidence)
+                        .then(function() {
+                            resolve(results);
+                        })
+                });
+            });
+        }
+
         if (!ev) {
             //console.log('here');
-            var query = [
-                "MATCH (n:Hypothesis)",
-                "WHERE id(n) = {hypothesis_id}",
-                "SET n = {hypothesis}",
-                // "ON CREATE SET b.weight = b.weight + 1",
-                // "ON MATCH SET b.weight = b.weight + 1",
-                // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
-                "RETURN n"
-            ].join('\n');
-
-            var params = {
-                hypothesis_id: id,
-                hypothesis: _.pick(hypothesis, ['name', 'weight', 'x', 'y'])
-            };
-
-            db.cypher({
-                query: query,
-                params: params
-            }, function (err, results) {
-                if (err) return reply(err);
-                var hypothesis = results[0]['n'];
-                console.log(hypothesis);
-                reply(hypothesis);
-
-            });
-            return;
+            updateAttributes(hypothesis)
+                                .then(function() {
+                                    reply(hypothesis);
+                                })
         }
-        var ev_id = ev._id;
-        //var ids = ev.map(function(evidence) {
-        //    return evidence._id;
-        //});
-        //console.log('ev ids', ev_id, id);
-        //reply('success');
-        var query = [
-            "MATCH (a:Hypothesis),(b:Evidence)",
-            "WHERE id(a) = {hypothesis_id} AND id(b) = {ev_id}",
-            "MERGE (a)-[r:HYPEV {type: {type}}]->(b)",
-            "ON CREATE SET a.weight = {weight}",
-            // "ON CREATE SET b.weight = b.weight + 1",
-            // "ON MATCH SET b.weight = b.weight + 1",
-            // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
-            "RETURN r"
-        ].join('\n');
-
-        var params = {
-            ev_id: ev_id,
-            type: hypothesis.tabType,
-            hypothesis_id: id,
-            weight: hypothesis.weight
-        };
-
-        db.cypher({
-            query: query,
-            params: params,
-        }, function (err, results) {
-            if (err) return reply(err);
-            //console.log('relationship hypothesis evidence', results);
-            var event = {
-                name: ev.name,
-                type: 'add evidence'
-            };
-
-            EventController.create(reply, event, ev);
-        });
+        else {
+         updateEvidence(hypothesis, evidence)
+             .then(function() {
+                 reply(hypothesis);
+             })
+        }
     },
 
     events: function (request, reply) {

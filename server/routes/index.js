@@ -7,9 +7,16 @@ exports.register = function (server, options, next) {
         require('hapi-io')
     ], function() {
         var io = server.plugins['hapi-io'].io;
-        io.on('connection', function(socket){
-            console.log('connected');
-        });
+/*        io.on('connection', function(socket){
+            var i = 0;
+            var interval = setInterval(function() {
+                i++;
+                if(i === 20) {
+                    clearInterval(interval);
+                }
+                io.emit('notification added', {notification: i});
+            });
+        });*/
         var routers;
         routers = [
             './hypothesis',

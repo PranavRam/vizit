@@ -97,73 +97,89 @@ module.exports = {
         //console.log(request.payload);
         var evidence = request.payload.evidence;
         var snippets = request.payload.snippets;
-        //console.log('evidence', ev);
-        //return reply(hypothesis);
-        if (!snippets) {
-            var query = [
-                "MATCH (n:Evidence)",
-                "WHERE id(n) = {evidence_id}",
-                "SET n = {evidence}",
-                // "ON CREATE SET b.weight = b.weight + 1",
-                // "ON MATCH SET b.weight = b.weight + 1",
-                // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
-                "RETURN n"
-            ].join('\n');
 
-            var params = {
-                evidence_id: id,
-                evidence: _.pick(evidence, ['name', 'weight', 'x', 'y'])
-            };
+        function updateAttributes(evidence) {
+            return Q.Promise(function(resolve, reject, notify) {
+                var query = [
+                    "MATCH (n:Evidence)",
+                    "WHERE id(n) = {evidence_id}",
+                    "SET n = {evidence}",
+                    // "ON CREATE SET b.weight = b.weight + 1",
+                    // "ON MATCH SET b.weight = b.weight + 1",
+                    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                    "RETURN n"
+                ].join('\n');
 
-            db.cypher({
-                query: query,
-                params: params
-            }, function (err, results) {
-                if (err) return reply(err);
-                var evidence = results[0]['n'];
-                //console.log(evidence);
-                reply(evidence);
-                //updateItems(reply);
+                var params = {
+                    evidence_id: id,
+                    evidence: _.pick(evidence, ['name', 'weight', 'x', 'y'])
+                };
 
+                db.cypher({
+                    query: query,
+                    params: params
+                }, function (err, results) {
+                    if (err) return reply(err);
+                    var evidence = results[0]['n'];
+                    //console.log(evidence);
+                    resolve(evidence);
+                    //updateItems(reply);
+
+                });
             });
-            return;
         }
-        var snippet_ids = snippets.map(function (snippet) {
-            return snippet._id;
-        });
-        //var ids = ev.map(function(evidence) {
-        //    return evidence._id;
-        //});
-        //console.log('ev ids', ev_id, id);
-        //reply('success');
-        var query = [
-            "MATCH (a:Evidence),(b:Snippet)",
-            "WHERE id(a) = {evidence_id} AND id(b) in {snippet_ids}",
-            "MERGE (a)-[r:EVIDENCESNIPPET]->(b)",
-            // "ON CREATE SET b.weight = b.weight + 1",
-            // "ON MATCH SET b.weight = b.weight + 1",
-            // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
-            "RETURN r"
-        ].join('\n');
 
-        var params = {
-            snippet_ids: snippet_ids,
-            evidence_id: id
-        };
+        function updateSnippets(evidence, snippets) {
+            return Q.Promise(function(resolve, reject, notify) {
+                var snippet_ids = snippets.map(function (snippet) {
+                    return snippet._id;
+                });
+                //var ids = ev.map(function(evidence) {
+                //    return evidence._id;
+                //});
+                //console.log('ev ids', ev_id, id);
+                //reply('success');
+                var query = [
+                    "MATCH (a:Evidence),(b:Snippet)",
+                    "WHERE id(a) = {evidence_id} AND id(b) in {snippet_ids}",
+                    "MERGE (a)-[r:EVIDENCESNIPPET]->(b)",
+                    // "ON CREATE SET b.weight = b.weight + 1",
+                    // "ON MATCH SET b.weight = b.weight + 1",
+                    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
+                    "RETURN r"
+                ].join('\n');
 
-        db.cypher({
-            query: query,
-            params: params,
-        }, function (err, results) {
-            if (err) return reply(err);
-            var snippet = results[0]['r'];
-            var event = {
-                name: evidence.name,
-                type: 'update evidence'
-            };
+                var params = {
+                    snippet_ids: snippet_ids,
+                    evidence_id: id
+                };
 
-            EventController.create(reply, event, evidence);
+                db.cypher({
+                    query: query,
+                    params: params,
+                }, function (err, results) {
+                    if (err) return reply(err);
+                    var snippet = results[0]['r'];
+                    var event = {
+                        name: evidence.name,
+                        type: 'update evidence'
+                    };
 
-        });
+                    EventController.create(event, evidence)
+                        .then(function () {
+                            resolve('updated evidence');
+                        })
+
+                });
+            });
+        }
+
+        if (!snippets) {
+            updateAttributes(evidence).then(function() { reply(evidence); });
+        }
+        else {
+            updateSnippets(evidence, snippets)
+                .then(function() { reply(evidence); });
+        }
     }
 };

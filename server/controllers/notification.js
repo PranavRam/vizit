@@ -7,46 +7,40 @@ var Parse = require('parse/node').Parse;
 
 module.exports = {
     index: function(request, reply) {
-        var imagePath = 'img/list/60.jpeg';
 
-        var todos = [
+        var notifications = [
             {
-                face : imagePath,
-                what: 'Brunch this weekend?',
+                title: 'Brunch this weekend?',
                 who: 'Min Li Chan',
                 when: '3:08PM',
-                notes: " I'll be in your neighborhood doing errands"
+                description: " I'll be in your neighborhood doing errands"
             },
             {
-                face : imagePath,
-                what: 'Brunch this weekend?',
+                title: 'Brunch this weekend?',
                 who: 'Min Li Chan',
                 when: '3:08PM',
-                notes: " I'll be in your neighborhood doing errands"
+                description: " I'll be in your neighborhood doing errands"
             },
             {
-                face : imagePath,
-                what: 'Brunch this weekend?',
+                title: 'Brunch this weekend?',
                 who: 'Min Li Chan',
                 when: '3:08PM',
-                notes: " I'll be in your neighborhood doing errands"
+                description: " I'll be in your neighborhood doing errands"
             },
             {
-                face : imagePath,
-                what: 'Brunch this weekend?',
+                title: 'Brunch this weekend?',
                 who: 'Min Li Chan',
                 when: '3:08PM',
-                notes: " I'll be in your neighborhood doing errands"
+                description: " I'll be in your neighborhood doing errands"
             },
             {
-                face : imagePath,
-                what: 'Brunch this weekend?',
+                title: 'Brunch this weekend?',
                 who: 'Min Li Chan',
                 when: '3:08PM',
-                notes: " I'll be in your neighborhood doing errands"
-            },
+                description: " I'll be in your neighborhood doing errands"
+            }
         ];
 
-        reply(todos);
+        reply(notifications);
     }
 };

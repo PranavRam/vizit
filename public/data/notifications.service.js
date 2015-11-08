@@ -5,7 +5,7 @@
     angular.module('app.data')
         .factory('notifications', notifications);
 
-    function notifications(dataservice) {
+    function notifications(dataservice, socket) {
         var data = [];
 
         var service = {
@@ -43,5 +43,9 @@
         function remove() {
 
         }
+
+        socket.on('notification added', function () {
+            console.log('notification: added', arguments);
+        });
     }
 })();
