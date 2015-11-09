@@ -7,7 +7,9 @@
 
     function notifications(dataservice, socket) {
         var data = [];
-
+        socket.on('notifications', function (notifications) {
+            angular.copy(data.concat(notifications.data), data);
+        });
         var service = {
             data: data,
             get: get,
@@ -43,9 +45,5 @@
         function remove() {
 
         }
-
-        socket.on('notification added', function () {
-            console.log('notification: added', arguments);
-        });
     }
 })();

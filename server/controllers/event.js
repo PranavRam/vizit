@@ -4,6 +4,7 @@
 var config = require('../config');
 var db = config.db;
 var Parse = require('parse/node').Parse;
+var Q = require('q');
 
 module.exports = {
     index: function(request, reply) {
@@ -43,7 +44,7 @@ module.exports = {
                 if (err) return reply(err);
                 results.forEach(function (result) {
                     if (!result['h']) return;
-                    console.log('add event', result['h']);
+                    //console.log('add event', result['h']);
                     var hypothesis = result['h'].properties;
                     var id = +result['h']._id;
 

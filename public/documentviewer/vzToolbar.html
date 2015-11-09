@@ -47,7 +47,7 @@
                     <ng-md-icon icon="my_library_add" style="fill: white;"></ng-md-icon>
                 </md-button>
             </div>
-            <md-button class="md-icon-button md-primary" aria-label="minimize-document-viewer" ng-click="showDocumentViewer = !showDocumentViewer">
+            <md-button class="md-icon-button md-primary" ng-hide="hideMinimize" aria-label="minimize-document-viewer" ng-click="showDocumentViewer = !showDocumentViewer">
                 <ng-md-icon icon="{{showDocumentViewer ? 'expand_more' : 'expand_less'}}" style="fill: white;"></ng-md-icon>
             </md-button>
             <!-- </md-button> -->

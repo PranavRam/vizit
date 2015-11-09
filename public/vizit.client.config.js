@@ -90,6 +90,9 @@ function config($stateProvider, $urlRouterProvider) {
                 }
             }
         })
+        .state('vizit.document_viewer', {
+            url: "/documents"
+        })
         .state('upload', {
             url: "/upload",
             templateUrl: "/public/layouts/upload.html",

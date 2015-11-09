@@ -2,6 +2,8 @@ var config = require('../config');
 var db = config.db;
 var Parse = require('parse/node').Parse;
 var EventController = require('./event');
+var Q = require('q');
+var _ = require('lodash');
 
 function flattenGraphNodes(data) {
     var flattened = data.properties;
@@ -48,7 +50,7 @@ function createNoSQL(hypothesis) {
 
 module.exports = {
     index: function (request, reply) {
-        //console.log('io', io);
+
         var query = [
             "MATCH (n:Hypothesis)",
             "OPTIONAL MATCH n-[r1:HYPEV {type: 'positive'}]->(ep)",
@@ -100,6 +102,7 @@ module.exports = {
 
         function updateAttributes(hypothesis) {
             return Q.Promise(function(resolve, reject, notify) {
+                console.log('updating attributes', id);
                 var query = [
                     "MATCH (n:Hypothesis)",
                     "WHERE id(n) = {hypothesis_id}",
@@ -121,9 +124,30 @@ module.exports = {
                 }, function (err, results) {
                     if (err) return reply(err);
                     var hypothesis = results[0]['n'];
-                    //console.log(hypothesis);
+                    console.log('hypotheses attributes updated');
                     resolve(hypothesis);
                 });
+            });
+        }
+
+        function updateNotifications(evidence) {
+            var query = [
+                "MATCH (e:Evidence)-->()-->(en:Entity)<--(sn)<--(ev)<--(h)",
+                "WHERE id(e) = {evidence}",
+                "RETURN collect(DISTINCT h) as hypotheses,  collect(DISTINCT ev) as evidences"
+            ].join('\n');
+
+            var params = {
+                evidence: evidence._id
+            };
+
+            db.cypher({
+                query: query,
+                params: params
+            }, function (err, results) {
+                if (err) return reply(err);
+
+                console.log(results);
             });
         }
 
@@ -161,12 +185,13 @@ module.exports = {
                     EventController.create(event, evidence)
                         .then(function() {
                             resolve(results);
+                            //updateNotifications(evidence);
                         })
                 });
             });
         }
 
-        if (!ev) {
+        if (!evidence) {
             //console.log('here');
             updateAttributes(hypothesis)
                                 .then(function() {

@@ -5,6 +5,8 @@ var config = require('../config/');
 var db = config.db;
 var Parse = require('parse/node').Parse;
 var EventController = require('./event');
+var Q = require('q');
+var _ = require('lodash');
 
 module.exports = {
     index: function (request, reply) {
@@ -94,7 +96,7 @@ module.exports = {
 
     update: function (request, reply) {
         var id = +encodeURIComponent(request.params.id);
-        //console.log(request.payload);
+        var io = request.server.plugins['hapi-io'].io;
         var evidence = request.payload.evidence;
         var snippets = request.payload.snippets;
 
@@ -123,9 +125,34 @@ module.exports = {
                     var evidence = results[0]['n'];
                     //console.log(evidence);
                     resolve(evidence);
-                    //updateItems(reply);
-
                 });
+            });
+        }
+
+        function updateNotifications(evidence) {
+            var query = [
+                "MATCH (e:Evidence)-->()-->(en:Entity)<--(sn)<--(ev)<--(h)",
+                "WHERE id(e) = {evidence}",
+                "RETURN collect(DISTINCT h) as hypotheses,  collect(DISTINCT ev) as evidences"
+            ].join('\n');
+
+            var params = {
+                evidence: evidence._id
+            };
+
+            db.cypher({
+                query: query,
+                params: params
+            }, function (err, results) {
+                if (err) return reply(err);
+
+                var notifications = results[0].hypotheses.map(function(hypothesis) {
+                    return {
+                        title: hypothesis.properties.name,
+                        description: 'updated evidence ' + evidence.name
+                    }
+                });
+                io.emit('notifications', {data: notifications});
             });
         }
 
@@ -134,11 +161,7 @@ module.exports = {
                 var snippet_ids = snippets.map(function (snippet) {
                     return snippet._id;
                 });
-                //var ids = ev.map(function(evidence) {
-                //    return evidence._id;
-                //});
-                //console.log('ev ids', ev_id, id);
-                //reply('success');
+
                 var query = [
                     "MATCH (a:Evidence),(b:Snippet)",
                     "WHERE id(a) = {evidence_id} AND id(b) in {snippet_ids}",
@@ -156,7 +179,7 @@ module.exports = {
 
                 db.cypher({
                     query: query,
-                    params: params,
+                    params: params
                 }, function (err, results) {
                     if (err) return reply(err);
                     var snippet = results[0]['r'];
@@ -164,10 +187,10 @@ module.exports = {
                         name: evidence.name,
                         type: 'update evidence'
                     };
-
                     EventController.create(event, evidence)
                         .then(function () {
                             resolve('updated evidence');
+                            updateNotifications(evidence);
                         })
 
                 });

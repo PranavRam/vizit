@@ -53,7 +53,7 @@ module.exports = {
                         // console.log(results);
                     });
                 });
-                console.log('exit');
+                //console.log('exit');
                 resolve("Done setTFDIF");
             });
         })
@@ -110,7 +110,7 @@ module.exports = {
             query: query
         }, function (err, results) {
             if (err) return reply(err);
-            console.log(results);
+            //console.log(results);
             reply(results);
         });
     }

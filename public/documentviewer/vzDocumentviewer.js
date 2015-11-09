@@ -22,7 +22,8 @@
             templateUrl: 'public/documentviewer/vzDocumentviewer.html',
             scope: {
                 documents: '=',
-                ach: '='
+                ach: '=',
+                hideMinimize: '='
                 //onSave: '&'
             },
             replace: true,
@@ -58,28 +59,21 @@
                 scope.$emit('showDocumentViewer:changed')
             });
 
-            scope.addToSelectedEvidence = function() {
+            function createSnippets(name, sentences, content, wholeDocument, text) {
                 var promises = [];
-                var sentences = angular.element('.document-viewer .document-text .select-text');
-                var evidence = scope.ach.selectedEvidence;
-                var evidenceEntities = {};
-                var content = evidence.content;
-                scope.entityTypes.forEach(function (entityType) {
-                    evidenceEntities[entityType] = [];
-                });
-                sentences.each(function () {
+                if(wholeDocument){
                     var snippet = {
-                        name: scope.selectedDocument.name,
-                        text: this.innerHTML
+                        name: name,
+                        text: text
                     };
                     content.push(snippet);
-                    var entities = textparser.getEntitiesInSentence(this.innerHTML);
-                    _.merge(evidenceEntities, entities, function (a, b) {
-                        // console.log(a, b);
-                        if (_.isArray(b)) {
-                            return a.concat(b);
-                        }
-                    });
+                    var entities = textparser.getEntitiesInSentence(text);
+                    /*_.merge(evidenceEntities, entities, function (a, b) {
+                     // console.log(a, b);
+                     if (_.isArray(b)) {
+                     return a.concat(b);
+                     }
+                     });*/
                     var promise = $http({
                         url: 'api/snippets',
                         method: 'POST',
@@ -90,70 +84,21 @@
                     });
 
                     promises.push(promise);
-                    // weight += getWeightsOfEntities(entities);
-                });
-                $q.all(promises)
-                    .then(function (snippets) {
-                        snippets = snippets.map(function (snippet) {
-                            return snippet.data;
-                        });
-                        dataservice.getEntitiesForEvidence(evidenceEntities)
-                            .then(function (entities) {
-                                entities = entities.map(function (entity) {
-                                    return entity.data[0]
-                                });
-                                var weight = 0;
-                                angular.forEach(entities, function (entity) {
-                                    weight += entity.properties.weight;
-                                });
-                                evidence.weight += weight;
-                                var promise = $http({
-                                    url: 'api/evidences/' + evidence._id,
-                                    method: 'PUT',
-                                    data: {
-                                        evidence: evidence,
-                                        snippets: snippets
-                                    }
-                                });
-
-                                promise.then(dataservice.updateModels)
-                                    .then(scope.ach.getData)
-                                    .then(scope.ach.updateACH);
-                                // evidence.entities = evidenceEntities;
-                            });
-                        // });
-                    });
-            }
-
-            scope.addEvidence = function (wholeDocument) {
-                var promises = [];
-                var sentences = angular.element('.document-viewer .document-text .select-text');
-                var evidence = {
-                    x: 100,
-                    y: 100,
-                    name: 'Evidence ' + evidences.data.length
-                };
-                var content = [];
-                var evidenceEntities = {};
-                scope.entityTypes.forEach(function (entityType) {
-                    evidenceEntities[entityType] = [];
-                });
-
-                if (!wholeDocument) {
-                    if (sentences.length <= 0) return;
+                }
+                else {
                     sentences.each(function () {
                         var snippet = {
-                            name: scope.selectedDocument.name,
+                            name: name,
                             text: this.innerHTML
                         };
                         content.push(snippet);
                         var entities = textparser.getEntitiesInSentence(this.innerHTML);
-                        _.merge(evidenceEntities, entities, function (a, b) {
-                            // console.log(a, b);
-                            if (_.isArray(b)) {
-                                return a.concat(b);
-                            }
-                        });
+                        /*_.merge(evidenceEntities, entities, function (a, b) {
+                         // console.log(a, b);
+                         if (_.isArray(b)) {
+                         return a.concat(b);
+                         }
+                         });*/
                         var promise = $http({
                             url: 'api/snippets',
                             method: 'POST',
@@ -167,68 +112,71 @@
                         // weight += getWeightsOfEntities(entities);
                     });
                 }
-                else {
-                    content = [];
-                    // weight = 0;
-                    content.push({
-                        name: scope.selectedDocument.name,
-                        text: scope.selectedDocument.parsedText
-                    });
-                    var entities = textparser.getEntitiesInSentence(scope.selectedDocument.parsedText);
-                    _.merge(evidenceEntities, entities, function (a, b) {
-                        // console.log(a, b);
-                        if (_.isArray(b)) {
-                            return a.concat(b);
-                        }
-                    });
-                     var promise = $http({
-                         url   : 'api/snippets/',
-                         method: 'POST',
-                         data  : {
-                           snippet: content,
-                           entities: entities
-                         }
-                     });
 
-                     promises.push(promise);
-                    // weight += getWeightsOfEntities(entities);
-                }
-                $q.all(promises)
+                return promises;
+            }
+            scope.addToSelectedEvidence = function() {
+                var sentences = angular.element('.document-viewer .document-text .select-text');
+                var evidence = scope.ach.selectedEvidence;
+                //var evidenceEntities = {};
+                var content = evidence.content;
+                /*scope.entityTypes.forEach(function (entityType) {
+                    evidenceEntities[entityType] = [];
+                });*/
+
+                $q.all(createSnippets(scope.selectedDocument.name, sentences, content))
                     .then(function (snippets) {
                         snippets = snippets.map(function (snippet) {
                             return snippet.data;
                         });
-                        dataservice.getEntitiesForEvidence(evidenceEntities)
-                            .then(function (entities) {
-                                entities = entities.map(function (entity) {
-                                    return entity.data[0]
-                                });
-                                var weight = 0;
-                                angular.forEach(entities, function (entity) {
-                                    weight += entity.properties.weight;
-                                });
-                                evidence.weight = weight;
-                                var promise = $http({
-                                    url: 'api/evidences',
-                                    method: 'POST',
-                                    data: {
-                                        evidence: evidence,
-                                        snippets: snippets
-                                    }
-                                });
+                        var promise = $http({
+                            url: 'api/evidences/' + evidence._id,
+                            method: 'PUT',
+                            data: {
+                                evidence: evidence,
+                                snippets: snippets
+                            }
+                        });
 
-                                //promise.then(function () {
-                                //    evidence.content = content;
-                                //    evidences.data.push(evidence);
-                                //    scope.ach.updateACH();
-                                promise.then(dataservice.updateModels)
-                                    .then(allData.get)
-                                    .then(scope.ach.updateACH);
-                                //});
-                                // evidence.entities = evidenceEntities;
-                            });
-                        // });
+                        promise.then(dataservice.updateModels)
+                            .then(allData.get)
+                            .then(scope.ach.updateACH);
                     });
+            };
+
+            scope.addEvidence = function (wholeDocument) {
+                var sentences = angular.element('.document-viewer .document-text .select-text');
+                var evidence = {
+                    x: 100,
+                    y: 100,
+                    name: 'Evidence ' + evidences.data.length
+                };
+                var content = [];
+                /*var evidenceEntities = {};
+                scope.entityTypes.forEach(function (entityType) {
+                    evidenceEntities[entityType] = [];
+                });*/
+
+                $q.all(createSnippets(scope.selectedDocument.name, sentences, content, wholeDocument, scope.selectedDocument.parsedText))
+                    .then(function (snippets) {
+                        snippets = snippets.map(function (snippet) {
+                            return snippet.data;
+                        });
+
+                        evidence.weight = 0;
+                        var promise = $http({
+                            url: 'api/evidences',
+                            method: 'POST',
+                            data: {
+                                evidence: evidence,
+                                snippets: snippets
+                            }
+                        });
+
+                        promise.then(dataservice.updateModels)
+                            .then(allData.get)
+                            .then(scope.ach.updateACH);
+                        });
             }
         }
     }

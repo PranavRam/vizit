@@ -13,7 +13,7 @@ module.exports = {
         // reply(request.payload);
         var entities = request.payload.entities;
         var entityIds = [];
-        for (entityType in entities) {
+        for (var entityType in entities) {
             if (entities.hasOwnProperty(entityType)) {
                 var ids = entities[entityType].map(function (entity) {
                     return +entity.id;
@@ -21,7 +21,7 @@ module.exports = {
                 entityIds = entityIds.concat(ids)
             }
         }
-        console.log(entityIds, snippet);
+        //console.log(entityIds, snippet);
         // reply(entities);
         var query = [
             "MERGE (n:Snippet { text: {text} })",
@@ -36,7 +36,7 @@ module.exports = {
 
         db.cypher({
             query: query,
-            params: params,
+            params: params
         }, function (err, results) {
             if (err) return reply(err);
             //console.log('snippet', results);
@@ -53,12 +53,12 @@ module.exports = {
 
             var params = {
                 entityIds: entityIds,
-                snippet_id: snippet._id,
+                snippet_id: snippet._id
             };
 
             db.cypher({
                 query: query,
-                params: params,
+                params: params
             }, function (err, results) {
                 if (err) return reply(err);
                 // console.log('relationship snippet', results);

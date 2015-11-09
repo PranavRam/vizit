@@ -28,14 +28,23 @@
             <ng-md-icon icon="view_list"
                         ng-style="{fill: currentState === 'vizit.ach_summary' ? 'white' : '#7E7E7E'}"></ng-md-icon>
         </md-button>
-    	<md-button class="md-icon-button md-primary" aria-label="ach-chart" ng-click="go('vizit.provenance')">
+
+        <md-button class="md-icon-button md-primary" aria-label="ach-chart" ng-click="go('vizit.provenance')">
             <md-tooltip>
                 ACH Provenance
             </md-tooltip>
             <ng-md-icon icon="trending_up"
                         ng-style="{fill: currentState === 'vizit.provenance' ? 'white' : '#7E7E7E'}"></ng-md-icon>
         </md-button>
+        <md-button class="md-icon-button md-primary" aria-label="ach-document-viewer" ng-click="go('vizit.document_viewer')">
+            <md-tooltip>
+                Document Viewer
+            </md-tooltip>
+            <ng-md-icon icon="insert_drive_file"
+                        ng-style="{fill: currentState === 'vizit.document_viewer' ? 'white' : '#7E7E7E'}"></ng-md-icon>
+        </md-button>
   	</span>
+
         <!-- <ng-md-icon icon="picture_in_picture" style="fill: black;"></ng-md-icon>
         <ng-md-icon icon="view_column" style="fill: white;"></ng-md-icon>
         <ng-md-icon icon="view_list" style="fill: white;"></ng-md-icon> -->
@@ -43,15 +52,25 @@
         <md-button class="md-icon-button md-primary" ng-click="$parent.toggleNotification()" aria-label="notifications">
             <ng-md-icon icon="notifications" style="fill: white;"></ng-md-icon>
         </md-button>
-        <md-button class="md-icon-button md-primary" aria-label="sort">
-            <ng-md-icon icon="account_circle" style="fill: white;"></ng-md-icon>
-        </md-button>
+        <md-menu md-offset="0 -5">
+            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                <ng-md-icon icon="settings"></ng-md-icon>
+            </md-button>
+            <md-menu-content width="4">
+                <md-menu-item>
+                    <md-button ng-click="resetAnalysis()"> <span> Reset Analysis </span></md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="resetAll()"> <span md-menu-align-target>Reset All</span></md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
         <!-- </md-button> -->
     </div>
 </md-toolbar>
-<md-content flex ui-view="topView" class="top-view">
+<md-content flex ui-view="topView" class="top-view" ng-hide="currentState === 'vizit.document_viewer'">
 
 </md-content>
 <!--<vz-toolbar></vz-toolbar>-->
-<vz-documentviewer ng-hide="ach.fullscreen" ach="ach"
-                   flex="30" documents="documents"></vz-documentviewer>
+<vz-documentviewer ng-hide="ach.fullscreen" ach="ach" hide-minimize="currentState === 'vizit.document_viewer'"
+                   ng-attr-flex="{{currentState === 'vizit.document_viewer' ? '100' : '30'}}" documents="documents"></vz-documentviewer>

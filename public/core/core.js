@@ -1,8 +1,8 @@
 angular.module('app.core')
     .controller('core', core);
 
-function core($scope, $state, model, dataservice,
-              hypotheses, evidences, entities, documents, $q) {
+function core($scope, $state, model, dataservice, $rootScope, $mdToast,
+              hypotheses, evidences, entities, documents, $q, $mdDialog) {
     $scope.documents = [];
     $scope.entities = [];
     $scope.selectedDocument = {};
@@ -83,11 +83,62 @@ function core($scope, $state, model, dataservice,
         if(item){
             $scope.ach.moveTo(item);
         }
-    }
+    };
     $scope.ach.getData = function() {
         var promises = [documents.get(), entities.get(),
             evidences.get(), hypotheses.get()];
 
         return $q.all(promises);
-    }
+    };
+
+    var originatorEv;
+    $scope.openMenu = function($mdOpenMenu, ev) {
+        originatorEv = ev;
+        $mdOpenMenu(ev);
+    };
+
+    $scope.resetAnalysis = function() {
+        $mdDialog.show(
+            $mdDialog.alert()
+                .title('You clicked!')
+                .content('You clicked reset analysis')
+                .ok('Nice')
+                .targetEvent(originatorEv)
+        );
+        originatorEv = null;
+    };
+
+    $scope.resetAll = function() {
+        $mdDialog.show(
+            $mdDialog.alert()
+                .title('You clicked!')
+                .content('You clicked reset all')
+                .ok('Nice')
+                .targetEvent(originatorEv)
+        );
+        originatorEv = null;
+    };
+
+    $rootScope.toastPosition = {
+        bottom: true,
+        top: false,
+        left: false,
+        right: true
+    };
+    $rootScope.getToastPosition = function () {
+        return Object.keys($scope.toastPosition)
+            .filter(function (pos) {
+                return $scope.toastPosition[pos];
+            })
+            .join(' ');
+    };
+
+    $rootScope.showNotification = function (title) {
+        $mdToast.show(
+            $mdToast.simple()
+                .content(title)
+                .position($scope.getToastPosition())
+                .hideDelay(3000)
+        );
+    };
 }
