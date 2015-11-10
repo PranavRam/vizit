@@ -138,9 +138,9 @@
                             }
                         });
 
-                        promise.then(dataservice.updateModels)
-                            .then(allData.get)
-                            .then(scope.ach.updateACH);
+                        //promise.then(dataservice.updateModels)
+                            //.then(allData.get)
+                            //.then(scope.ach.updateACH);
                     });
             };
 
@@ -173,9 +173,9 @@
                             }
                         });
 
-                        promise.then(dataservice.updateModels)
-                            .then(allData.get)
-                            .then(scope.ach.updateACH);
+                        //promise.then(dataservice.updateModels)
+                        //    .then(allData.get)
+                        //    .then(scope.ach.updateACH);
                         });
             }
         }

@@ -5,8 +5,21 @@
     angular.module('app.data')
         .factory('hypotheses', hypotheses);
 
-    function hypotheses(dataservice) {
+    function hypotheses(dataservice, socket, $rootScope) {
         var data = [];
+        socket.on('hypotheses:create', function(response){
+            var hypothesis = response.hypothesis;
+            hypothesis.positive = [];
+            hypothesis.negative = [];
+            data.push(hypothesis);
+            //console.log('added hypothesis', hypothesis);
+        });
+
+        socket.on('hypotheses:update', function(response) {
+            $rootScope.$broadcast('loadData');
+            $rootScope.showNotification('Added Evidence ' + response.evidence.name + ' to ' +
+            response.hypothesis.name);
+        });
 
         var service = {
             data: data,
@@ -32,12 +45,7 @@
             var hypothesis = {
                 x: 100, y: 100, weight: 0,
                 name: "Hypothesis " + data.length};
-            dataservice.createHypothesis(hypothesis)
-                .then(function(result) {
-                    result.positive = []
-                    result.negative = [];
-                    data.push(result);
-                });
+            dataservice.createHypothesis(hypothesis);
         }
 
         function remove() {

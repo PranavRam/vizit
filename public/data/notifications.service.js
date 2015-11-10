@@ -5,10 +5,11 @@
     angular.module('app.data')
         .factory('notifications', notifications);
 
-    function notifications(dataservice, socket) {
+    function notifications(dataservice, socket, $rootScope) {
         var data = [];
         socket.on('notifications', function (notifications) {
             angular.copy(data.concat(notifications.data), data);
+            $rootScope.showNotification('Changes Occurred');
         });
         var service = {
             data: data,

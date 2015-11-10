@@ -125,6 +125,11 @@
 
                     zoom.scale(scale);
                     zoomHandler(scale);
+
+                    scope.$on('loadedData', function() {
+                        render();
+                        minimap.render();
+                    });
                     scope.ach.updateACH = function () {
                         render();
                         minimap.render();
@@ -217,19 +222,17 @@
 
                                 if(_.findIndex(hypothesis[hypothesis.tabType], '_id', d._id)) {
                                     hypothesis[hypothesis.tabType].push(d);
-                                    var weight = 0;
+/*                                    var weight = 0;
                                     hypothesis['positive'].forEach(function(evidence) {
                                         weight += evidence.weight;
                                     });
                                     hypothesis['negative'].forEach(function(evidence) {
                                         weight -= evidence.weight;
                                     });
-                                    hypothesis.weight = weight;
-                                    render();
+                                    hypothesis.weight = weight;*/
+                                    //render();
                                     //console.log('intersect', hypothesis);
-                                    dataservice.updateHypothesis(hypothesis, d)
-                                        .then(allData.get)
-                                        .then(scope.ach.updateACH);
+                                    dataservice.updateHypothesis(hypothesis, d);
                                     return false;
                                 }
                             }

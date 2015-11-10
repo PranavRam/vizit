@@ -44,12 +44,12 @@ module.exports = {
     },
 
     create: function (request, reply) {
-        // console.log(request);
+        var io = request.server.plugins['hapi-io'].io;
         var evidence = request.payload.evidence;
         var snippets = request.payload.snippets;
         var snippetIds = snippets.map(function (snippet) {
             return snippet._id;
-        })
+        });
         var query = [
             "MERGE (n:Evidence {name: {evidence_name}})",
             'ON CREATE SET n = {props}',
@@ -71,10 +71,13 @@ module.exports = {
                 "MATCH (a:Evidence),(b:Snippet)",
                 "WHERE id(a) = {evidence_id} AND id(b) in {snippetIds}",
                 "MERGE (a)-[r:EVIDENCESNIPPET]->(b)",
+                "WITH a MATCH (a:Evidence)-->()-->(en:Entity)",
+                "WITH sum(en.weight) as weights, a",
+                "SET a.weight = weights",
                 // "ON CREATE SET b.weight = b.weight + 1",
                 // "ON MATCH SET b.weight = b.weight + 1",
                 // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
-                "RETURN r"
+                "RETURN a"
             ].join('\n');
 
             var params = {
@@ -89,6 +92,7 @@ module.exports = {
                 if (err) return reply(err);
                 //console.log('relationship evidence snippet', results);
                 reply(evidence);
+                io.emit('evidences:create', {evidence: evidence});
 
             });
         });
@@ -125,6 +129,7 @@ module.exports = {
                     var evidence = results[0]['n'];
                     //console.log(evidence);
                     resolve(evidence);
+                    io.emit('evidences:update', {evidence: evidence});
                 });
             });
         }
@@ -187,10 +192,13 @@ module.exports = {
                         name: evidence.name,
                         type: 'update evidence'
                     };
+
+                    resolve('updated evidence');
+                    
                     EventController.create(event, evidence)
                         .then(function () {
-                            resolve('updated evidence');
                             updateNotifications(evidence);
+                            io.emit('evidences:update', {evidence: evidence});
                         })
 
                 });
@@ -198,11 +206,16 @@ module.exports = {
         }
 
         if (!snippets) {
-            updateAttributes(evidence).then(function() { reply(evidence); });
+            updateAttributes(evidence)
+                .then(function() {
+                    reply(evidence);
+                });
         }
         else {
             updateSnippets(evidence, snippets)
-                .then(function() { reply(evidence); });
+                .then(function() {
+                    reply(evidence);
+                });
         }
     }
 };

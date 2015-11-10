@@ -18,8 +18,7 @@
 
             return service;
         })
-        .factory('allData', function ($q, hypotheses, evidences, entities) {
-
+        .factory('allData', function ($q, hypotheses, evidences, entities, $rootScope) {
             var service = {
                 get: function () {
                     var promises = [entities.get(),
@@ -27,7 +26,14 @@
                     return $q.all(promises);
                 }
 
-            }
+            };
+
+            $rootScope.$on('loadData', function() {
+                service.get().then(function() {
+                    $rootScope.$broadcast('loadedData');
+                })
+            });
+
             return service;
         })
 })();

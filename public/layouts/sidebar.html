@@ -17,6 +17,7 @@
                             ng-click="ach.selectedEvidence = evidence"
                             ng-class="{selected: evidence === ach.selectedEvidence}"
                             show-location="showLocation(evidence)"
+                            scale="evidenceWeightScale"
                             item="evidence" on-save="updateItem('evidences', evidence)"></vz-editable-list-item>
                 <!--</md-content>-->
             </md-content>
@@ -31,6 +32,7 @@
                             ng-click="ach.selectedHypothesis = hypothesis"
                             ng-class="{selected: hypothesis === ach.selectedHypothesis}"
                             show-location="showLocation(hypothesis)"
+                            scale="hypothesisWeightScale"
                             item="hypothesis" on-save="updateItem('hypotheses', hypothesis)"></vz-editable-list-item>
                 <!--</md-content>-->
             </md-content>

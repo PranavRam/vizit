@@ -77,7 +77,7 @@
                 }
             }
 
-        }
+        };
         return directive;
         function link(scope, element, attrs) {
             element.css('background-color', scope.getConnectionStrength());

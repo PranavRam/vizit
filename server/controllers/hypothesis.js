@@ -70,7 +70,7 @@ module.exports = {
     },
 
     create: function (request, reply) {
-        // console.log(request);
+        var io = request.server.plugins['hapi-io'].io;
         var hypothesis = request.payload.hypothesis;
         var query = [
             "MERGE (n:Hypothesis {name: {hypothesis_name}})",
@@ -88,21 +88,23 @@ module.exports = {
             params: params
         }, function (err, results) {
             if (err) return reply(err);
-            console.log('add hypothesis', results[0]);
+            //console.log('add hypothesis', results[0]);
             var hypothesis = flattenGraphNodes(results[0]['n']);
             createNoSQL(hypothesis);
+            io.emit('hypotheses:create', {hypothesis: hypothesis});
             reply(hypothesis);
         });
     },
 
     update: function (request, reply) {
+        var io = request.server.plugins['hapi-io'].io;
         var id = +encodeURIComponent(request.params.id);
         var hypothesis = request.payload.hypothesis;
         var evidence = request.payload.ev;
 
         function updateAttributes(hypothesis) {
             return Q.Promise(function(resolve, reject, notify) {
-                console.log('updating attributes', id);
+                //console.log('updating attributes', id);
                 var query = [
                     "MATCH (n:Hypothesis)",
                     "WHERE id(n) = {hypothesis_id}",
@@ -130,15 +132,15 @@ module.exports = {
             });
         }
 
-        function updateNotifications(evidence) {
+        function updateNotifications(hypothesis, evidences) {
             var query = [
-                "MATCH (e:Evidence)-->()-->(en:Entity)<--(sn)<--(ev)<--(h)",
-                "WHERE id(e) = {evidence}",
+                "MATCH (e:Hypothesis)-->()-->()-->(en:Entity)<--(sn)<--(ev)<--(h)",
+                "WHERE id(e) = {hypothesis}",
                 "RETURN collect(DISTINCT h) as hypotheses,  collect(DISTINCT ev) as evidences"
             ].join('\n');
 
             var params = {
-                evidence: evidence._id
+                hypothesis: hypothesis._id
             };
 
             db.cypher({
@@ -147,7 +149,13 @@ module.exports = {
             }, function (err, results) {
                 if (err) return reply(err);
 
-                console.log(results);
+                var notifications = results[0].hypotheses.map(function(hyp) {
+                    return {
+                        title: hyp.properties.name + ' changed to ' + hyp.properties.weight,
+                        description: 'added evidence ' + evidence.name + ' to ' + hypothesis.name
+                    }
+                });
+                io.emit('notifications', {data: notifications});
             });
         }
 
@@ -157,18 +165,15 @@ module.exports = {
                     "MATCH (a:Hypothesis),(b:Evidence)",
                     "WHERE id(a) = {hypothesis_id} AND id(b) = {ev_id}",
                     "MERGE (a)-[r:HYPEV {type: {type}}]->(b)",
-                    "ON CREATE SET a.weight = {weight}",
-                    // "ON CREATE SET b.weight = b.weight + 1",
-                    // "ON MATCH SET b.weight = b.weight + 1",
-                    // "ON MATCH SET r.startOffset = r.startOffset + [{startOffset}], r.endOffset = r.endOffset + [{endOffset}]",
-                    "RETURN r"
+                    "WITH a MATCH (a)-->()-->()-->(en)",
+                    "SET en.weight = en.weight + 1",
+                    "RETURN a"
                 ].join('\n');
 
                 var params = {
                     ev_id: evidence._id,
                     type: hypothesis.tabType,
-                    hypothesis_id: hypothesis._id,
-                    weight: hypothesis.weight
+                    hypothesis_id: hypothesis._id
                 };
 
                 db.cypher({
@@ -181,11 +186,11 @@ module.exports = {
                         name: evidence.name,
                         type: 'add evidence'
                     };
-
+                    resolve(results);
                     EventController.create(event, evidence)
                         .then(function() {
-                            resolve(results);
-                            //updateNotifications(evidence);
+                            updateNotifications(hypothesis, evidence);
+                            io.emit('hypotheses:update', {evidence: evidence, hypothesis: hypothesis});
                         })
                 });
             });

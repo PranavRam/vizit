@@ -23,14 +23,14 @@
             scope: {
                 item: '=',
                 onSave: '&',
-                showLocation: '&'
+                showLocation: '&',
+                scale: '='
             },
             replace: true,
             controller: function ($scope) {
                 $scope.hover = false;
                 $scope.getWeightWidth = function (weight) {
-                    if(weight < 0) weight = -weight;
-                    return Math.round(weight) + 'px';
+                    return $scope.scale(weight);
                 };
                 $scope.updateItem = function() {
                     $scope.onSave();

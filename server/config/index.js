@@ -9,7 +9,8 @@ var config = {
     api: '',
     title: 'Vizit',
     parse: {
-      hypothesis: Parse.Object.extend("Hypothesis")
+        hypothesis: Parse.Object.extend("Hypothesis"),
+        notification: Parse.Object.extend("Notification")
     },
     db: new neo4j.GraphDatabase("http://vizit:0bp1mago6MgssAE46bH3@vizit.sb05.stations.graphenedb.com:24789")
 }

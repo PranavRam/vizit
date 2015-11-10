@@ -16,10 +16,8 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
     $scope.showDocumentText = true;
     $scope.evidences = [];
     $scope.hypotheses = [];
-    //window.scp = entities.connections;
-    var entityCountScale = d3.scale.linear();
-    var entityCountWidth = 40;
-
+    $scope.evidenceWeightScale = d3.scale.linear();
+    $scope.hypothesisWeightScale = d3.scale.linear();
 
     $scope.ach = {
         toolbar: {
@@ -37,7 +35,23 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
     activate();
 
     function activate() {
+        function adjustScales() {
+            var evidenceMax = d3.max(evidences.data, function(evidence) {
+                return evidence.weight;
+            });
 
+            var hypothesisMax = d3.max(hypotheses.data, function(hypothesis) {
+                return hypothesis.weight;
+            });
+
+            $scope.hypothesisWeightScale
+                .domain([0, hypothesisMax])
+                .range([0, 200]);
+
+            $scope.evidenceWeightScale
+                .domain([0, evidenceMax])
+                .range([0, 200]);
+        }
         $scope.documents = documents.data.map(function (data) {
             data.viewCount = 0;
             return data;
@@ -46,19 +60,16 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
         $scope.selectedDocument = $scope.documents[0];
         //entities.data
         //var entities = entities.data;
-        var extent = d3.extent(entities.data, function (d) {
-            return d.tfidf;
-        });
-
-        entityCountScale
-            .domain(extent)
-            .range([1, entityCountWidth]);
-
+        adjustScales();
         $scope.entities = entities.data;
 
         $scope.evidences = evidences.data;
 
         $scope.hypotheses = hypotheses.data;
+
+        $scope.$on('loadedData', function() {
+            adjustScales();
+        })
     }
 
 
@@ -77,7 +88,7 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
         }
         promise.then($scope.ach.updateACH);
 
-    }
+    };
 
     $scope.showLocation = function(item){
         if(item){
