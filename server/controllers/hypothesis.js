@@ -28,22 +28,47 @@ function flattenHypotheses(results) {
 }
 
 function createNoSQL(hypothesis) {
-    var hypothesis_parse = new config.parse.hypothesis();
+    var query = new Parse.Query(config.parse.hypothesis);
+    query.find({
+        success: function (results) {
+            var maxCount = 0;
+            results.forEach(function (hypo) {
+                if (hypo.get('events').length > maxCount) {
+                    maxCount = hypo.get('events').length;
+                }
+            });
+            var hypothesis_parse = new config.parse.hypothesis();
+            var i;
+            var events = [];
+            for(i=0; i<maxCount; i++) {
+                events.push({
+                    name: '',
+                    event: '',
+                    obj: {},
+                    weight: 0,
+                    time: new Date()
+                });
+            }
+            hypothesis_parse.set("neo4j", hypothesis._id);
+            hypothesis_parse.set("name", hypothesis.name);
+            hypothesis_parse.set("weight", 0);
+            hypothesis_parse.set("events", events);
 
-    hypothesis_parse.set("neo4j", hypothesis._id);
-    hypothesis_parse.set("name", hypothesis.name);
-    hypothesis_parse.set("weight", 0);
-    hypothesis_parse.set("events", []);
-
-    hypothesis_parse.save(null, {
-        success: function (response) {
-            // Execute any logic that should take place after the object is saved.
-            //console.log('New object created with objectId: ' + hypothesis_parse.id);
+            hypothesis_parse.save(null, {
+                success: function (response) {
+                    // Execute any logic that should take place after the object is saved.
+                    //console.log('New object created with objectId: ' + hypothesis_parse.id);
+                },
+                error: function (response, error) {
+                    // Execute any logic that should take place if the save fails.
+                    // error is a Parse.Error with an error code and message.
+                    console.log('Failed to create new object, with error code: ' + error.message);
+                }
+            });
         },
-        error: function (response, error) {
-            // Execute any logic that should take place if the save fails.
-            // error is a Parse.Error with an error code and message.
-            console.log('Failed to create new object, with error code: ' + error.message);
+        error: function (error) {
+            //alert("Error: " + error.code + " " + error.message);
+            //reply({});
         }
     });
 }
@@ -103,7 +128,7 @@ module.exports = {
         var evidence = request.payload.ev;
 
         function updateAttributes(hypothesis) {
-            return Q.Promise(function(resolve, reject, notify) {
+            return Q.Promise(function (resolve, reject, notify) {
                 //console.log('updating attributes', id);
                 var query = [
                     "MATCH (n:Hypothesis)",
@@ -125,9 +150,23 @@ module.exports = {
                     params: params
                 }, function (err, results) {
                     if (err) return reply(err);
-                    var hypothesis = results[0]['n'];
+                    var hyp = results[0]['n'];
                     console.log('hypotheses attributes updated');
-                    resolve(hypothesis);
+                    var id = +encodeURIComponent(request.params.id);
+                    var query = new Parse.Query(config.parse.hypothesis);
+                    query.equalTo("neo4j", id);
+                    query.first({
+                        success: function (object) {
+                            //console.log('retrieved object', object);
+                            object.set('name', hypothesis.name);
+                            object.save();
+                        },
+                        error: function (error) {
+                            //alert("Error: " + error.code + " " + error.message);
+                            //resolve({});
+                        }
+                    });
+                    resolve(hyp);
                 });
             });
         }
@@ -149,7 +188,7 @@ module.exports = {
             }, function (err, results) {
                 if (err) return reply(err);
 
-                var notifications = results[0].hypotheses.map(function(hyp) {
+                var notifications = results[0].hypotheses.map(function (hyp) {
                     return {
                         title: hyp.properties.name + ' changed to ' + hyp.properties.weight,
                         description: 'added evidence ' + evidence.name + ' to ' + hypothesis.name
@@ -160,7 +199,7 @@ module.exports = {
         }
 
         function updateEvidence(hypothesis, evidence) {
-            return Q.Promise(function(resolve, reject, notify) {
+            return Q.Promise(function (resolve, reject, notify) {
                 var query = [
                     "MATCH (a:Hypothesis),(b:Evidence)",
                     "WHERE id(a) = {hypothesis_id} AND id(b) = {ev_id}",
@@ -188,7 +227,7 @@ module.exports = {
                     };
                     resolve(results);
                     EventController.create(event, evidence)
-                        .then(function() {
+                        .then(function () {
                             updateNotifications(hypothesis, evidence);
                             io.emit('hypotheses:update', {evidence: evidence, hypothesis: hypothesis});
                         })
@@ -199,15 +238,15 @@ module.exports = {
         if (!evidence) {
             //console.log('here');
             updateAttributes(hypothesis)
-                                .then(function() {
-                                    reply(hypothesis);
-                                })
+                .then(function () {
+                    reply(hypothesis);
+                })
         }
         else {
-         updateEvidence(hypothesis, evidence)
-             .then(function() {
-                 reply(hypothesis);
-             })
+            updateEvidence(hypothesis, evidence)
+                .then(function () {
+                    reply(hypothesis);
+                })
         }
     },
 
