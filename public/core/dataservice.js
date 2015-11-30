@@ -23,7 +23,9 @@
                 getHypothesisEvents: getHypothesisEvents,
                 getHypothesesEvents: getHypothesesEvents,
 
-                updateModels: updateModels
+                updateModels: updateModels,
+
+                getDocumentsForEntity: getDocumentsForEntity
             };
 
             return service;
@@ -154,7 +156,7 @@
                         var arrayEntities = _.uniq(entities[entityType], 'id');
                         angular.forEach(arrayEntities, function (entity) {
                             var promise = $http({
-                                url: 'api/entities/' + entity.id,
+                                url: '/api/entities/' + entity.id,
                                 method: 'GET'
                             });
                             promises.push(promise);
@@ -169,6 +171,15 @@
                     then(updateModelsComplete);
 
                 function updateModelsComplete(data, status, headers, config) {
+                    return data.data;
+                }
+            }
+
+            function getDocumentsForEntity(id) {
+                return $http.get('/api//entities/' + id + '/documents').
+                    then(getDocumentsForEntityComplete);
+
+                function getDocumentsForEntityComplete(data, status, headers, config) {
                     return data.data;
                 }
             }

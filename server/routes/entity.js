@@ -26,5 +26,11 @@ module.exports = [
         method: 'GET',
         path: '/api/connections/{id}',
         handler: EntityController.connections
+    },
+
+    {
+        method: 'GET',
+        path: '/api/entities/{id}/documents',
+        handler: EntityController.documents
     }
 ];

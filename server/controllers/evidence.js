@@ -194,7 +194,7 @@ module.exports = {
                     };
 
                     resolve('updated evidence');
-                    
+
                     EventController.create(event, evidence)
                         .then(function () {
                             updateNotifications(evidence);

@@ -9,7 +9,7 @@
         var data = [];
         socket.on('notifications', function (notifications) {
             angular.copy(data.concat(notifications.data), data);
-            $rootScope.showNotification('Changes Occurred');
+            $rootScope.showNotification('New Events');
         });
         var service = {
             data: data,

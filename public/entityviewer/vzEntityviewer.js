@@ -48,6 +48,8 @@
                 //$scope.styleSheet = {};
                 //$scope.styleSheet['background-color'] = 'red';
                 $scope.colorScale = d3.scale.ordinal();
+                $scope.hover = false;
+                $scope.documents = [];
                 $scope.getConnections = function () {
                     //console.log('connections');
                     //$scope.selectedEntity = entity;
@@ -74,7 +76,18 @@
                     });
                     return found ? found : 'white';
                     //return found;
-                }
+                };
+                var originatorEv;
+                $scope.openMenu = function($mdOpenMenu, ev) {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    entities.getDocuments($scope.entity._id)
+                        .then(function(response) {
+                           $scope.documents = response;
+                            originatorEv = ev;
+                            $mdOpenMenu(ev);
+                        });
+                };
             }
 
         };
@@ -110,7 +123,7 @@
                     //console.log(element[0]);
                     //console.log('----After-----');
                 }
-            })
+            });
         }
     }
 
@@ -127,7 +140,7 @@
                 showToolbar: '@'
             },
             replace: true,
-            controller: function ($scope) {
+            controller: function ($scope, $mdDialog) {
                 //console.log($scope.showToolbar);
                 $scope.useSelector = $scope.useSelector === 'true';
                 $scope.showToolbar = $scope.showToolbar === 'true';

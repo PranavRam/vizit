@@ -13,7 +13,8 @@
             get: get,
             add: add,
             remove: remove,
-            connections: connections
+            connections: connections,
+            getDocuments: getDocuments
         };
 
         return service;
@@ -35,6 +36,13 @@
 
         function remove() {
 
+        }
+
+        function getDocuments(id) {
+            return dataservice.getDocumentsForEntity(id)
+                .then(function(response) {
+                    return response;
+                })
         }
     }
 })();

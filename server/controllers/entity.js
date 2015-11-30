@@ -102,5 +102,31 @@ module.exports = {
             });
             reply(connections);
         });
+    },
+
+    documents: function (request, reply) {
+        // console.log(request);
+        var id = encodeURIComponent(request.params.id);
+        var query = [
+            'MATCH (n:Entity)-[]-(d:Document)',
+            'WHERE id(n) = {id}',
+            'RETURN d',
+        ].join('\n')
+
+        db.cypher({
+            query: query,
+            params: {
+                id: +id
+            }
+        }, function (err, results) {
+            if (err) return reply(err);
+            var documents = results;
+            documents = documents.map(function (document) {
+                var obj = document['d'].properties;
+                obj._id = document['d']._id;
+                return obj;
+            });
+            reply(documents);
+        });
     }
 };

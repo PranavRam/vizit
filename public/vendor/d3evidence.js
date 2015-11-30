@@ -31,7 +31,7 @@
             .on("dragend", function (d) {
                 var self = d3.select(this);
                 draggable = false;
-                var snapBack = opts.onDragEnd(d);
+                var snapBack = opts.onDragEnd(d, d3.event);
                 if (snapBack) {
                     d.x = previousLoc.x;
                     d.y = previousLoc.y;

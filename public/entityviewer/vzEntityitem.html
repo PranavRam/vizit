@@ -1,8 +1,21 @@
 <div class="entity-relevance">
 </div>
-<div class="entity" layout="row">
+<div class="entity" layout="row" ng-mouseover="hover = true" ng-mouseout="hover = false">
     <div class="entity-count">
         <div class="bar" ng-style="{ 'width' : barWidth({count: entity.tfidf }) }"></div>
     </div>
     <span flex class="entity-text">{{entity.text}}</span>
+    <md-menu style="z-index: 1000; margin-top: -20px;"
+             ng-show="hover" class="entity-document-menu">
+        <md-button aria-label="open document list" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+            <ng-md-icon icon="insert_drive_file" size="16"></ng-md-icon>
+        </md-button>
+        <md-menu-content width="4">
+            <md-menu-item ng-repeat="document in documents">
+                <md-button>
+                   {{document.name}}
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
 </div>

@@ -13,7 +13,7 @@
         });
         socket.on('evidences:update', function(response) {
             $rootScope.$broadcast('loadData');
-            $rootScope.showNotification('Updated Evidence ' + response.evidence.properties.name);
+            //$rootScope.showNotification('Updated Evidence ' + response.evidence.properties.name);
         });
 
         var service = {

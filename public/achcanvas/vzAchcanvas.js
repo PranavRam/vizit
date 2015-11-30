@@ -211,8 +211,8 @@
                         dataservice.updateHypothesis(d);
                     }
 
-                    function onEvidenceDragEnd(d) {
-                        console.log('dragged', d);
+                    function onEvidenceDragEnd(d, event) {
+                        console.log('dragged', d, event);
                         var found = false;
                         scope.hypotheses.every(function(hypothesis) {
                             if(intersectRect(d, hypothesis, 250, 200)) {
