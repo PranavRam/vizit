@@ -6,7 +6,7 @@
                      ng-repeat="document in documents | filter:searchInput" layout="row"
                      layout-align="space-between center"
                      ng-class="{selected: document.name === selectedDocument.name}">
-                    <span flex="20">{{document.viewCount}}</span>
+                    <span flex="20">{{document.viewCount || 0}}</span>
                     <span flex>{{document.name}}</span>
                 </div>
             </md-card-content>

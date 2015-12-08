@@ -9,11 +9,10 @@ var fs = require('fs');
 var multiparty = require('multiparty');
 var Q = require('q');
 var S = require('string');
-var natural = require('natural'),
-    TfIdf = natural.TfIdf;
 var http = require('request');
 var _ = require('lodash');
-
+var Path = require('path');
+var setTFDIF = require('./misc').setTFDIF;
 function addEntity(entity, cb) {
     return Q.Promise(function (resolve, reject, notify) {
         var query = [
@@ -26,7 +25,9 @@ function addEntity(entity, cb) {
         var props = {
             type: entity["NER"],
             text: entity.word,
-            count: 1
+            count: 1,
+            weight: 0,
+            tfidf: 0
         };
 
         var params = {
@@ -173,7 +174,7 @@ function createDocument(doc, entities) {
     })
 }
 
-function extractEntities(doc) {
+function extractEntities(doc, io) {
     // alchemy.entities(doc.text, {}, function(err, response) {
     //   if (err) throw err;
 
@@ -193,20 +194,21 @@ function extractEntities(doc) {
             var entities = JSON.parse(body);
             createDocument(doc, entities)
                 .then(function () {
-                    console.log("Done with doc creation!", doc.name);
+                    //console.log("Done with doc creation!", doc.name);
                     resolve('done document', doc.name)
+                    io.emit('document:processed', {document: doc});
                 });
         });
     })
 }
 
-function readZip(path) {
+function readZip(path, io) {
     // reading archives
     var zip = new AdmZip(path);
     var zipEntries = zip.getEntries(); // an array of ZipEntry records
     var i = 0;
     var promises = [];
-    console.log('zip entries');
+    //console.log('zip entries');
     while (i < 3) {
         var zipEntry = zipEntries[i];
         var name = zipEntry.entryName;
@@ -218,7 +220,7 @@ function readZip(path) {
             }
             promises.push(function (doc) {
                 return function () {
-                    return extractEntities(doc);
+                    return extractEntities(doc, io);
                 }
             }(doc));
             // promises.push(deferred.promise);
@@ -251,38 +253,39 @@ function readZip(path) {
     // });
 }
 
-var upload = function (files) {
-    console.log('upload function');
-    return Q.Promise(function (resolve, reject, notify) {
+var upload = function (files, io) {
+    //console.log('upload function', files);
+    //return Q.Promise(function (resolve, reject, notify) {
         fs.readFile(files.file[0].path, function (err, data) {
-            fs.writeFile(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename, data, function (err) {
-                if (err) return reply(err);
+            fs.writeFile(Path.join(__dirname, '../uploads/') + files.file[0].originalFilename, data, function (err) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
                 console.log('uploading');
-                var result = readZip(Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
+                var result = readZip(Path.join(__dirname, '../uploads/') + files.file[0].originalFilename, io);
                 result.then(function () {
-                    console.log("loaded", arguments);
+                    //console.log("loaded", arguments);
                     setTFDIF()
                         .then(function () {
-                            resolve("done with NER");
+                            io.emit('documents:processed');
                         })
                 });
                 // return reply('File uploaded to: ' + Path.join(__dirname, 'server/uploads/') + files.file[0].originalFilename);
 
             });
         });
-    });
+    //});
 };
 module.exports = {
     uploadDocuments: function (request, reply) {
+        var io = request.server.plugins['hapi-io'].io;
         var form = new multiparty.Form();
         form.parse(request.payload, function (err, fields, files) {
-            console.log('upload handler')
+            //console.log('upload handler')
             if (err) return reply(err);
-            upload(files, reply)
-                .then(function () {
-                    console.log("Finally Done");
-                    reply("Finally Done");
-                });
+            upload(files, io);
+            reply("uploaded documents");
         });
     }
 };

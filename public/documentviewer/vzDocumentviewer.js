@@ -34,6 +34,7 @@
                 $scope.entityTypes = model.entityTypes;
                 $scope.selectDocument = function (doc) {
                     if ($scope.selectedDocument._id !== doc._id) {
+                        doc.viewCount = doc.viewCount || 0;
                         doc.viewCount = doc.viewCount + 1;
                     }
                     $scope.selectedDocument = doc;

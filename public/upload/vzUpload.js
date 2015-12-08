@@ -24,7 +24,7 @@
             scope: {
               success: '&'
             },
-            controller: function($scope) {
+            controller: function($scope, $state) {
                 $scope.uploading = false;
                 $scope.file = void 0;
                 $scope.fileUpdated = function(files, $event) {
@@ -43,7 +43,8 @@
                     }).success(function (data, status, headers, config) {
                         console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
                         $scope.uploading = false;
-                        $scope.success();
+                        $state.go('vizit.entity_ach');
+
                     }).error(function (data, status, headers, config) {
                         console.log('error status: ' + status);
                         $scope.uploading = false;

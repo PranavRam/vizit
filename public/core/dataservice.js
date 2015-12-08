@@ -25,7 +25,10 @@
 
                 updateModels: updateModels,
 
-                getDocumentsForEntity: getDocumentsForEntity
+                getDocumentsForEntity: getDocumentsForEntity,
+
+                resetAnalysis: resetAnalysis,
+                resetAll: resetAll
             };
 
             return service;
@@ -176,11 +179,29 @@
             }
 
             function getDocumentsForEntity(id) {
-                return $http.get('/api//entities/' + id + '/documents').
+                return $http.get('/api/entities/' + id + '/documents').
                     then(getDocumentsForEntityComplete);
 
                 function getDocumentsForEntityComplete(data, status, headers, config) {
                     return data.data;
+                }
+            }
+
+            function resetAnalysis() {
+                return $http.get('/api/reset').
+                    then(getResetAnalysisComplete);
+
+                function getResetAnalysisComplete(data, status, headers, config) {
+                    return data;
+                }
+            }
+
+            function resetAll() {
+                return $http.get('/api/reset-all').
+                    then(getResetAllComplete);
+
+                function getResetAllComplete(data, status, headers, config) {
+                    return data;
                 }
             }
         })

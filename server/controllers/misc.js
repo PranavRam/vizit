@@ -4,6 +4,11 @@
 var config = require('../config/');
 var db = config.db;
 var Parse = require('parse/node').Parse;
+var Q = require('q');
+var natural = require('natural');
+var TfIdf = natural.TfIdf;
+var _ = require('lodash');
+
 module.exports = {
     setTFDIF: function (request, reply) {
         return Q.Promise(function (resolve, reject, notify) {
@@ -78,6 +83,49 @@ module.exports = {
         }, function (err, results) {
             if (err) return reply(err);
             var query = new Parse.Query(config.parse.hypothesis);
+            query.find().then(function(results) {
+                return Parse.Object.destroyAll(results);
+            }).then(function() {
+                // Done
+            }, function(error) {
+                // Error
+            });
+            query = new Parse.Query(config.parse.notification);
+            query.find().then(function(results) {
+                return Parse.Object.destroyAll(results);
+            }).then(function() {
+                // Done
+            }, function(error) {
+                // Error
+            });
+            // console.log(results);
+            reply("success");
+        });
+    },
+
+    resetAll: function (request, reply) {
+        // console.log(request);
+        // console.log(request.payload);
+        // reply(request.payload);
+        var query = [
+            'MATCH (n)',
+            'OPTIONAL MATCH (n)-[r]-()',
+            'DELETE n,r'
+        ].join('\n');
+
+        db.cypher({
+            query: query,
+        }, function (err, results) {
+            if (err) return reply(err);
+            var query = new Parse.Query(config.parse.hypothesis);
+            query.find().then(function(results) {
+                return Parse.Object.destroyAll(results);
+            }).then(function() {
+                // Done
+            }, function(error) {
+                // Error
+            });
+            query = new Parse.Query(config.parse.notification);
             query.find().then(function(results) {
                 return Parse.Object.destroyAll(results);
             }).then(function() {

@@ -13,6 +13,7 @@ var config = {
         notification: Parse.Object.extend("Notification")
     },
     db: new neo4j.GraphDatabase("http://vizit:0bp1mago6MgssAE46bH3@vizit.sb05.stations.graphenedb.com:24789")
+    //db: new neo4j.GraphDatabase("http://localhost:7474")
 }
 
 module.exports = config;

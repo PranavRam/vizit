@@ -19,6 +19,12 @@ module.exports = [
 
     {
         method: 'GET',
+        path: '/api/reset-all',
+        handler: MiscController.resetAll
+    },
+
+    {
+        method: 'GET',
         path: '/updatemodels',
         handler: MiscController.updateGraph
     }

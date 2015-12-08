@@ -52,10 +52,7 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
                 .domain([0, evidenceMax])
                 .range([0, 200]);
         }
-        $scope.documents = documents.data.map(function (data) {
-            data.viewCount = 0;
-            return data;
-        });
+        $scope.documents = documents.data;
 
         $scope.selectedDocument = $scope.documents[0];
         //entities.data
@@ -109,25 +106,32 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
     };
 
     $scope.resetAnalysis = function() {
-        $mdDialog.show(
-            $mdDialog.alert()
-                .title('You clicked!')
-                .content('You clicked reset analysis')
-                .ok('Nice')
-                .targetEvent(originatorEv)
-        );
-        originatorEv = null;
+        //$mdDialog.show(
+        //    $mdDialog.alert()
+        //        .title('You clicked!')
+        //        .content('You clicked reset analysis')
+        //        .ok('Nice')
+        //        .targetEvent(originatorEv)
+        //);
+        //originatorEv = null;
+        dataservice.resetAnalysis()
+            .then($scope.ach.getData)
+            .then($scope.ach.updateACH)
     };
 
     $scope.resetAll = function() {
-        $mdDialog.show(
-            $mdDialog.alert()
-                .title('You clicked!')
-                .content('You clicked reset all')
-                .ok('Nice')
-                .targetEvent(originatorEv)
-        );
-        originatorEv = null;
+        //$mdDialog.show(
+        //    $mdDialog.alert()
+        //        .title('You clicked!')
+        //        .content('You clicked reset all')
+        //        .ok('Nice')
+        //        .targetEvent(originatorEv)
+        //);
+        //originatorEv = null;
+        dataservice.resetAll()
+            .then(function() {
+                $state.go('upload');
+            })
     };
 
     $rootScope.toastPosition = {
