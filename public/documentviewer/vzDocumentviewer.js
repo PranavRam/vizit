@@ -147,6 +147,7 @@
 
             scope.addEvidence = function (wholeDocument) {
                 var sentences = angular.element('.document-viewer .document-text .select-text');
+                if (!sentences.length) return;
                 var evidence = {
                     x: 100,
                     y: 100,

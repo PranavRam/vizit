@@ -78,7 +78,7 @@
 
 					title = header.append("xhtml:p").attr("class", "title");
 					count = header.append("xhtml:div").attr("class", "count");
-					showHide = header.append("xhtml:div").attr("class", "show-hide");
+					// showHide = header.append("xhtml:div").attr("class", "show-hide");
 
 					tabs = body.append('div')
 						.classed('tabs', true)
@@ -140,7 +140,7 @@
 				// console.log(data);
 				count.style({
 					"text-align": "center",
-					"background-color": "#4CAF50",
+					"background-color": function(d){ return d.weight < 0 ? 'red' :  "#4CAF50"},
 					// "color": "white",
 					//width: 25+"px",
 					//height: 25+"px",
@@ -151,11 +151,11 @@
 					// flex: "5"
 				});
 
-				showHide.style({
-					"text-align": "center",
-					padding: "8px"
-				})
-				.html('<i class="fa fa-chevron-down"></i>')
+				// showHide.style({
+				// 	"text-align": "center",
+				// 	padding: "8px"
+				// })
+				// .html('<i class="fa fa-chevron-down"></i>')
 				// .attr({
 				// 	flex: "5"
 				// })

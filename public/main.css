@@ -246,5 +246,7 @@ ng-md-icon.selected {
 
 body {
   overflow: hidden; }
-
+.md-sidenav-right {
+  color: white;
+}
 /*# sourceMappingURL=main.css.map */

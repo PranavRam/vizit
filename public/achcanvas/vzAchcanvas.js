@@ -177,7 +177,7 @@
                                 .x(achCanvas.width() - 8 - minimapWidth)
                                 .y(achCanvas.height() - 8 - minimapHeight)
                                 .render()
-                        })
+                        },200)
                     }
                     $rootScope.$on('showDocumentViewer:changed', function (event, mass) {
                         resize()

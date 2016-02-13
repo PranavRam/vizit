@@ -88,7 +88,7 @@
 
                     title = header.append("xhtml:p").attr("class", "title");
                     count = header.append("xhtml:div").attr("class", "count");
-                    showHide = header.append("xhtml:div").attr("class", "show-hide");
+                    // showHide = header.append("xhtml:div").attr("class", "show-hide");
                 }
 
                 container.style({
@@ -128,11 +128,11 @@
                         // flex: "5"
                     })
 
-                showHide.style({
-                    "text-align": "center",
-                    padding: "8px"
-                })
-                    .html('<i class="fa fa-chevron-down"></i>')
+                // showHide.style({
+                //     "text-align": "center",
+                //     padding: "8px"
+                // })
+                //     .html('<i class="fa fa-chevron-down"></i>')
                 // .attr({
                 // 	flex: "5"
                 // })

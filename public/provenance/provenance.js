@@ -21,7 +21,7 @@ function provenance($scope, $timeout, dataservice) {
                 values: hyp.events.map(function(event, i) {
                     return {
                         x: i,
-                        y: event.weight || Math.floor(Math.random() * 10) + 1
+                        y: event.weight || 0
                     }
                 })
             }
