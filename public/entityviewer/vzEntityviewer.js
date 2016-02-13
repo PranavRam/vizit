@@ -208,7 +208,7 @@
                 var parentHeight = element.parent().height();
                 var siblingHeight = getSiblingHeight();
                 //console.log(parentHeight, siblingHeight);
-                virtualContainer.css('height', (parentHeight - siblingHeight) + 'px');
+                virtualContainer.css('height', (parentHeight - siblingHeight - 60) + 'px');
             }
 
             setHeight();

@@ -11,7 +11,7 @@
   ],
   "dependencies": {
     "jquery": "~2.1.4",
-    "angular-material": "~0.11.2",
+    "angular-material": "~1.0.5",
     "angular-material-icons": "~0.6.0",
     "angular-nvd3": "~1.0.2",
     "angular-ui-grid": "~3.0.6",
@@ -25,10 +25,11 @@
     "nvd3": "~1.8.1",
     "svg-morpheus": "~0.1.8",
     "textures": "*",
-    "angular-socket-io": "~0.7.0"
+    "angular-socket-io": "~0.7.0",
+    "angular": "^1.5.0"
   },
   "resolutions": {
-    "angular": "1.4.4",
+    "angular": "^1.5.0",
     "d3": "<=3.5.0"
   }
 }

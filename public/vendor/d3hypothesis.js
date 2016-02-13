@@ -4,7 +4,7 @@
 		var opts = {
 			width: 250,
 			onDragEnd: function(d) {
-				console.log(d);
+				// console.log(d);
 			}
 		}
 
@@ -12,7 +12,7 @@
 		var drag = d3.behavior.drag()
 		    .origin(function(d) { return d; })
 		    .on("dragstart", function() {
-				console.log('drag');
+				// console.log('drag');
 		    	d3.event.sourceEvent.stopPropagation();
 		    	var targetNode = d3.event.sourceEvent.target;
 					if(d3.select(targetNode).classed("header") || 
@@ -137,7 +137,7 @@
 							.attr({
 								flex: ""
 							});
-				console.log(data);
+				// console.log(data);
 				count.style({
 					"text-align": "center",
 					"background-color": "#4CAF50",
@@ -185,7 +185,7 @@
 						content = content.data(positiveData);
 					}
 					else {
-						console.log(negativeData);
+						// console.log(negativeData);
 						content = content.data(negativeData);
 					}
 					content.enter().append('p').attr('class', 'content');

@@ -1,5 +1,5 @@
 <md-content layout="column" layout-padding>
-    <md-content flex>
+    <md-content flex="80">
         <div class="document-text" ng-show="showDocumentText">
             <div
                  ng-bind-html="selectedDocument.parsedText | sentences | to_trusted"
@@ -15,7 +15,7 @@
             <!--</md-content>-->
         </div>
     </md-content>
-    <div layout="row" layout-align="space-between center">
+    <div layout="row" flex="20" layout-align="space-between center">
         <h4>{{selectedDocument.name}}</h4>
         <md-input-container class="md-icon-float">
             <!-- Use floating label instead of placeholder -->

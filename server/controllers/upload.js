@@ -209,7 +209,7 @@ function readZip(path, io) {
     var i = 0;
     var promises = [];
     //console.log('zip entries');
-    while (i < 3) {
+    while (i < zipEntries.length) {
         var zipEntry = zipEntries[i];
         var name = zipEntry.entryName;
         if (name.match(/\.(txt)/g) && !S(name).startsWith("__MACOSX")) {
@@ -227,7 +227,6 @@ function readZip(path, io) {
         }
         i++;
     }
-    console.log('zip entries end');
     // console.log(promises);
     // promises.reduce(Q.when, Q(0))
     // console.log('start');

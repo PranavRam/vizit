@@ -24,7 +24,7 @@
                 return dataservice.getEntities()
                     .then(function (response) {
                         angular.copy(response, data);
-                        console.log(data);
+                        // console.log(data);
                         return data;
                     });
             //}

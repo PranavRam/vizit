@@ -25,16 +25,28 @@ var server = new Hapi.Server();
 
 function extractEntities(text) {
   return Q.Promise(function(resolve, reject, notify) {
-    console.log("extracting entities", text);
+    console.log("extracting entities", text.substring(0, 30));
     coreNLP.process(text, function(err, result) {
         if(err)
           throw err;
         else
           var sentences = result.document.sentences.sentence;
           var allEntities = [];
-        // console.log(sentences);
+          if(!_.isArray(sentences)){
+            if(_.isObject(sentences)) {
+              sentences = [sentences]
+            }
+          }
+          sentences = sentences || []
           sentences.forEach(function(sentence) {
             var tokens = sentence.tokens.token;
+            if(!_.isArray(tokens)){
+              if(_.isObject(tokens)) {
+                tokens = [tokens]
+              }
+            }
+            tokens = tokens || []
+            // console.log('tokens', tokens)
             var entities = tokens.filter(function(token) {
               return token["NER"] !== "O";
             });
