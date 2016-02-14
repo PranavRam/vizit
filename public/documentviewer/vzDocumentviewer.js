@@ -44,7 +44,10 @@
                 };
                 $scope.$watch('documents', function(newVal) {
                     $scope.selectedDocument = $scope.documents[0];
-                })
+                });
+                $scope.$on('showDocument', function(evnt, docId) {
+                    $scope.selectedDocument = _.find($scope.documents, { '_id': docId});
+                });
             }
         };
         return directive;

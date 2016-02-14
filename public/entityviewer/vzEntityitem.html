@@ -12,7 +12,7 @@
         </md-button>
         <md-menu-content width="4">
             <md-menu-item ng-repeat="document in documents">
-                <md-button>
+                <md-button ng-click="showDocument(document)">
                    {{document.name}}
                 </md-button>
             </md-menu-item>

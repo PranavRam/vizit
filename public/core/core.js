@@ -66,7 +66,7 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
 
         $scope.$on('loadedData', function() {
             adjustScales();
-        })
+        });
     }
 
 

@@ -88,6 +88,10 @@
                             $mdOpenMenu(ev);
                         });
                 };
+
+                $scope.showDocument = function(doc) {
+                    $rootScope.$broadcast('showDocument', doc._id);
+                }
             }
 
         };
