@@ -8,10 +8,8 @@
     function hypotheses(dataservice, socket, $rootScope) {
         var data = [];
         socket.on('hypotheses:create', function(response){
-            var hypothesis = response.hypothesis;
-            hypothesis.positive = [];
-            hypothesis.negative = [];
-            data.push(hypothesis);
+            $rootScope.$broadcast('loadData');
+            $rootScope.showNotification('Added new Hypothesis');
             //console.log('added hypothesis', hypothesis);
         });
 

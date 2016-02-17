@@ -185,7 +185,7 @@
                     scope.$watch('ach.fullscreen', function (newVal, oldVal) {
                         resize()
                     });
-                    /*scope.$watchGroup('evidences', function (newVal, oldVal) {
+                    /*scope.$watchCollection('evidences', function (newVal, oldVal) {
                         //if (newVal !== oldVal) {
                             // console.log(scope.evidences);
                             render();
