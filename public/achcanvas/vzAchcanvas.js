@@ -185,7 +185,7 @@
                     scope.$watch('ach.fullscreen', function (newVal, oldVal) {
                         resize()
                     });
-                    scope.$watchGroup('evidences', function (newVal, oldVal) {
+                    /*scope.$watchGroup('evidences', function (newVal, oldVal) {
                         //if (newVal !== oldVal) {
                             // console.log(scope.evidences);
                             render();
@@ -198,7 +198,7 @@
                             render();
                             minimap.render();
                         //}
-                    });
+                    });*/
 
                     function intersectRect(r1, r2, width, height) {
                         return !(r2.x > (r1.x + width) ||
@@ -230,7 +230,7 @@
                                         weight -= evidence.weight;
                                     });
                                     hypothesis.weight = weight;*/
-                                    //render();
+                                    // render();
                                     //console.log('intersect', hypothesis);
                                     dataservice.updateHypothesis(hypothesis, d);
                                     return false;

@@ -65,12 +65,12 @@ module.exports = {
     },
 
     reset: function (request, reply) {
-        // console.log(request);
+        console.log('reset');
         // console.log(request.payload);
         // reply(request.payload);
         var query = [
-            'MATCH (n)',
-            'WHERE NOT n:Document AND NOT n:Entity',
+            'MATCH n',
+            'WHERE n:Hypothesis OR n:Evidence OR n:Snippet',
             'OPTIONAL MATCH (n)-[r]-()',
             'DELETE n,r',
             'WITH n MATCH (e:Entity)',
@@ -82,6 +82,7 @@ module.exports = {
             query: query,
         }, function (err, results) {
             if (err) return reply(err);
+            console.log('reset db');
             var query = new Parse.Query(config.parse.hypothesis);
             query.find().then(function(results) {
                 return Parse.Object.destroyAll(results);

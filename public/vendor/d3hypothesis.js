@@ -143,7 +143,7 @@
 				// console.log(data);
 				count.style({
 					"text-align": "center",
-					"background-color": function(d){ return d.weight < 0 ? 'red' :  "#4CAF50"},
+					"background-color": function(d){ return data.weight < 0 ? 'red' :  "#4CAF50"},
 					// "color": "white",
 					//width: 25+"px",
 					//height: 25+"px",
@@ -180,6 +180,7 @@
 				body.call(zoomDisabled);
 
 				function changeTab(type) {
+					data = parent.datum();
 					var positiveData = data.positive || [];
 					var negativeData = data.negative || [];
 					var content = body.selectAll('.content');
