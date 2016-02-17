@@ -214,12 +214,12 @@
                     function onEvidenceDragEnd(d, event) {
                         console.log('dragged', d, event);
                         var found = false;
-                        scope.hypotheses.every(function(hypothesis) {
+                        scope.hypotheses.every(function(hypothesis, loc) {
                             if(intersectRect(d, hypothesis, 250, 200)) {
                                 //console.log(hypothesis);
                                 found = true;
+                                hypothesis.tabType = d3.select(hypotheses[0][loc]).select(".tabs").attr("data-type");
                                 // hypothesis[hypothesis.tabType] = hypothesis[hypothesis.tabType] || [];
-
                                 if(_.findIndex(hypothesis[hypothesis.tabType], '_id', d._id)) {
                                     hypothesis[hypothesis.tabType].push(d);
 /*                                    var weight = 0;

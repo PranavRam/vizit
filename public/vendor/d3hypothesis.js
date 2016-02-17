@@ -55,7 +55,6 @@
 				var tabs = body.selectAll('.tabs');
 				var positiveTab = tabs.selectAll('.positive');
 				var negativeTab = tabs.selectAll('.negative');
-				data.tabType = data.tabType ||  'positive';
 				//var content = body.selectAll('.content');
 				//var evidences = content.selectAll('.evidences');
 
@@ -94,8 +93,9 @@
 						.on('click', function(d) {
 							negativeTab.classed('selected', false);
 							positiveTab.classed('selected', true);
-							data.tabType = 'positive'
-							changeTab(data.tabType);
+							tabs.attr("data-type", "positive");
+							var tabType = 'positive';
+							changeTab(tabType);
 						})
 						.classed('flex', true);
 
@@ -106,14 +106,17 @@
 						.on('click', function(d) {
 							negativeTab.classed('selected', true);
 							positiveTab.classed('selected', false);
-							data.tabType = 'negative'
-							changeTab(data.tabType);
+							var tabType = tabs.attr("data-type", "negative");
+							// data.tabType = 'negative'
+							changeTab(tabType);
 						})
 						.classed('flex', true);
 
 					//content = body.append('div')
 					//	.attr('class', 'content');
 				}
+				var tabType = tabs.attr("data-type") ||  'positive';
+				tabs.attr("data-type", tabType);
 				container.style({
 					"color": "white"
 				})
@@ -172,7 +175,7 @@
 					width: opts.width,
 					height: 200
 				});
-				changeTab(data.tabType);
+				changeTab(tabType);
 				fo.call(drag);
 				body.call(zoomDisabled);
 

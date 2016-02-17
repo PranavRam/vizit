@@ -21,6 +21,10 @@
         .factory('allData', function ($q, hypotheses, documents, evidences, entities, $rootScope) {
             var service = {
                 get: function () {
+                    var promises = [evidences.get(), hypotheses.get()];
+                    return $q.all(promises);
+                },
+                getAll: function() {
                     var promises = [entities.get(), documents.get(),
                         evidences.get(), hypotheses.get()];
                     return $q.all(promises);
@@ -30,6 +34,12 @@
 
             $rootScope.$on('loadData', function() {
                 service.get().then(function() {
+                    $rootScope.$broadcast('loadedData');
+                })
+            });
+
+            $rootScope.$on('loadAllData', function() {
+                service.getAll().then(function() {
                     $rootScope.$broadcast('loadedData');
                 })
             });

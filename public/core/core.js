@@ -65,7 +65,18 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
         $scope.hypotheses = hypotheses.data;
 
         $scope.$on('loadedData', function() {
+            $scope.documents = documents.data;
+            if ($scope.documents.length){
+                $scope.selectedDocument = $scope.documents[0];
+            }
+            //entities.data
+            //var entities = entities.data;
             adjustScales();
+            $scope.entities = entities.data;
+
+            $scope.evidences = evidences.data;
+
+            $scope.hypotheses = hypotheses.data;
         });
     }
 
