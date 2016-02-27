@@ -30,7 +30,7 @@
             controller: function ($scope) {
                 $scope.hover = false;
                 $scope.getWeightWidth = function (weight) {
-                    return $scope.scale(weight);
+                    return $scope.scale(Math.abs(weight));
                 };
                 $scope.updateItem = function() {
                     $scope.onSave();

@@ -52,6 +52,7 @@ function createNoSQL(hypothesis) {
             hypothesis_parse.set("neo4j", hypothesis._id);
             hypothesis_parse.set("name", hypothesis.name);
             hypothesis_parse.set("weight", 0);
+            hypothesis_parse.set("threshold", 5);
             hypothesis_parse.set("events", events);
 
             hypothesis_parse.save(null, {
@@ -142,7 +143,7 @@ module.exports = {
 
                 var params = {
                     hypothesis_id: id,
-                    hypothesis: _.pick(hypothesis, ['name', 'weight', 'x', 'y'])
+                    hypothesis: _.pick(hypothesis, ['name', 'weight', 'threshold', 'x', 'y'])
                 };
 
                 db.cypher({

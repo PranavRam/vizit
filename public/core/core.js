@@ -41,7 +41,7 @@ function core($scope, $state, model, dataservice, $rootScope, $mdToast,
             });
 
             var hypothesisMax = d3.max(hypotheses.data, function(hypothesis) {
-                return hypothesis.weight;
+                return Math.abs(hypothesis.weight);
             });
 
             $scope.hypothesisWeightScale

@@ -201,6 +201,9 @@ ng-md-icon svg {
   .hypotheses .hypothesis .item-weight .bar {
     height: 10px;
     background-color: black; }
+  .hypotheses .hypothesis .item-weight .bar.negative {
+    background-color: red;
+  }
 .hypotheses .hypothesis.selected {
   border-right: solid 2px #f44336; }
 
@@ -248,5 +251,9 @@ body {
   overflow: hidden; }
 .md-sidenav-right {
   color: white;
+}
+
+.threshold-slider {
+  margin: 0 1rem;
 }
 /*# sourceMappingURL=main.css.map */

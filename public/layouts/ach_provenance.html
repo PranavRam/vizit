@@ -44,5 +44,9 @@
       <!--<chart-grid-optional axis-id="y2" grid-value="40" grid-text="Value on the y2"/>-->
     <!--</chart-grid>-->
   <!--</c3chart>-->
+<md-radio-group ng-model="controls.type" layout="row">
+  <md-radio-button value="event" class="md-primary">Event</md-radio-button>
+  <md-radio-button value="time"> Time </md-radio-button>
+</md-radio-group>
 <nvd3 options="options" data="data" ng-if="showGraph"></nvd3>
 <!-- </div> -->
