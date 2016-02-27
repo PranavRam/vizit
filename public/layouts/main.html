@@ -1,22 +1,22 @@
 <md-toolbar class="top-bar">
     <div class="md-toolbar-tools" layout="row" layout-align="start center">
         <h2>
-            <span>Vizit</span>
+            <span>SCADE</span>
         </h2>
         <span flex></span>
         <!-- <md-progress-circular class="md-warn" md-diameter="24" md-mode="indeterminate"></md-progress-circular> -->
         <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
   	<span>
-	  	<md-button class="md-icon-button" ng-click="go('vizit.entity_ach')" aria-label="ach-canvas">
+	  	<md-button class="md-icon-button" ng-click="go('vizit.entity_ach')" aria-label="ach-browser">
             <md-tooltip>
-                ACH Canvas
+                ACH Browser
             </md-tooltip>
             <ng-md-icon icon="picture_in_picture"
                         ng-style="{fill: currentState === 'vizit.entity_ach' ? 'white' : '#7E7E7E'}"></ng-md-icon>
         </md-button>
-	  	<md-button class="md-icon-button md-primary" ng-click="go('vizit.entity_view')" aria-label="entity-view">
+	  	<md-button class="md-icon-button md-primary" ng-click="go('vizit.entity_view')" aria-label="entity-viewer">
             <md-tooltip>
-                Entity View
+                Entity Viewer
             </md-tooltip>
             <ng-md-icon icon="view_column"
                         ng-style="{fill: currentState === 'vizit.entity_view' ? 'white' : '#7E7E7E'}"></ng-md-icon>
@@ -31,7 +31,7 @@
 
         <md-button class="md-icon-button md-primary" aria-label="ach-chart" ng-click="go('vizit.provenance')">
             <md-tooltip>
-                ACH Provenance
+                Provenance Timeline
             </md-tooltip>
             <ng-md-icon icon="trending_up"
                         ng-style="{fill: currentState === 'vizit.provenance' ? 'white' : '#7E7E7E'}"></ng-md-icon>
@@ -50,13 +50,22 @@
         <ng-md-icon icon="view_list" style="fill: white;"></ng-md-icon> -->
         <span flex="5"></span>
         <md-button class="md-icon-button md-primary" ng-click="go('upload')" aria-label="upload">
+            <md-tooltip>
+                File Upload
+            </md-tooltip>
             <ng-md-icon icon="file_upload" style="fill: white;"></ng-md-icon>
         </md-button>
         <md-button class="md-icon-button md-primary" ng-click="$parent.toggleNotification()" aria-label="notifications">
+            <md-tooltip>
+                Notifications
+            </md-tooltip>
             <ng-md-icon icon="notifications" style="fill: white;"></ng-md-icon>
         </md-button>
         <md-menu md-offset="0 -5">
             <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                <md-tooltip>
+                    Settings
+                </md-tooltip>
                 <ng-md-icon icon="settings"></ng-md-icon>
             </md-button>
             <md-menu-content width="4">

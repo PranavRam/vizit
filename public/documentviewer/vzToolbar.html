@@ -2,11 +2,23 @@
     <md-toolbar flex="20" class="top-bar" >
         <div class="md-toolbar-tools" layout="row" layout-align="center center" ng-show="showDocumentViewer">
             <!-- <md-button class="md-icon-button" aria-label="Favorite"> -->
-            <md-button class="md-icon-button md-primary" aria-label="sort">
-                <ng-md-icon icon="sort" style="fill: white;"></ng-md-icon>
+            <md-button class="md-icon-button md-primary" 
+                ng-click="documentList.orderBy = 'name'"
+                aria-label="sort">
+                <md-tooltip>
+                    Sort Alphabetically
+                </md-tooltip>
+                <ng-md-icon icon="sort" 
+                    style="fill: white;"></ng-md-icon>
             </md-button>
-            <md-button class="md-icon-button md-primary" aria-label="visibility">
-                <ng-md-icon icon="visibility" style="fill: white;"></ng-md-icon>
+            <md-button class="md-icon-button md-primary"
+                ng-click="documentList.orderBy = 'viewCount'"
+                aria-label="visibility">
+                <md-tooltip>
+                    Sort by View Count
+                </md-tooltip>
+                <ng-md-icon icon="visibility" 
+                    style="fill: white;"></ng-md-icon>
             </md-button>
             <!-- </md-button> -->
         </div>
@@ -17,6 +29,9 @@
             <!-- <ng-md-icon icon="text_format" style="fill: white;"></ng-md-icon> -->
 
             <md-button ng-show="showDocumentViewer" class="md-icon-button md-primary" aria-label="showTextToggle" ng-click="showDocumentText = !showDocumentText">
+                <md-tooltip>
+                    Entity / Text Toggle
+                </md-tooltip>
                 <ng-md-icon icon="{{showDocumentText ? 'list' : 'text_format'}}" style="fill: white;"></ng-md-icon>
             </md-button>
             <span flex></span>

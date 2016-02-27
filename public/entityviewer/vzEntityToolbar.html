@@ -8,19 +8,28 @@
         <md-button class="md-icon-button"
                    ng-click="toolbar.orderBy = 'text'"
                    aria-label="sort_alphabetically">
+            <md-tooltip>
+                Sort Alphabetically
+            </md-tooltip>
             <ng-md-icon icon="sort"
                         ng-class="{'selected': toolbar.orderBy === 'text'}"></ng-md-icon>
         </md-button>
         <md-button class="md-icon-button"
-                   ng-click="toolbar.orderBy = 'tfidf'"
+                   ng-click="toolbar.orderBy = '-tfidf'"
                    aria-label="sort_frequency">
+            <md-tooltip>
+                Sort by Frequency
+            </md-tooltip>
             <ng-md-icon icon="filter_list"
-                        ng-class="{'selected': toolbar.orderBy === 'tfidf'}"
+                        ng-class="{'selected': toolbar.orderBy === '-tfidf'}"
                     ></ng-md-icon>
         </md-button>
         <md-button class="md-icon-button"
                    ng-click="toolbar.reverse = !toolbar.reverse"
                    aria-label="sort_connection">
+            <md-tooltip>
+                Reverse Sort
+            </md-tooltip>
             <ng-md-icon icon="swap_calls"
                     ng-class="{'selected': toolbar.reverse}"></ng-md-icon>
         </md-button>

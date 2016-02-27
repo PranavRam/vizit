@@ -48,6 +48,9 @@
                 $scope.$on('showDocument', function(evnt, docId) {
                     $scope.selectedDocument = _.find($scope.documents, { '_id': docId});
                 });
+                $scope.documentList = {
+                    orderBy: ''
+                }
             }
         };
         return directive;

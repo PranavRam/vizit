@@ -7,7 +7,7 @@ var config = {
     host: '0.0.0.0',
     port: parseInt(process.env.PORT, 10) || 3000,
     api: '',
-    title: 'Vizit',
+    title: 'SCADE - Supportive Computational Analysis, Discovery and Exploration',
     parse: {
         hypothesis: Parse.Object.extend("Hypothesis"),
         notification: Parse.Object.extend("Notification")

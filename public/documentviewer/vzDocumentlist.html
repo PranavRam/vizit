@@ -3,7 +3,7 @@
         <md-card>
             <md-card-content>
                 <div class="document-item" ng-click="selectDocument(document)"
-                     ng-repeat="document in documents | filter:searchInput" layout="row"
+                     ng-repeat="document in documents | filter:searchInput | orderBy: documentList.orderBy" layout="row"
                      layout-align="space-between center"
                      ng-class="{selected: document.name === selectedDocument.name}">
                     <span flex="20">{{document.viewCount || 0}}</span>
