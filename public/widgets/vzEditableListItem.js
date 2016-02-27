@@ -35,6 +35,10 @@
                 $scope.updateItem = function() {
                     $scope.onSave();
                 };
+                $scope.changeThreshold = function(item) {
+
+                    $scope.onSave();
+                }
             }
         };
         return directive;

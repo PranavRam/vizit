@@ -6,7 +6,7 @@ angular.module('app.provenance')
 
 function provenance($scope, $timeout, dataservice) {
     $scope.controls = {
-        type: 'time'
+        type: 'event'
     };
     $scope.$watch('controls.type', function(prev, curr) {
         var preparedData = prepareData(provenanceData);

@@ -67,11 +67,13 @@ module.exports = {
     reset: function (request, reply) {
         console.log('reset');
         // console.log(request.payload);
-        // reply(request.payload);
+        // reply(request.payload);MATCH (n)
+
         var query = [
             'MATCH n',
             'WHERE n:Hypothesis OR n:Evidence OR n:Snippet',
             'OPTIONAL MATCH (n)-[r]-()',
+            'WITH n,r LIMIT 50000',
             'DELETE n,r',
             'WITH n MATCH (e:Entity)',
             'SET e.weight = 0',

@@ -92,7 +92,15 @@ module.exports = {
                 if (err) return reply(err);
                 //console.log('relationship evidence snippet', results);
                 reply(evidence);
-                io.emit('evidences:create', {evidence: evidence});
+                var event = {
+                        name: evidence.name,
+                        type: 'create evidence'
+                    };
+                EventController.create(event, evidence)
+                        .then(function () {
+                            io.emit('evidences:create', {evidence: evidence});
+                        })
+                // io.emit('evidences:create', {evidence: evidence});
 
             });
         });
@@ -103,7 +111,7 @@ module.exports = {
         var io = request.server.plugins['hapi-io'].io;
         var evidence = request.payload.evidence;
         var snippets = request.payload.snippets;
-
+        var oldHypotheses = [];
         function updateAttributes(evidence) {
             return Q.Promise(function(resolve, reject, notify) {
                 var query = [
@@ -151,17 +159,29 @@ module.exports = {
             }, function (err, results) {
                 if (err) return reply(err);
 
-                var notifications = results[0].hypotheses.map(function(hypothesis) {
+                var notifications = results[0].hypotheses
+                .filter(function(hyp) {
+                    var oldHyp = _.find(oldHypotheses, function(ohyp) {
+                        return hyp._id = ohyp._id;
+                    });
+                    return Math.abs((hyp.properties.weight - oldHyp.weight)/oldHyp.weight) > (oldHyp.threshold / 100);
+                })
+                .map(function (hyp) {     
                     return {
-                        title: hypothesis.properties.name,
-                        description: 'updated evidence ' + evidence.name
+                        title: hyp.properties.name + ' changed to ' + hyp.properties.weight,
+                        description: 'added evidence ' + evidence.name + ' to ' + hypothesis.name
                     }
                 });
-                io.emit('notifications', {data: notifications});
+                console.log('evidencess');
+                console.log(oldHypotheses, results[0].hypotheses, notifications);
+                if(notifications.length > 0){
+                    io.emit('notifications', {data: notifications});
+                }
             });
         }
 
         function updateSnippets(evidence, snippets) {
+            console.log('update snippet 1');
             return Q.Promise(function(resolve, reject, notify) {
                 var snippet_ids = snippets.map(function (snippet) {
                     return snippet._id;
@@ -181,7 +201,7 @@ module.exports = {
                     snippet_ids: snippet_ids,
                     evidence_id: id
                 };
-
+                console.log('updating snippet');
                 db.cypher({
                     query: query,
                     params: params
@@ -194,7 +214,7 @@ module.exports = {
                     };
 
                     resolve('updated evidence');
-
+                    console.log('creating event');
                     EventController.create(event, evidence)
                         .then(function () {
                             updateNotifications(evidence);
@@ -205,6 +225,27 @@ module.exports = {
             });
         }
 
+        function getOld() {
+            var query = [
+                "MATCH (n:Hypothesis)",
+                "OPTIONAL MATCH n-[r1:HYPEV {type: 'positive'}]->(ep)",
+                "WITH collect(ep) as pos_ev, n",
+                "OPTIONAL MATCH n-[r2:HYPEV {type: 'negative'}]->(en)",
+                "RETURN n, collect(en) as neg_ev , pos_ev"
+            ].join('\n');
+
+            db.cypher({
+                query: query
+            }, function (err, results) {
+                if (err) return reply(err);
+                //console.log(results);
+                oldHypotheses = flattenHypotheses(results);
+                updateSnippets(evidence, snippets)
+                .then(function() {
+                    reply(evidence);
+                });
+            });
+        }
         if (!snippets) {
             updateAttributes(evidence)
                 .then(function() {
@@ -212,10 +253,7 @@ module.exports = {
                 });
         }
         else {
-            updateSnippets(evidence, snippets)
-                .then(function() {
-                    reply(evidence);
-                });
+            getOld();
         }
     }
 };

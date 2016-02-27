@@ -49,10 +49,16 @@ function createNoSQL(hypothesis) {
                     time: new Date()
                 });
             }
+            events.push({
+                name: hypothesis.name,
+                event: 'created hypothesis: ' + hypothesis.name,
+                obj: hypothesis,
+                weight: 0,
+                threshold: 5,
+                time: new Date()
+            });
             hypothesis_parse.set("neo4j", hypothesis._id);
             hypothesis_parse.set("name", hypothesis.name);
-            hypothesis_parse.set("weight", 0);
-            hypothesis_parse.set("threshold", 5);
             hypothesis_parse.set("events", events);
 
             hypothesis_parse.save(null, {
@@ -127,7 +133,7 @@ module.exports = {
         var id = +encodeURIComponent(request.params.id);
         var hypothesis = request.payload.hypothesis;
         var evidence = request.payload.ev;
-
+        var oldHypotheses = [];
         function updateAttributes(hypothesis) {
             return Q.Promise(function (resolve, reject, notify) {
                 //console.log('updating attributes', id);
@@ -189,13 +195,23 @@ module.exports = {
             }, function (err, results) {
                 if (err) return reply(err);
 
-                var notifications = results[0].hypotheses.map(function (hyp) {
+                var notifications = results[0].hypotheses
+                .filter(function(hyp) {
+                    var oldHyp = _.find(oldHypotheses, function(ohyp) {
+                        return hyp._id = ohyp._id;
+                    });
+                    return Math.abs((hyp.properties.weight - oldHyp.weight)/oldHyp.weight) > (oldHyp.threshold / 100);
+                })
+                .map(function (hyp) {     
                     return {
                         title: hyp.properties.name + ' changed to ' + hyp.properties.weight,
                         description: 'added evidence ' + evidence.name + ' to ' + hypothesis.name
                     }
                 });
-                io.emit('notifications', {data: notifications});
+                console.log(oldHypotheses, results[0].hypotheses, notifications);
+                if(notifications.length > 0){
+                    io.emit('notifications', {data: notifications});
+                }
             });
         }
 
@@ -236,6 +252,27 @@ module.exports = {
             });
         }
 
+        function getOld() {
+            var query = [
+                "MATCH (n:Hypothesis)",
+                "OPTIONAL MATCH n-[r1:HYPEV {type: 'positive'}]->(ep)",
+                "WITH collect(ep) as pos_ev, n",
+                "OPTIONAL MATCH n-[r2:HYPEV {type: 'negative'}]->(en)",
+                "RETURN n, collect(en) as neg_ev , pos_ev"
+            ].join('\n');
+
+            db.cypher({
+                query: query
+            }, function (err, results) {
+                if (err) return reply(err);
+                //console.log(results);
+                oldHypotheses = flattenHypotheses(results);
+                updateEvidence(hypothesis, evidence)
+                    .then(function () {
+                        reply(hypothesis);
+                    })
+            });
+        }
         if (!evidence) {
             //console.log('here');
             updateAttributes(hypothesis)
@@ -244,10 +281,7 @@ module.exports = {
                 })
         }
         else {
-            updateEvidence(hypothesis, evidence)
-                .then(function () {
-                    reply(hypothesis);
-                })
+            getOld();
         }
     },
 

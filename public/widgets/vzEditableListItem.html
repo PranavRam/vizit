@@ -13,7 +13,7 @@
         <div class="bar" ng-class="item.weight < 0 ? 'negative' : ''" ng-style="{ 'width' : getWeightWidth(item.weight) }"></div>
     </div>
     <div layout="row" ng-if="item.threshold">
-        <md-slider flex md-discrete ng-model="item.threshold" step="5" min="5" max="100" aria-label="threshold" class="threshold-slider">
+        <md-slider flex md-discrete ng-model="item.threshold" step="5" min="5" max="100" aria-label="threshold" class="threshold-slider" ng-change="changeThreshold(item)">
         <!-- <md-slider flex min="5" max="100" ng-model="item.threshold" aria-label="threshold" class="threshold-slider"> -->
     </div>    
 </div>

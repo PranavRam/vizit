@@ -58,6 +58,7 @@ module.exports = {
                                 event: event.type,
                                 obj: obj,
                                 weight: hypothesis.weight,
+                                threshold: hypothesis.threshold,
                                 time: new Date()
                             });
                             object.save();

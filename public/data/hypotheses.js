@@ -41,7 +41,7 @@
 
         function add() {
             var hypothesis = {
-                x: 100, y: 100, weight: 0,
+                x: 100, y: 100, weight: 0, threshold: 5,
                 name: "Hypothesis " + data.length};
             dataservice.createHypothesis(hypothesis);
         }
