@@ -24,7 +24,7 @@ function provenance($scope, $timeout, dataservice) {
                 activate(preparedData);
             })
     });
-    
+
     var optionsEvent = {
         chart: {
             type: 'lineWithFocusChart',
@@ -35,7 +35,49 @@ function provenance($scope, $timeout, dataservice) {
                 bottom: 60,
                 left: 40
             },
-            transitionDuration: 500
+            transitionDuration: 500,
+            // x: function(d) {
+            //   return d.x;
+            // },
+            // xAxis: {
+            //   staggerLabels: true,
+            //   axisLabel: 'Events',
+            //   tickFormat: function(d) {
+            //     if(provenanceData[0].events[d]){
+            //       return provenanceData[0].events[d].name;
+            //     }
+            //   }
+            // }
+            tooltip: {
+               contentGenerator: function (e, i) {
+                 var series = e.series[0];
+                 if (series.value === null) return;
+                 var rows =
+                   "<tr>" +
+                     "<td class='key'>" + 'Event: ' + "</td>" +
+                     "<td class='x-value'>" + series.values[e.point.x].name + "</td>" +
+                   "</tr>" +
+                   "<tr>" +
+                     "<td class='key'>" + 'Weight: ' + "</td>" +
+                     "<td class='x-value'><strong>" + (series.value?series.value.toFixed(2):0) + "</strong></td>" +
+                   "</tr>";
+
+                 var header =
+                   "<thead>" +
+                     "<tr>" +
+                       "<td class='legend-color-guide'><div style='background-color: " + series.color + ";'></div></td>" +
+                       "<td class='key'><strong>" + series.key + "</strong></td>" +
+                     "</tr>" +
+                   "</thead>";
+
+                 return "<table>" +
+                     header +
+                     "<tbody>" +
+                       rows +
+                     "</tbody>" +
+                   "</table>";
+               }
+             }
         }
     };
 
@@ -66,6 +108,14 @@ function provenance($scope, $timeout, dataservice) {
                 },
                 yAxis: {
                     axisLabel: 'Weight'
+                },
+                x2Axis: {
+                  axisLabel: 'Time',
+                  tickFormat: function(d){
+                   // console.log(d, d3.time.format('%Y-%m-%dT%H:%M:%SZ')(new Date(d)));
+                      return d3.time.format('%m-%d T%H:%M:%S')(new Date(d));
+                  }
+
                 }
 
             }
@@ -78,12 +128,14 @@ function provenance($scope, $timeout, dataservice) {
                     values: hyp.events.map(function(event, i) {
                         return {
                             x: i,
+                            name: event.event +": "+event.name,
                             y: event.weight || 0
                         }
                     })
                 }
             });
         }
+
         else {
             return data
                 .map(function(hyp) {
